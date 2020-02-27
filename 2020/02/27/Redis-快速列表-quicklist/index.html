@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="Redis,DB," />
 
 
 
@@ -82,22 +82,20 @@
 <meta name="description" content="[TOC]  前言： quicklist是一个3.2版本之后新增的基础数据结构，是redis自定义的一种复杂数据结构，将ziplist和adlist结合到了一个数据结构中。主要是作为list的基础数据结构。在3.2之前，list是根据元素数量的多少采用ziplist或者adlist作为基础数据结构，3.2之后统一改用quicklist.  定义从数据结构的角度来说quicklist结合了两种数据结">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Redis-快速列表-quicklist">
-<meta property="og:url" content="http://yoursite.com/2020/02/26/Redis-%E5%BF%AB%E9%80%9F%E5%88%97%E8%A1%A8-quicklist/index.html">
+<meta property="og:url" content="http://yoursite.com/2020/02/27/Redis-%E5%BF%AB%E9%80%9F%E5%88%97%E8%A1%A8-quicklist/index.html">
 <meta property="og:site_name" content="简笔话编程">
 <meta property="og:description" content="[TOC]  前言： quicklist是一个3.2版本之后新增的基础数据结构，是redis自定义的一种复杂数据结构，将ziplist和adlist结合到了一个数据结构中。主要是作为list的基础数据结构。在3.2之前，list是根据元素数量的多少采用ziplist或者adlist作为基础数据结构，3.2之后统一改用quicklist.  定义从数据结构的角度来说quicklist结合了两种数据结">
-<meta property="og:image" content="http://yoursite.com/2020/02/26/Redis-%E5%BF%AB%E9%80%9F%E5%88%97%E8%A1%A8-quicklist/4D55BD28-D972-4447-A955-A82BBB38E9FA.png">
-<meta property="og:image" content="http://yoursite.com/2020/02/26/Redis-%E5%BF%AB%E9%80%9F%E5%88%97%E8%A1%A8-quicklist/4D55BD28-D972-4447-A955-A82BBB38E9FA.png">
-<meta property="og:image" content="http://yoursite.com/4D55BD28-D972-4447-A955-A82BBB38E9FA.png">
-<meta property="og:image" content="http://yoursite.com/2020/02/26/Redis-%E5%BF%AB%E9%80%9F%E5%88%97%E8%A1%A8-quicklist/4D55BD28-D972-4447-A955-A82BBB38E9FA.png">
-<meta property="og:image" content="http://yoursite.com/2020/02/26/Redis-%E5%BF%AB%E9%80%9F%E5%88%97%E8%A1%A8-quicklist/53E15F58-FDCD-48F2-AA8D-3B1A779F322F.png">
-<meta property="og:image" content="http://yoursite.com/2020/02/26/Redis-%E5%BF%AB%E9%80%9F%E5%88%97%E8%A1%A8-quicklist/2254A950-979F-4791-80C7-607B5B6D652F.png">
-<meta property="og:image" content="http://yoursite.com/2020/02/26/Redis-%E5%BF%AB%E9%80%9F%E5%88%97%E8%A1%A8-quicklist/C4E22556-4A4F-47A1-997D-C06CE5E6749C.png">
-<meta property="article:published_time" content="2020-02-26T11:37:21.197Z">
-<meta property="article:modified_time" content="2020-02-26T11:37:21.197Z">
+<meta property="og:image" content="http://yoursite.com/2020/02/27/Redis-%E5%BF%AB%E9%80%9F%E5%88%97%E8%A1%A8-quicklist/4D55BD28-D972-4447-A955-A82BBB38E9FA.png">
+<meta property="og:image" content="http://yoursite.com/2020/02/27/Redis-%E5%BF%AB%E9%80%9F%E5%88%97%E8%A1%A8-quicklist/53E15F58-FDCD-48F2-AA8D-3B1A779F322F.png">
+<meta property="og:image" content="http://yoursite.com/2020/02/27/Redis-%E5%BF%AB%E9%80%9F%E5%88%97%E8%A1%A8-quicklist/2254A950-979F-4791-80C7-607B5B6D652F.png">
+<meta property="og:image" content="http://yoursite.com/2020/02/27/Redis-%E5%BF%AB%E9%80%9F%E5%88%97%E8%A1%A8-quicklist/C4E22556-4A4F-47A1-997D-C06CE5E6749C.png">
+<meta property="article:published_time" content="2020-02-27T06:38:09.232Z">
+<meta property="article:modified_time" content="2020-02-27T06:38:09.232Z">
 <meta property="article:author" content="Golden">
-<meta property="article:tag" content="golden java">
+<meta property="article:tag" content="Redis">
+<meta property="article:tag" content="DB">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://yoursite.com/2020/02/26/Redis-%E5%BF%AB%E9%80%9F%E5%88%97%E8%A1%A8-quicklist/4D55BD28-D972-4447-A955-A82BBB38E9FA.png">
+<meta name="twitter:image" content="http://yoursite.com/2020/02/27/Redis-%E5%BF%AB%E9%80%9F%E5%88%97%E8%A1%A8-quicklist/4D55BD28-D972-4447-A955-A82BBB38E9FA.png">
 
 
 
@@ -107,7 +105,7 @@
     root: '/',
     scheme: 'Muse',
     version: '5.1.4',
-    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
     fancybox: true,
     tabs: true,
     motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
@@ -127,7 +125,7 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2020/02/26/Redis-快速列表-quicklist/"/>
+  <link rel="canonical" href="http://yoursite.com/2020/02/27/Redis-快速列表-quicklist/"/>
 
 
 
@@ -189,7 +187,7 @@
       
         
         <li class="menu-item menu-item-home">
-          <a href="/%20" rel="section">
+          <a href="/" rel="section">
             
               <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
             
@@ -199,7 +197,7 @@
       
         
         <li class="menu-item menu-item-tags">
-          <a href="/tags/%20" rel="section">
+          <a href="/tags" rel="section">
             
               <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
             
@@ -209,7 +207,7 @@
       
         
         <li class="menu-item menu-item-categories">
-          <a href="/categories/%20" rel="section">
+          <a href="/categories" rel="section">
             
               <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
             
@@ -219,7 +217,7 @@
       
         
         <li class="menu-item menu-item-archives">
-          <a href="/archives/%20" rel="section">
+          <a href="/archives" rel="section">
             
               <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
             
@@ -228,12 +226,12 @@
         </li>
       
         
-        <li class="menu-item menu-item-schedule">
-          <a href="/schedule/%20" rel="section">
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-calendar"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
             
-            日程表
+            关于
           </a>
         </li>
       
@@ -270,7 +268,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/02/26/Redis-%E5%BF%AB%E9%80%9F%E5%88%97%E8%A1%A8-quicklist/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/02/27/Redis-%E5%BF%AB%E9%80%9F%E5%88%97%E8%A1%A8-quicklist/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Golden">
@@ -299,8 +297,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-02-26T19:37:21+08:00">
-                2020-02-26
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-02-27T14:38:09+08:00">
+                2020-02-27
               </time>
             
 
@@ -309,6 +307,28 @@
             
           </span>
 
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Redis/" itemprop="url" rel="index">
+                    <span itemprop="name">Redis</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -347,10 +367,7 @@
 <li>链表(adlist)在插入、删除节点的时间复杂度很低,但是内存利用率低，且由于内存不连续容易产生内存碎片。利用ziplist减少node数量。</li>
 <li>压缩表(ziplist)内存连续，存储效率高；但是插入和删除的成本太高，需要频繁的进行数据搬移、释放或申请内存。为避免长度较长的ziplist修改时带来的内存拷贝开销，通过配置项配置合理的ziplist长度。</li>
 </ul>
-<h4 id="核心数据结构"><a href="#核心数据结构" class="headerlink" title="核心数据结构"></a>核心数据结构</h4><h5 id="quicklist"><a href="#quicklist" class="headerlink" title="quicklist"></a>quicklist</h5><p>quicklistNode实际上就是对ziplist的进一步封装，quicklist包含多个quicklistNode，quicklistNode由ziplist来保存数据。</p>
-<img src="/2020/02/26/Redis-%E5%BF%AB%E9%80%9F%E5%88%97%E8%A1%A8-quicklist/4D55BD28-D972-4447-A955-A82BBB38E9FA.png" class title="This is an example image">
-
-<p><img src="/2020/02/26/Redis-%E5%BF%AB%E9%80%9F%E5%88%97%E8%A1%A8-quicklist/4D55BD28-D972-4447-A955-A82BBB38E9FA.png" alt="17755a553f9431d5c834be7591b3d94c"><br><img src="/4D55BD28-D972-4447-A955-A82BBB38E9FA.png" alt="17755a553f9431d5c834be7591b3d94c"><br><img src="/2020/02/26/Redis-%E5%BF%AB%E9%80%9F%E5%88%97%E8%A1%A8-quicklist/4D55BD28-D972-4447-A955-A82BBB38E9FA.png" alt="17755a553f9431d5c834be7591b3d94c"><br>注：两端的节点，是没有被压缩的。它们的数据指针zl指向真正的ziplist。中间的其它节点是被压缩过的，它们的数据指针zl指向被压缩后的ziplist结构，即一个quicklistLZF结构。</p>
+<h4 id="核心数据结构"><a href="#核心数据结构" class="headerlink" title="核心数据结构"></a>核心数据结构</h4><h5 id="quicklist"><a href="#quicklist" class="headerlink" title="quicklist"></a>quicklist</h5><p>quicklistNode实际上就是对ziplist的进一步封装，quicklist包含多个quicklistNode，quicklistNode由ziplist来保存数据。<br><img src="/2020/02/27/Redis-%E5%BF%AB%E9%80%9F%E5%88%97%E8%A1%A8-quicklist/4D55BD28-D972-4447-A955-A82BBB38E9FA.png" alt="17755a553f9431d5c834be7591b3d94c"><br>注：两端的节点，是没有被压缩的。它们的数据指针zl指向真正的ziplist。中间的其它节点是被压缩过的，它们的数据指针zl指向被压缩后的ziplist结构，即一个quicklistLZF结构。</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">quicklist</span> &#123;</span></span><br><span class="line">    quicklistNode *head;    <span class="comment">// 头结点</span></span><br><span class="line">    quicklistNode *tail;    <span class="comment">// 尾节点</span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">long</span> count;    <span class="comment">// 所有数据的数量</span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> len;       <span class="comment">// quicklist节点数量</span></span><br><span class="line">    <span class="keyword">int</span> <span class="built_in">fill</span> : <span class="number">16</span>;          <span class="comment">// 单个节点的负载比例，即：单个ziplist的大小限制 </span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> compress : <span class="number">16</span>;   <span class="comment">// 压缩深度</span></span><br><span class="line">&#125; quicklist;</span><br></pre></td></tr></table></figure>
 <blockquote>
 <p>注：由于quicklist结构包含了压缩表和链表，那么每个quicklistNode的大小就是一个需要仔细考量的点。<br>如果单个quicklistNode存储的数据太多，就会影响插入效率；<br>如果单个quicklistNode太小，就会变得跟链表一样造成空间浪费。</p>
@@ -373,7 +390,7 @@
 <li>插入首个节点<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; lpush lst 123 456</span><br><span class="line">(integer) 2</span><br><span class="line">127.0.0.1:6379&gt; object encoding lst</span><br><span class="line">&quot;quicklist&quot;</span><br></pre></td></tr></table></figure>
 ![7e4dfc9484485e3614c7e3df722a6d6e]/(91A0F506-9628-4A73-B67F-07DDECD3A98A.png)<ul>
 <li>再插入一个节点<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"> 127.0.0.1:6379&gt; lpush lst 789</span><br><span class="line">(integer) 4</span><br></pre></td></tr></table></figure>
-因为第一个节点中的元素数量已经大于等于 fill 中的值了, 一个新的节点会被创建。fill 仍然为 3, len 变为 2, count 变为 4<br><img src="/2020/02/26/Redis-%E5%BF%AB%E9%80%9F%E5%88%97%E8%A1%A8-quicklist/53E15F58-FDCD-48F2-AA8D-3B1A779F322F.png" alt="7113fc22174b94426a900d545d307170"></li>
+因为第一个节点中的元素数量已经大于等于 fill 中的值了, 一个新的节点会被创建。fill 仍然为 3, len 变为 2, count 变为 4<br><img src="/2020/02/27/Redis-%E5%BF%AB%E9%80%9F%E5%88%97%E8%A1%A8-quicklist/53E15F58-FDCD-48F2-AA8D-3B1A779F322F.png" alt="7113fc22174b94426a900d545d307170"></li>
 </ul>
 </li>
 </ul>
@@ -383,14 +400,14 @@
 </li>
 <li><p>插入节点</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; del lst</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; lpush lst aa1 aa2 aa3 bb1 bb2 bb3 cc1 cc2 cc3</span><br><span class="line">(integer) 8</span><br></pre></td></tr></table></figure>
-<p><img src="/2020/02/26/Redis-%E5%BF%AB%E9%80%9F%E5%88%97%E8%A1%A8-quicklist/2254A950-979F-4791-80C7-607B5B6D652F.png" alt="f0945c027bade24a3ad38d783389cc58"></p>
+<p><img src="/2020/02/27/Redis-%E5%BF%AB%E9%80%9F%E5%88%97%E8%A1%A8-quicklist/2254A950-979F-4791-80C7-607B5B6D652F.png" alt="f0945c027bade24a3ad38d783389cc58"></p>
 </li>
 <li><p>将节点插入到中间部分</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; linsert lst after bb2 123</span><br><span class="line">(integer) 10</span><br><span class="line">结果：cc3 cc2 cc1 bb3 bb2 123 bb1  aa3 aa2 aa1</span><br></pre></td></tr></table></figure>
 
 </li>
 </ul>
-<p>因为存储了值 bb2 的 quicklistNode 是满的了, 这个节点会被拆开<br><img src="/2020/02/26/Redis-%E5%BF%AB%E9%80%9F%E5%88%97%E8%A1%A8-quicklist/C4E22556-4A4F-47A1-997D-C06CE5E6749C.png" alt="aac22087ede59ca425088cd0192941a2"></p>
+<p>因为存储了值 bb2 的 quicklistNode 是满的了, 这个节点会被拆开<br><img src="/2020/02/27/Redis-%E5%BF%AB%E9%80%9F%E5%88%97%E8%A1%A8-quicklist/C4E22556-4A4F-47A1-997D-C06CE5E6749C.png" alt="aac22087ede59ca425088cd0192941a2"></p>
 <h5 id="插入"><a href="#插入" class="headerlink" title="插入"></a>插入</h5><p>如果你插入一个新的元素到 quicklist 中</p>
 <ul>
 <li>如果当前的 quicklist 是空的, 创建一个新的 ziplist 并且把这个元素插入到 ziplist 中</li>
@@ -414,8 +431,34 @@
     
 
     
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    Golden
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://yoursite.com/2020/02/27/Redis-%E5%BF%AB%E9%80%9F%E5%88%97%E8%A1%A8-quicklist/" title="Redis-快速列表-quicklist">http://yoursite.com/2020/02/27/Redis-%E5%BF%AB%E9%80%9F%E5%88%97%E8%A1%A8-quicklist/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
 
     <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Redis/" rel="tag"># Redis</a>
+          
+            <a href="/tags/DB/" rel="tag"># DB</a>
+          
+        </div>
       
 
       
@@ -513,7 +556,7 @@
             
               <div class="site-state-item site-state-posts">
               
-                <a href="/archives/%20%7C%7C%20archive">
+                <a href="/archives%7C%7C%20archive">
               
                   <span class="site-state-item-count">2</span>
                   <span class="site-state-item-name">日志</span>
@@ -522,7 +565,25 @@
             
 
             
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
 
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
             
 
           </nav>
@@ -542,6 +603,24 @@
                     <a href="mailto:zhaojinxin_golden@163.com" target="_blank" title="E-Mail">
                       
                         <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.cnblogs.com/zhaojinxin" target="_blank" title="博客园">
+                      
+                        <i class="fa fa-fw fa-crosshairs"></i>博客园</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.nowcoder.net/golden" target="_blank" title="牛客网">
+                      
+                        <i class="fa fa-fw fa-spinner"></i>牛客网</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.jianshu.com/u/85d91cc782b1" target="_blank" title="简书">
+                      
+                        <i class="fa fa-fw fa-heartbeat"></i>简书</a>
                   </span>
                 
             </div>
@@ -602,6 +681,8 @@
 
 
 
+<!-- 隐藏网页底部 powered By Hexo / 强力驱动
+
   <span class="post-meta-divider">|</span>
 
 
@@ -610,6 +691,7 @@
 
 
 
+-->
 
         
 
@@ -626,6 +708,8 @@
     
       <div class="back-to-top">
         <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
         
       </div>
     
