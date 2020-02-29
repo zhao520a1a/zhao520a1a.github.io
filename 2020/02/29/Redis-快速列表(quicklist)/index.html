@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Redis内部原理," />
+  <meta name="keywords" content="redis内部结构," />
 
 
 
@@ -79,21 +79,21 @@
 
 
 
-<meta name="description" content="[TOC]  前言： quicklist是一个3.2版本之后新增的基础数据结构，是redis自定义的一种复杂数据结构，将压缩表和链表结合到了一个数据结构中。主要是作为list的基础数据结构。在3.2之前，list是根据元素数量的多少采用ziplist或者adlist作为基础数据结构，3.2之后统一改用quicklist.  定义从数据结构的角度来说quicklist结合了两种数据结构的优缺点，复杂">
+<meta name="description" content="[TOC]  前言： quicklist是一个3.2版本之后新增的基础数据结构，是redis自定义的一种复杂数据结构，将ziplist和adlist结合到了一个数据结构中。主要是作为list的基础数据结构。在3.2之前，list是根据元素数量的多少采用ziplist或者adlist作为基础数据结构，3.2之后统一改用quicklist.  定义从数据结构的角度来说quicklist结合了两种数据结">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Redis-快速列表(quicklist)">
 <meta property="og:url" content="http://yoursite.com/2020/02/29/Redis-%E5%BF%AB%E9%80%9F%E5%88%97%E8%A1%A8(quicklist)/index.html">
 <meta property="og:site_name" content="简笔话编程">
-<meta property="og:description" content="[TOC]  前言： quicklist是一个3.2版本之后新增的基础数据结构，是redis自定义的一种复杂数据结构，将压缩表和链表结合到了一个数据结构中。主要是作为list的基础数据结构。在3.2之前，list是根据元素数量的多少采用ziplist或者adlist作为基础数据结构，3.2之后统一改用quicklist.  定义从数据结构的角度来说quicklist结合了两种数据结构的优缺点，复杂">
+<meta property="og:description" content="[TOC]  前言： quicklist是一个3.2版本之后新增的基础数据结构，是redis自定义的一种复杂数据结构，将ziplist和adlist结合到了一个数据结构中。主要是作为list的基础数据结构。在3.2之前，list是根据元素数量的多少采用ziplist或者adlist作为基础数据结构，3.2之后统一改用quicklist.  定义从数据结构的角度来说quicklist结合了两种数据结">
 <meta property="og:image" content="http://yoursite.com/2020/02/29/Redis-%E5%BF%AB%E9%80%9F%E5%88%97%E8%A1%A8(quicklist)/4D55BD28-D972-4447-A955-A82BBB38E9FA.png">
 <meta property="og:image" content="http://yoursite.com/2020/02/29/Redis-%E5%BF%AB%E9%80%9F%E5%88%97%E8%A1%A8(quicklist)/E509CE4D-92D6-4D5A-9430-0535ED2F989E.png">
 <meta property="og:image" content="http://yoursite.com/2020/02/29/Redis-%E5%BF%AB%E9%80%9F%E5%88%97%E8%A1%A8(quicklist)/A00CD00B-9D55-425D-8791-EBA17AF7A227.png">
 <meta property="og:image" content="http://yoursite.com/2020/02/29/Redis-%E5%BF%AB%E9%80%9F%E5%88%97%E8%A1%A8(quicklist)/23D940D1-1262-441C-B58B-BD72DF12BD86.png">
 <meta property="og:image" content="http://yoursite.com/2020/02/29/Redis-%E5%BF%AB%E9%80%9F%E5%88%97%E8%A1%A8(quicklist)/9E311D76-E91B-4600-8058-DDD12356FB67.png">
-<meta property="article:published_time" content="2020-02-29T00:47:51.221Z">
-<meta property="article:modified_time" content="2020-02-29T01:41:16.869Z">
+<meta property="article:published_time" content="2020-02-29T05:30:41.344Z">
+<meta property="article:modified_time" content="2020-02-29T05:40:48.951Z">
 <meta property="article:author" content="Golden">
-<meta property="article:tag" content="Redis内部原理">
+<meta property="article:tag" content="redis内部结构">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://yoursite.com/2020/02/29/Redis-%E5%BF%AB%E9%80%9F%E5%88%97%E8%A1%A8(quicklist)/4D55BD28-D972-4447-A955-A82BBB38E9FA.png">
 
@@ -299,7 +299,7 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-02-29T08:47:51+08:00">
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-02-29T13:30:41+08:00">
                 2020-02-29
               </time>
             
@@ -322,8 +322,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Redis/" itemprop="url" rel="index">
-                    <span itemprop="name">Redis</span>
+                  <a href="/categories/redis/" itemprop="url" rel="index">
+                    <span itemprop="name">redis</span>
                   </a>
                 </span>
 
@@ -361,7 +361,7 @@
       
         <p>[TOC]</p>
 <blockquote>
-<p>前言： quicklist是一个3.2版本之后新增的基础数据结构，是redis自定义的一种复杂数据结构，<code>将压缩表和链表结合到了一个数据结构中</code>。主要是作为list的基础数据结构。<br>在3.2之前，list是根据元素数量的多少采用ziplist或者adlist作为基础数据结构，<code>3.2之后统一改用quicklist</code>.</p>
+<p>前言： quicklist是一个3.2版本之后新增的基础数据结构，是redis自定义的一种复杂数据结构，<code>将ziplist和adlist结合到了一个数据结构中</code>。主要是作为<br>list的基础数据结构。<br>在3.2之前，list是根据元素数量的多少采用ziplist或者adlist作为基础数据结构，<code>3.2之后统一改用quicklist</code>.</p>
 </blockquote>
 <h4 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h4><p>从数据结构的角度来说quicklist结合了两种数据结构的优缺点，复杂但是实用。通过将每个压缩表用双向链表的方式连接起来，来寻求一种收益最大化。</p>
 <h4 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h4><p>quicklist目的是最大程度减小内存空间占用并保证性能</p>
@@ -386,10 +386,7 @@
 </ul>
 <h5 id="quicklistNode"><a href="#quicklistNode" class="headerlink" title="quicklistNode"></a>quicklistNode</h5><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">quicklistNode</span> &#123;</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">quicklistNode</span> *<span class="title">prev</span>;</span> <span class="comment">// 前一个节点</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">quicklistNode</span> *<span class="title">next</span>;</span> <span class="comment">// 后一个节点</span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">char</span> *zl;  <span class="comment">// ziplist指针</span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> sz;  <span class="comment">// ziplist的内存大小,,单位是字节</span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> count : <span class="number">16</span>;  <span class="comment">// zpilist中数据项的个数,它是一个 16 bit 大小的字段, 所以一个 quicklistNode 最多也只能存储 65536 个元素</span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> encoding : <span class="number">2</span>;  <span class="comment">// 当前节点中的 ziplist 的编码方式,1 1(RAW) 表示默认的方式存储, 2(LZF) 表示用 LZF 算法压缩后进行的存储</span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> container : <span class="number">2</span>;  <span class="comment">// 表示 quicklistNode 当前使用哪种数据结构进行存储的, 目前支持的也是默认的值为 2(ZIPLIST), 未来也许会引入更多其他的结构</span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> recompress : <span class="number">1</span>;  <span class="comment">// 压缩标志,1表示压缩</span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> attempted_compress : <span class="number">1</span>; <span class="comment">//  节点是否能够被压缩,只用在测试</span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> extra : <span class="number">10</span>; <span class="comment">//是剩下多出来的 bit, 可以留作未来使用</span></span><br><span class="line">&#125; quicklistNode;</span><br></pre></td></tr></table></figure>
 <p>注：这里从变量count开始，都采用了位域的方式进行数据的内存声明，使得6个unsigned int变量只用到了一个unsigned int的内存大小。</p>
-<h4 id="Redis配置"><a href="#Redis配置" class="headerlink" title="Redis配置"></a>Redis配置</h4><h5 id="list-max-ziplist-size"><a href="#list-max-ziplist-size" class="headerlink" title="list-max-ziplist-size"></a>list-max-ziplist-size</h5><p>Redis的配置文件中，给出了每个ziplist中长度的设定，可通过配置项配置合理的ziplist长度，设置根据场景而定。对应quicklist的fill属性，取值含义同fill属性值。例如</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">list-max-ziplist-size -2</span><br></pre></td></tr></table></figure>
-<h5 id="list-compress-depth"><a href="#list-compress-depth" class="headerlink" title="list-compress-depth"></a>list-compress-depth</h5><p>因为链表的特性，一般首尾两端操作较频繁，中部操作相对较少，所以redis提供<code>压缩深度配置</code>：<br>参数list-compress-depth的取值含义如下：<br>0: 是个特殊值，表示都不压缩。这是Redis的默认值。<br>1: 表示quicklist两端各有1个节点不压缩，中间的节点压缩。<br>2: 表示quicklist两端各有2个节点不压缩，中间的节点压缩。<br>3: 表示quicklist两端各有3个节点不压缩，中间的节点压缩。<br>依此类推，最大16bit</p>
-<h4 id="插入过程"><a href="#插入过程" class="headerlink" title="插入过程"></a>插入过程</h4><p>如果你插入一个新的元素到 quicklist 中</p>
+<h4 id="插入节点过程"><a href="#插入节点过程" class="headerlink" title="插入节点过程"></a>插入节点过程</h4><p>如果你插入一个新的元素到 quicklist 中</p>
 <ul>
 <li>如果当前的 quicklist 是空的, 创建一个新的 ziplist 并且把这个元素插入到 ziplist 中;</li>
 <li>如果当前的 quicklist 不是空的, 如果这个要插入的节点还有位置(count &lt; fill), 找到你想要插入的位置,插入到当前节点的 ziplist 中;</li>
@@ -400,11 +397,9 @@
 <h4 id="示例1"><a href="#示例1" class="headerlink" title="示例1"></a>示例1</h4><ul>
 <li>我在配置文件做了如下两行的更改<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">list-max-ziplist-size 3</span><br><span class="line">list-compress-depth 0</span><br></pre></td></tr></table></figure></li>
 <li>插入首个节点<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; lpush lst 123 456</span><br><span class="line">(integer) 2</span><br><span class="line">127.0.0.1:6379&gt; object encoding lst</span><br><span class="line">&quot;quicklist&quot;</span><br></pre></td></tr></table></figure>
-<img src="/2020/02/29/Redis-%E5%BF%AB%E9%80%9F%E5%88%97%E8%A1%A8(quicklist)/E509CE4D-92D6-4D5A-9430-0535ED2F989E.png" alt="7e4dfc9484485e3614c7e3df722a6d6e"><ul>
+<img src="/2020/02/29/Redis-%E5%BF%AB%E9%80%9F%E5%88%97%E8%A1%A8(quicklist)/E509CE4D-92D6-4D5A-9430-0535ED2F989E.png" alt="7e4dfc9484485e3614c7e3df722a6d6e"></li>
 <li>再插入一个节点<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"> 127.0.0.1:6379&gt; lpush lst 789</span><br><span class="line">(integer) 4</span><br></pre></td></tr></table></figure>
 注： 因为第一个节点中的元素数量已经大于等于 fill 中的值了, 一个新的节点会被创建。fill 仍然为 3, len 变为 2, count 变为 4<br><img src="/2020/02/29/Redis-%E5%BF%AB%E9%80%9F%E5%88%97%E8%A1%A8(quicklist)/A00CD00B-9D55-425D-8791-EBA17AF7A227.png" alt="7113fc22174b94426a900d545d307170"></li>
-</ul>
-</li>
 </ul>
 <h4 id="示例2"><a href="#示例2" class="headerlink" title="示例2"></a>示例2</h4><ul>
 <li>我在配置文件做了如下两行的更改<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">list-max-ziplist-size 3</span><br><span class="line">list-compress-depth 0</span><br></pre></td></tr></table></figure></li>
@@ -412,6 +407,14 @@
 <img src="/2020/02/29/Redis-%E5%BF%AB%E9%80%9F%E5%88%97%E8%A1%A8(quicklist)/23D940D1-1262-441C-B58B-BD72DF12BD86.png" alt="f0945c027bade24a3ad38d783389cc58"></li>
 <li>将节点插入到中间部分<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; linsert lst after bb2 123</span><br><span class="line">(integer) 10</span><br><span class="line">结果：cc3 cc2 cc1 bb3 bb2 123 bb1  aa3 aa2 aa1</span><br></pre></td></tr></table></figure>
 注：因为存储了值 bb2 的 quicklistNode 是满的了, 这个节点会被拆开<br><img src="/2020/02/29/Redis-%E5%BF%AB%E9%80%9F%E5%88%97%E8%A1%A8(quicklist)/9E311D76-E91B-4600-8058-DDD12356FB67.png" alt="aac22087ede59ca425088cd0192941a2"></li>
+</ul>
+<h4 id="Redis配置"><a href="#Redis配置" class="headerlink" title="Redis配置"></a>Redis配置</h4><h5 id="list-max-ziplist-size"><a href="#list-max-ziplist-size" class="headerlink" title="list-max-ziplist-size"></a>list-max-ziplist-size</h5><p>Redis的配置文件中，给出了每个ziplist中长度的设定，可通过配置项配置合理的ziplist长度，设置根据场景而定。对应quicklist的fill属性，取值含义同fill属性值。例如</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">list-max-ziplist-size -2</span><br></pre></td></tr></table></figure>
+<h5 id="list-compress-depth"><a href="#list-compress-depth" class="headerlink" title="list-compress-depth"></a>list-compress-depth</h5><p>因为链表的特性，一般首尾两端操作较频繁，中部操作相对较少，所以redis提供<code>压缩深度配置</code>：<br>参数list-compress-depth的取值含义如下：<br>0: 是个特殊值，表示都不压缩。这是Redis的默认值。<br>1: 表示quicklist两端各有1个节点不压缩，中间的节点压缩。<br>2: 表示quicklist两端各有2个节点不压缩，中间的节点压缩。<br>3: 表示quicklist两端各有3个节点不压缩，中间的节点压缩。<br>依此类推，最大16bit</p>
+<h4 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h4><ul>
+<li>快速列表将压缩表和链表结合到了一个数据结构中`。主要是作为list的基础数据结构；</li>
+<li>可通过配置项<code>list-max-ziplist-size</code>设定合理的ziplist大小；值为负代表从字节大小限定，值为正代表元素个数限定；</li>
+<li>可通过配置项<code>list-compress-depth</code>设定压缩深度配置；</li>
 </ul>
 <blockquote>
 <p>参考：<br><a href="https://github.com/zpoint/Redis-Internals/blob/5.0/Object/list/list.md" target="_blank" rel="noopener">https://github.com/zpoint/Redis-Internals/blob/5.0/Object/list/list.md</a><br><a href="http://czrzchao.com/redisSourceQuicklist#quicklist" target="_blank" rel="noopener">http://czrzchao.com/redisSourceQuicklist#quicklist</a><br><a href="https://blog.csdn.net/qq_31720329/article/details/99938219" target="_blank" rel="noopener">https://blog.csdn.net/qq_31720329/article/details/99938219</a></p>
@@ -463,7 +466,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Redis%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/" rel="tag"># Redis内部原理</a>
+            <a href="/tags/redis%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84/" rel="tag"># redis内部结构</a>
           
         </div>
       
@@ -476,14 +479,18 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2020/02/29/Redis-%E8%B7%B3%E8%B7%83%E8%A1%A8(skiplist)/" rel="next" title="Redis-跳跃表(skiplist)">
+                <i class="fa fa-chevron-left"></i> Redis-跳跃表(skiplist)
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2020/02/29/hello-world/" rel="prev" title="Hello World">
-                Hello World <i class="fa fa-chevron-right"></i>
+              <a href="/2020/02/29/Redis-%E5%8F%8C%E5%90%91%E9%93%BE%E8%A1%A8(ADlist)/" rel="prev" title="Redis-双向链表(ADlist)">
+                Redis-双向链表(ADlist) <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -565,7 +572,7 @@
               
                 <a href="/archives%7C%7C%20archive">
               
-                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-count">10</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -654,7 +661,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#定义"><span class="nav-number">1.</span> <span class="nav-text">定义</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#特点"><span class="nav-number">2.</span> <span class="nav-text">特点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#核心数据结构"><span class="nav-number">3.</span> <span class="nav-text">核心数据结构</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#quicklist"><span class="nav-number">3.1.</span> <span class="nav-text">quicklist</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#quicklistNode"><span class="nav-number">3.2.</span> <span class="nav-text">quicklistNode</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Redis配置"><span class="nav-number">4.</span> <span class="nav-text">Redis配置</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#list-max-ziplist-size"><span class="nav-number">4.1.</span> <span class="nav-text">list-max-ziplist-size</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#list-compress-depth"><span class="nav-number">4.2.</span> <span class="nav-text">list-compress-depth</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#插入过程"><span class="nav-number">5.</span> <span class="nav-text">插入过程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#删除节点过程"><span class="nav-number">6.</span> <span class="nav-text">删除节点过程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#示例1"><span class="nav-number">7.</span> <span class="nav-text">示例1</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#示例2"><span class="nav-number">8.</span> <span class="nav-text">示例2</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#定义"><span class="nav-number">1.</span> <span class="nav-text">定义</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#特点"><span class="nav-number">2.</span> <span class="nav-text">特点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#核心数据结构"><span class="nav-number">3.</span> <span class="nav-text">核心数据结构</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#quicklist"><span class="nav-number">3.1.</span> <span class="nav-text">quicklist</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#quicklistNode"><span class="nav-number">3.2.</span> <span class="nav-text">quicklistNode</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#插入节点过程"><span class="nav-number">4.</span> <span class="nav-text">插入节点过程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#删除节点过程"><span class="nav-number">5.</span> <span class="nav-text">删除节点过程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#示例1"><span class="nav-number">6.</span> <span class="nav-text">示例1</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#示例2"><span class="nav-number">7.</span> <span class="nav-text">示例2</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Redis配置"><span class="nav-number">8.</span> <span class="nav-text">Redis配置</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#list-max-ziplist-size"><span class="nav-number">8.1.</span> <span class="nav-text">list-max-ziplist-size</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#list-compress-depth"><span class="nav-number">8.2.</span> <span class="nav-text">list-compress-depth</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#小结"><span class="nav-number">9.</span> <span class="nav-text">小结</span></a></li></ol></div>
             
 
           </div>

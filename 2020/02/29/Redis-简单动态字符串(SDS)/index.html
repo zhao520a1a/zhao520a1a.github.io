@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="redis内部结构," />
 
 
 
@@ -79,17 +79,21 @@
 
 
 
-<meta name="description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
+<meta name="description" content="[TOC]  引言：没有直接使用C语音的传统字符串表示，即：以空字符串结尾的字符数组，以下简称C字符串。而是自己构建名为SDS（simple dynamic string）的抽象类型。  为什么Redis使用SDS而不是C字符串？基于对字符串的安全性、效率以及功能方面的要求，C字符串不能满足。SDS具有以下优点：  常数复杂度获取字符串长度 - C字符串不记录自身长度 杜绝缓冲区溢出 - SDS会">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hello World">
-<meta property="og:url" content="http://yoursite.com/2020/02/29/hello-world/index.html">
+<meta property="og:title" content="Redis-简单动态字符串(SDS)">
+<meta property="og:url" content="http://yoursite.com/2020/02/29/Redis-%E7%AE%80%E5%8D%95%E5%8A%A8%E6%80%81%E5%AD%97%E7%AC%A6%E4%B8%B2(SDS)/index.html">
 <meta property="og:site_name" content="简笔话编程">
-<meta property="og:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
-<meta property="article:published_time" content="2020-02-29T01:29:12.802Z">
-<meta property="article:modified_time" content="2020-02-29T01:29:12.803Z">
+<meta property="og:description" content="[TOC]  引言：没有直接使用C语音的传统字符串表示，即：以空字符串结尾的字符数组，以下简称C字符串。而是自己构建名为SDS（simple dynamic string）的抽象类型。  为什么Redis使用SDS而不是C字符串？基于对字符串的安全性、效率以及功能方面的要求，C字符串不能满足。SDS具有以下优点：  常数复杂度获取字符串长度 - C字符串不记录自身长度 杜绝缓冲区溢出 - SDS会">
+<meta property="og:image" content="http://yoursite.com/2020/02/29/Redis-%E7%AE%80%E5%8D%95%E5%8A%A8%E6%80%81%E5%AD%97%E7%AC%A6%E4%B8%B2(SDS)/75214435-D430-495D-8550-44D86559C5C5.png">
+<meta property="og:image" content="http://yoursite.com/2020/02/29/Redis-%E7%AE%80%E5%8D%95%E5%8A%A8%E6%80%81%E5%AD%97%E7%AC%A6%E4%B8%B2(SDS)/411AB69A-7601-44FC-A49A-95408A9EDD69.png">
+<meta property="og:image" content="http://yoursite.com/2020/02/29/Redis-%E7%AE%80%E5%8D%95%E5%8A%A8%E6%80%81%E5%AD%97%E7%AC%A6%E4%B8%B2(SDS)/51E6893D-A211-4E01-BB9D-A186298E9540.png">
+<meta property="article:published_time" content="2020-02-29T05:31:00.604Z">
+<meta property="article:modified_time" content="2020-02-29T05:40:36.976Z">
 <meta property="article:author" content="Golden">
-<meta property="article:tag" content="golden java">
+<meta property="article:tag" content="redis内部结构">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yoursite.com/2020/02/29/Redis-%E7%AE%80%E5%8D%95%E5%8A%A8%E6%80%81%E5%AD%97%E7%AC%A6%E4%B8%B2(SDS)/75214435-D430-495D-8550-44D86559C5C5.png">
 
 
 
@@ -119,13 +123,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2020/02/29/hello-world/"/>
+  <link rel="canonical" href="http://yoursite.com/2020/02/29/Redis-简单动态字符串(SDS)/"/>
 
 
 
 
 
-  <title>Hello World | 简笔话编程</title>
+  <title>Redis-简单动态字符串(SDS) | 简笔话编程</title>
   
 
 
@@ -264,7 +268,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/02/29/hello-world/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/02/29/Redis-%E7%AE%80%E5%8D%95%E5%8A%A8%E6%80%81%E5%AD%97%E7%AC%A6%E4%B8%B2(SDS)/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Golden">
@@ -281,7 +285,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Hello World</h1>
+          <h1 class="post-title" itemprop="name headline">Redis-简单动态字符串(SDS)</h1>
         
 
         <div class="post-meta">
@@ -293,7 +297,7 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-02-29T09:29:12+08:00">
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-02-29T13:31:00+08:00">
                 2020-02-29
               </time>
             
@@ -303,6 +307,28 @@
             
           </span>
 
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/redis/" itemprop="url" rel="index">
+                    <span itemprop="name">redis</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -331,19 +357,56 @@
       
 
       
-        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html" target="_blank" rel="noopener">Deployment</a></p>
+        <p>[TOC]</p>
+<blockquote>
+<p>引言：没有直接使用C语音的传统字符串表示，即：以空字符串结尾的字符数组，以下简称C字符串。而是自己构建名为SDS（simple dynamic string）的抽象类型。</p>
+</blockquote>
+<h4 id="为什么Redis使用SDS而不是C字符串？"><a href="#为什么Redis使用SDS而不是C字符串？" class="headerlink" title="为什么Redis使用SDS而不是C字符串？"></a><code>为什么Redis使用SDS而不是C字符串？</code></h4><p>基于对字符串的安全性、效率以及功能方面的要求，C字符串不能满足。<br>SDS具有以下优点：</p>
+<ol>
+<li>常数复杂度获取字符串长度 - C字符串不记录自身长度</li>
+<li>杜绝缓冲区溢出 - SDS会根据长度检查空间，自动扩容<br>注：上面2点，是由于C字符串不记录自身长度导致的。</li>
+<li>减少修改字符串长度时所需的内存重分配次数<br>在一般程序中，每次修改字符串长度时，都会执行一次内存重新分配。SDS通过“未使用空间”，解除了字符串长度和底层数组长度的关联，并实现<code>空间预分配</code>和<code>惰性空间分配释放</code>两种优化策略。</li>
+<li>二进制安全 - SDS API以处理二进制的方式来处理SDS存放在buf数组的数据，</li>
+<li>兼容部分C字符串函数</li>
+</ol>
+<h4 id="SDS用途"><a href="#SDS用途" class="headerlink" title="SDS用途"></a>SDS用途</h4><ol>
+<li>保存数据库中字符串值</li>
+<li>用作缓冲区：AOF模块中的AOF缓冲区以及客户端状态中的缓冲区</li>
+</ol>
+<h4 id="数据结构"><a href="#数据结构" class="headerlink" title="数据结构"></a>数据结构</h4><p>在3.2版本以前SDS只有一种数据结构，到了<code>3.2版本以后SDS根据存储的内容会选择不同的数据结构</code>，以到达节省内存的效果！<br><img src="/2020/02/29/Redis-%E7%AE%80%E5%8D%95%E5%8A%A8%E6%80%81%E5%AD%97%E7%AC%A6%E4%B8%B2(SDS)/75214435-D430-495D-8550-44D86559C5C5.png" alt="f2d0508f4b09155f532da24cbd267244"></p>
+<p>注：<strong>attribute</strong> ((<strong>packed</strong>))这个声明就是用来告诉编译器取消内存对齐优化，按照实际的占用字节数进行对齐。<br>但是内存对齐怎么办呢，不能为了一点内存大大拖慢cpu的寻址效率啊？redis 通过自己在malloc等c语言内存分配函数上封装了一层zmalloc，将内存分配收敛，并解决了内存对齐的问题。</p>
+<p>在3.2以后的版本，SDS分为了5种数据结构，分别应对不同长度的字符串需求，具体的类型选择如下。<br><img src="/2020/02/29/Redis-%E7%AE%80%E5%8D%95%E5%8A%A8%E6%80%81%E5%AD%97%E7%AC%A6%E4%B8%B2(SDS)/411AB69A-7601-44FC-A49A-95408A9EDD69.png" alt="69edcb582e2853645b42911b65eb15ee"><br>说明：由于sdshdr5的只用来存储长度为32字节以下的字符数组，因此flags的5个bit就能满足长度记录，加上type所需的3bit，刚好为8bit一个字节，因此sdshdr5不需要单独的len记录长度，并且只有32个字节的存储空间，动态的变更内存余地较小，所以 redis 直接不存储alloc。<br>sdshdr8内部结构如下：<br><img src="/2020/02/29/Redis-%E7%AE%80%E5%8D%95%E5%8A%A8%E6%80%81%E5%AD%97%E7%AC%A6%E4%B8%B2(SDS)/51E6893D-A211-4E01-BB9D-A186298E9540.png" alt="7e267c34172b1f1eb02b00262578601f"><br>len ： 记录当前字节数组的长度（不包括\0），使得获取字符串长度的时间复杂度由O(N)变为了O(1);<br>alloc： 记录了当前字节数组总共分配的内存大小（不包括\0）;<br>flags：记录了当前字节数组的属性、用来标识到底是sdshdr8还是sdshdr16等;<br>buf： 一个<u>字节数组</u>,保存了字符串真正的值以及末尾的一个\0;</p>
+<blockquote>
+<p><code>为什么遵循\0字符结尾这一惯例？</code></p>
+</blockquote>
+<p>SDS可以直接重用一部分C字符串函数库里面的函数，即：buf末尾的\0是为了复用string.h中部分字符串操作函数。</p>
+<h4 id="优化策略"><a href="#优化策略" class="headerlink" title="优化策略"></a>优化策略</h4><h5 id="空间预分配"><a href="#空间预分配" class="headerlink" title="空间预分配"></a>空间预分配</h5><p>SDS字符串在空间不够,重新分配内存时。采用空间预分配: </p>
+<ul>
+<li>内存的预分配策略主要有两种：</li>
+</ul>
+<ol>
+<li>拼接后的字符串长度不超过1M，分配两倍的内存</li>
+<li>拼接够的字符串长度超过1M，多分配1M的内存</li>
+<li>如果新的字符串长度超过了原有字符串类型的限定那么还会涉及到一个重新生成sdshdr的过程。还有一个细节需要注意，由于sdshrd5并不存储alloc值，因此无法获取sdshrd5的可用大小，如果继续采用sdshrd5进行存储，在之后的拼接过程中每次都还是要进行内存重分配。因此在发生拼接行为时，sdshrd5会被直接优化成sdshrd8。</li>
+</ol>
+<p><code>设计思想：将原本N次字符串拼接需要N次内存重新分配的次数优化到最多需要N次，是典型的空间换时间的做法。</code></p>
+<h5 id="惰性空间分配释放"><a href="#惰性空间分配释放" class="headerlink" title="惰性空间分配释放"></a>惰性空间分配释放</h5><p> 在SDS的字符串缩短操作中，多余出来的空间并不会直接释放，而是保留这部分空间，待以后再用。</p>
+<blockquote>
+<p>扩展：</p>
+</blockquote>
+<ul>
+<li>在一些无须对字符串值修改的地方，使用C字符串作为字符串字面量。eg:打印日志。</li>
+<li>当可以修改字符串值时，会使用SDS表示字符串值。eg:包含字符串值的键值对在底层都是有SDS实现的。</li>
+</ul>
+<h4 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h4><ul>
+<li>为了直接重用一部分C字符串函数库里面的函数，SDS设计遵循了\0字符结尾这一惯例;</li>
+<li>通过记录数据长度，可以常数复杂度获取字符串长度；</li>
+<li>在3.2以后的版本，SDS分为了5种数据结构，分别应对不同长度的字符串需求；</li>
+<li>SDS设计运用了<code>空间预分配</code>和<code>惰性空间分配释放</code>两种优化策略,减少修改字符串长度时所需的内存重分配次数；</li>
+</ul>
+<blockquote>
+<p>参考：<br><a href="https://blog.csdn.net/czrzchao/article/details/78990345" target="_blank" rel="noopener">https://blog.csdn.net/czrzchao/article/details/78990345</a></p>
+</blockquote>
 
       
     </div>
@@ -376,7 +439,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://yoursite.com/2020/02/29/hello-world/" title="Hello World">http://yoursite.com/2020/02/29/hello-world/</a>
+    <a href="http://yoursite.com/2020/02/29/Redis-%E7%AE%80%E5%8D%95%E5%8A%A8%E6%80%81%E5%AD%97%E7%AC%A6%E4%B8%B2(SDS)/" title="Redis-简单动态字符串(SDS)">http://yoursite.com/2020/02/29/Redis-%E7%AE%80%E5%8D%95%E5%8A%A8%E6%80%81%E5%AD%97%E7%AC%A6%E4%B8%B2(SDS)/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>
@@ -389,6 +452,12 @@
 
     <footer class="post-footer">
       
+        <div class="post-tags">
+          
+            <a href="/tags/redis%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84/" rel="tag"># redis内部结构</a>
+          
+        </div>
+      
 
       
       
@@ -398,14 +467,18 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2020/02/29/Redis-%E5%8F%8C%E5%90%91%E9%93%BE%E8%A1%A8(ADlist)/" rel="next" title="Redis-双向链表(ADlist)">
+                <i class="fa fa-chevron-left"></i> Redis-双向链表(ADlist)
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2020/02/29/Redis-%E5%AD%97%E5%85%B8(dict)/" rel="prev" title="Redis-字典(dict)">
-                Redis-字典(dict) <i class="fa fa-chevron-right"></i>
+              <a href="/2020/02/29/Redis%E4%B9%8B%E6%BA%90%E7%A0%81%E7%BB%93%E6%9E%84%E5%B1%9E%E6%80%A7/" rel="prev" title="Redis之源码结构属性">
+                Redis之源码结构属性 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -576,7 +649,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Quick-Start"><span class="nav-number">1.</span> <span class="nav-text">Quick Start</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Create-a-new-post"><span class="nav-number">1.1.</span> <span class="nav-text">Create a new post</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Run-server"><span class="nav-number">1.2.</span> <span class="nav-text">Run server</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Generate-static-files"><span class="nav-number">1.3.</span> <span class="nav-text">Generate static files</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Deploy-to-remote-sites"><span class="nav-number">1.4.</span> <span class="nav-text">Deploy to remote sites</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#为什么Redis使用SDS而不是C字符串？"><span class="nav-number">1.</span> <span class="nav-text">为什么Redis使用SDS而不是C字符串？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#SDS用途"><span class="nav-number">2.</span> <span class="nav-text">SDS用途</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#数据结构"><span class="nav-number">3.</span> <span class="nav-text">数据结构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#优化策略"><span class="nav-number">4.</span> <span class="nav-text">优化策略</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#空间预分配"><span class="nav-number">4.1.</span> <span class="nav-text">空间预分配</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#惰性空间分配释放"><span class="nav-number">4.2.</span> <span class="nav-text">惰性空间分配释放</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#小结"><span class="nav-number">5.</span> <span class="nav-text">小结</span></a></li></ol></div>
             
 
           </div>

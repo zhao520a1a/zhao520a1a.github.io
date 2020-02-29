@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="redis内部结构," />
 
 
 
@@ -79,15 +79,20 @@
 
 
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="home">
-<meta property="og:url" content="http://yoursite.com/home/index.html">
+<meta name="description" content="[TOC] 用途 整数集合是集合键（外数据结构set）的底层实现之一（当集合元素都是整数且元素数量不多时使用），它可以保存整数值，并且保证集合中不会出现重复元素。 数据结构inset结构体定义如下： 12345typedef struct intset &amp;#123;    uint32_t encoding;  &#x2F;&#x2F; 编码方式，一个元素所需要的内存大小    uint32_t length;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Redis-整数集合(intset)">
+<meta property="og:url" content="http://yoursite.com/2020/02/29/Redis-%E6%95%B4%E6%95%B0%E9%9B%86%E5%90%88(intset)/index.html">
 <meta property="og:site_name" content="简笔话编程">
-<meta property="article:published_time" content="2020-02-27T06:10:54.000Z">
-<meta property="article:modified_time" content="2020-02-27T06:10:54.253Z">
+<meta property="og:description" content="[TOC] 用途 整数集合是集合键（外数据结构set）的底层实现之一（当集合元素都是整数且元素数量不多时使用），它可以保存整数值，并且保证集合中不会出现重复元素。 数据结构inset结构体定义如下： 12345typedef struct intset &amp;#123;    uint32_t encoding;  &#x2F;&#x2F; 编码方式，一个元素所需要的内存大小    uint32_t length;">
+<meta property="og:image" content="http://yoursite.com/2020/02/29/Redis-%E6%95%B4%E6%95%B0%E9%9B%86%E5%90%88(intset)/50600BB2-D30D-4F8A-9B2F-AC623958E8C5.png">
+<meta property="og:image" content="http://yoursite.com/2020/02/29/Redis-%E6%95%B4%E6%95%B0%E9%9B%86%E5%90%88(intset)/77C8B39D-B731-49CC-970C-AEB431A4C6E2.png">
+<meta property="article:published_time" content="2020-02-29T05:29:26.037Z">
+<meta property="article:modified_time" content="2020-02-29T05:41:21.592Z">
 <meta property="article:author" content="Golden">
-<meta property="article:tag" content="golden java">
+<meta property="article:tag" content="redis内部结构">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yoursite.com/2020/02/29/Redis-%E6%95%B4%E6%95%B0%E9%9B%86%E5%90%88(intset)/50600BB2-D30D-4F8A-9B2F-AC623958E8C5.png">
 
 
 
@@ -117,13 +122,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/home/"/>
+  <link rel="canonical" href="http://yoursite.com/2020/02/29/Redis-整数集合(intset)/"/>
 
 
 
 
 
-  <title>home | 简笔话编程</title>
+  <title>Redis-整数集合(intset) | 简笔话编程</title>
   
 
 
@@ -250,33 +255,232 @@
 
   <div id="posts" class="posts-expand">
     
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/02/29/Redis-%E6%95%B4%E6%95%B0%E9%9B%86%E5%90%88(intset)/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Golden">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简笔话编程">
+    </span>
+
     
-    
-    <div class="post-block page">
       <header class="post-header">
 
-	<h1 class="post-title" itemprop="name headline">home</h1>
-
-
-
-</header>
-
-      
-      
-      
-      <div class="post-body">
         
         
+          <h1 class="post-title" itemprop="name headline">Redis-整数集合(intset)</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-02-29T13:29:26+08:00">
+                2020-02-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
           
-        
-      </div>
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/redis/" itemprop="url" rel="index">
+                    <span itemprop="name">redis</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
       
       
+
+      
+        <p>[TOC]</p>
+<h4 id="用途"><a href="#用途" class="headerlink" title="用途"></a>用途</h4><p> 整数集合是<code>集合键（外数据结构set）的底层实现之一</code>（当集合元素都是整数且元素数量不多时使用），它可以保存整数值，并且保证集合中不会出现重复元素。</p>
+<h4 id="数据结构"><a href="#数据结构" class="headerlink" title="数据结构"></a>数据结构</h4><p>inset结构体定义如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">intset</span> &#123;</span></span><br><span class="line">    <span class="keyword">uint32_t</span> encoding;  <span class="comment">// 编码方式，一个元素所需要的内存大小</span></span><br><span class="line">    <span class="keyword">uint32_t</span> length;    <span class="comment">// 集合长度</span></span><br><span class="line">    <span class="keyword">int8_t</span> contents[];  <span class="comment">// 集合数组</span></span><br><span class="line">&#125; intset;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>encoding为inset的编码方式，有3种编码方式，分别对应不同范围的整型：<br>#define INTSET_ENC_INT16 (sizeof(int16_t))  // -32768<del>32767<br>#define INTSET_ENC_INT32 (sizeof(int32_t))  // -2147483648</del>2147483647<br>#define INTSET_ENC_INT64 (sizeof(int64_t))  // -2^63~2^63-1<br>intset的编码是由最大的一个数决定的，如果有一个数是int64，那么整个inset的编码都是int64。</li>
+<li>length是inset的整数个数</li>
+<li>contents整数数组intset的内存是连续的，所有的数据增删改查操作都是在内存地址偏移的基础上进行的，并且整数的保存也是有序的.<br>一个保存了5个int16的intset的内存示意图如下：<img src="/2020/02/29/Redis-%E6%95%B4%E6%95%B0%E9%9B%86%E5%90%88(intset)/50600BB2-D30D-4F8A-9B2F-AC623958E8C5.png" alt="66b2c7ba640166f863b0d6e90d4589db"></li>
+</ul>
+<h5 id="新增元素"><a href="#新增元素" class="headerlink" title="新增元素"></a>新增元素</h5><p>新增过程会涉及到了intset的升级、查找和插入。</p>
+<p>如果待插入数据的编码大于当前intset的编码，就需要先进行升级。<br>为了确保intset元素的唯一性，再插入之前会进行一次查找，利用intset有序的特性，通过二分法对目标value进行查找。<br>当查不到对应value时，会在原有内存的基础上进行realloc，多申请一个元素的内存。由于intset的内存为连续，因此插入时，比value大的元素都要依次向后移动。<br>注：由于移动的操作是在原有内存地址基础上进行的，因此在这里不能用memcpy进行内存拷贝，需要用memmove。</p>
+<h5 id="升级操作"><a href="#升级操作" class="headerlink" title="升级操作"></a>升级操作</h5><p>那么当插入的value大于当前intset的encode时就需要对intset进行升级，以适应更大的值。<br>首先当需要对原有intset进行升级时，插入的元素一定是大于当前intset的最大值或者小于当前intset的最小值的，因此带插入的value一定是在首尾，只需判断其正负即可。<br><img src="/2020/02/29/Redis-%E6%95%B4%E6%95%B0%E9%9B%86%E5%90%88(intset)/77C8B39D-B731-49CC-970C-AEB431A4C6E2.png" alt="9fb2f1e74240afbcdff8296e9183786d"></p>
+<blockquote>
+<p>升级的好处:</p>
+<ol>
+<li>提升灵活性</li>
+<li>节约内存</li>
+</ol>
+</blockquote>
+<h4 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h4><p>intset主要有以下特性：</p>
+<ul>
+<li><p>内存连续，数值存储有序、无重复</p>
+</li>
+<li><p>有三种编码方式，通过升级的方式进行编码切换</p>
+</li>
+<li><p><code>不支持降级</code></p>
+</li>
+<li><p>小端存储</p>
+<blockquote>
+<p>参考：<a href="http://czrzchao.com/redisSourceIntset" target="_blank" rel="noopener">http://czrzchao.com/redisSourceIntset</a></p>
+</blockquote>
+</li>
+</ul>
+
       
     </div>
     
     
     
+
+<div>
+  
+    <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束,感谢您的阅读-------------</div>
+    
+</div>
+
+  
+</div>
+
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    Golden
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://yoursite.com/2020/02/29/Redis-%E6%95%B4%E6%95%B0%E9%9B%86%E5%90%88(intset)/" title="Redis-整数集合(intset)">http://yoursite.com/2020/02/29/Redis-%E6%95%B4%E6%95%B0%E9%9B%86%E5%90%88(intset)/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/redis%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84/" rel="tag"># redis内部结构</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/02/29/Redis-%E5%AD%97%E5%85%B8(dict)/" rel="next" title="Redis-字典(dict)">
+                <i class="fa fa-chevron-left"></i> Redis-字典(dict)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/02/29/Redis-%E5%AF%B9%E8%B1%A1%E7%B3%BB%E7%BB%9F%EF%BC%88redisObject%EF%BC%89/" rel="prev" title="Redis-对象系统（redisObject）">
+                Redis-对象系统（redisObject） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
   </div>
 
 
@@ -309,8 +513,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -408,6 +621,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#用途"><span class="nav-number">1.</span> <span class="nav-text">用途</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#数据结构"><span class="nav-number">2.</span> <span class="nav-text">数据结构</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#新增元素"><span class="nav-number">2.1.</span> <span class="nav-text">新增元素</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#升级操作"><span class="nav-number">2.2.</span> <span class="nav-text">升级操作</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#小结"><span class="nav-number">3.</span> <span class="nav-text">小结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
