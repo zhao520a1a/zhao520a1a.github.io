@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="redis持久化," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="[TOC] 定义 RDB 是 Redis 将 server 端的内存中的键值对以二进制的方式，持久化存储的一种文件形式。 文件中，一般会以 对象的长度+对象的格式来存储，只要根据这个格式，就能渐进的遍历整个文件。  Redis 还支持开启 LZF 的压缩算法，可以牺牲 CPU 时间，来减少 RDB 文件的大小；如果开启LZF并且超过20个 bytes 时， 会将压缩后的字符写入文件。  触发方式自">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Redis之RDB持久化">
+<meta property="og:url" content="http://yoursite.com/2020/02/29/Redis%E4%B9%8BRDB%E6%8C%81%E4%B9%85%E5%8C%96/index.html">
+<meta property="og:site_name" content="简笔话编程">
+<meta property="og:description" content="[TOC] 定义 RDB 是 Redis 将 server 端的内存中的键值对以二进制的方式，持久化存储的一种文件形式。 文件中，一般会以 对象的长度+对象的格式来存储，只要根据这个格式，就能渐进的遍历整个文件。  Redis 还支持开启 LZF 的压缩算法，可以牺牲 CPU 时间，来减少 RDB 文件的大小；如果开启LZF并且超过20个 bytes 时， 会将压缩后的字符写入文件。  触发方式自">
+<meta property="og:image" content="http://yoursite.com/2020/02/29/Redis%E4%B9%8BRDB%E6%8C%81%E4%B9%85%E5%8C%96/7241F4E3-2FE8-4A68-B725-1255B55A8DC4.png">
+<meta property="og:image" content="http://yoursite.com/2020/02/29/Redis%E4%B9%8BRDB%E6%8C%81%E4%B9%85%E5%8C%96/A97F3ED8-C7D5-463E-B95C-35D855850CF8.png">
+<meta property="og:image" content="http://yoursite.com/2020/02/29/Redis%E4%B9%8BRDB%E6%8C%81%E4%B9%85%E5%8C%96/5E259A51-871D-4D29-BD79-B13A1B1BDF63.png">
+<meta property="og:image" content="http://yoursite.com/2020/02/29/Redis%E4%B9%8BRDB%E6%8C%81%E4%B9%85%E5%8C%96/201A1691-0544-4C53-8E3D-4F90303AE3F2.png">
+<meta property="og:image" content="http://yoursite.com/2020/02/29/Redis%E4%B9%8BRDB%E6%8C%81%E4%B9%85%E5%8C%96/36FBD139-51B0-4B9D-83AC-AF131CBA5801.png">
+<meta property="article:published_time" content="2020-02-29T08:06:28.788Z">
+<meta property="article:modified_time" content="2020-02-29T08:07:32.510Z">
+<meta property="article:author" content="Golden">
+<meta property="article:tag" content="redis持久化">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yoursite.com/2020/02/29/Redis%E4%B9%8BRDB%E6%8C%81%E4%B9%85%E5%8C%96/7241F4E3-2FE8-4A68-B725-1255B55A8DC4.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/02/29/Redis之RDB持久化/"/>
+
+
+
+
+
+  <title>Redis之RDB持久化 | 简笔话编程</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+    
+    <a href="https://github.com/zhao520a1a" target="_blank" rel="noopener" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#64CEAA; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">简笔话编程</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Golden是一只程序猿</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/02/29/Redis%E4%B9%8BRDB%E6%8C%81%E4%B9%85%E5%8C%96/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Golden">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简笔话编程">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Redis之RDB持久化</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-02-29T16:06:28+08:00">
+                2020-02-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/redis/" itemprop="url" rel="index">
+                    <span itemprop="name">redis</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>[TOC]</p>
+<h4 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h4><ul>
+<li>RDB 是 Redis 将 server 端的内存中的键值对以二进制的方式，持久化存储的一种文件形式。 文件中，一般会以 <code>对象的长度+对象</code>的格式来存储，只要根据这个格式，就能渐进的遍历整个文件。 </li>
+<li>Redis 还支持开启 LZF 的压缩算法，可以牺牲 CPU 时间，来减少 RDB 文件的大小；如果开启LZF并且超过20个 bytes 时， 会将压缩后的字符写入文件。</li>
+</ul>
+<h4 id="触发方式"><a href="#触发方式" class="headerlink" title="触发方式"></a>触发方式</h4><h5 id="自动触发"><a href="#自动触发" class="headerlink" title="自动触发"></a>自动触发</h5><p>Redis通过配置save参数，来触发RDB持久化条件。<br>　　默认如下配置：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">save 900 1：表示900 秒内如果至少有 1 个 key 的值变化，则保存</span><br><span class="line">save 300 10：表示300 秒内如果至少有 10 个 key 的值变化，则保存</span><br><span class="line">save 60 10000：表示60 秒内如果至少有 10000 个 key 的值变化，则保存</span><br></pre></td></tr></table></figure>
+
+<h5 id="手动触发"><a href="#手动触发" class="headerlink" title="手动触发"></a>手动触发</h5><p>提供了两种命令</p>
+<ul>
+<li>save<br>该命令会阻塞当前Redis服务器，执行save命令期间，Redis不能处理其他命令，直到RDB过程完成为止。</li>
+<li>bgsave<br>执行该命令时，Redis会在后台异步进行快照操作，同时还可以响应客户端请求。具体操作是Redis进程执行fork操作创建子进程，RDB持久化过程由子进程负责，完成后自动结束。阻塞只发生在fork阶段，一般时间很短。<h5 id="对比"><a href="#对比" class="headerlink" title="对比"></a>对比</h5><img src="/2020/02/29/Redis%E4%B9%8BRDB%E6%8C%81%E4%B9%85%E5%8C%96/7241F4E3-2FE8-4A68-B725-1255B55A8DC4.png" alt="eaa6b0418d701f629c40eb6aba3618b1"></li>
+</ul>
+<h4 id="恢复数据"><a href="#恢复数据" class="headerlink" title="恢复数据"></a>恢复数据</h4><ul>
+<li>将备份文件 (dump.rdb) 移动到 redis 安装目录并启动服务即可，redis就会自动加载文件数据至内存了。</li>
+<li>Redis 服务器在载入 RDB 文件期间，会一直处于阻塞状态，直到载入工作完成为止。<br>注：获取 redis 的安装目录可以使用 config get dir 命令<br><img src="/2020/02/29/Redis%E4%B9%8BRDB%E6%8C%81%E4%B9%85%E5%8C%96/A97F3ED8-C7D5-463E-B95C-35D855850CF8.png" alt="02ec04e9b969264920938a8651add762"></li>
+</ul>
+<h4 id="停止持久化"><a href="#停止持久化" class="headerlink" title="停止持久化"></a>停止持久化</h4><p>当只想利用Redis的缓存功能，并不像使用 Redis 的持久化功能， 可以将redis.conf 中，save 行注释掉或者直接一个空字符串<code>save &quot;&quot;</code>, 来停用保存功能</p>
+<h4 id="RDB自动保存原理"><a href="#RDB自动保存原理" class="headerlink" title="RDB自动保存原理"></a>RDB自动保存原理</h4><h5 id="redisService结构"><a href="#redisService结构" class="headerlink" title="redisService结构"></a>redisService结构</h5><p>Redis的服务器状态，使用redisService结构保存</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">redisService</span>&#123;</span></span><br><span class="line">     <span class="comment">//1、记录保存save条件的数组</span></span><br><span class="line">     <span class="class"><span class="keyword">struct</span> <span class="title">saveparam</span> *<span class="title">saveparams</span>;</span></span><br><span class="line">     <span class="comment">//2、修改计数器</span></span><br><span class="line">     <span class="keyword">long</span> <span class="keyword">long</span> dirty;</span><br><span class="line">     <span class="comment">//3、上一次执行保存的时间</span></span><br><span class="line">     <span class="keyword">time_t</span> lastsave;</span><br><span class="line"> </span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">saveparam</span>&#123;</span></span><br><span class="line">     <span class="comment">//秒数</span></span><br><span class="line">     <span class="keyword">time_t</span> seconds;</span><br><span class="line">     <span class="comment">//修改数</span></span><br><span class="line">     <span class="keyword">int</span> changes;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>举例：<br>在 redis.conf 配置文件中进行了关于save 的配置，在服务器状态中的saveparam 数组将会是如下的样子：<br><img src="/2020/02/29/Redis%E4%B9%8BRDB%E6%8C%81%E4%B9%85%E5%8C%96/5E259A51-871D-4D29-BD79-B13A1B1BDF63.png" alt="4d222bb5fe42c52358d7470ec490afd7"></p>
+<h5 id="dirty-计数器和lastsave-属性"><a href="#dirty-计数器和lastsave-属性" class="headerlink" title="dirty 计数器和lastsave 属性"></a>dirty 计数器和lastsave 属性</h5><p>　　dirty 计数器： 记录距离上一次成功执行 save 命令或者 bgsave 命令之后，Redis服务器进行了多少次修改（包括写入、删除、更新等操作）。</p>
+<p>　　lastsave 属性： 它是一个时间戳，记录上一次成功执行 save 命令或者 bgsave 命令的时间。</p>
+<p>-　通过这两个命令，当服务器成功执行一次修改操作，那么dirty 计数器就会加 1，而lastsave 属性记录上一次执行save或bgsave的时间。</p>
+<ul>
+<li>Redis 服务器还有一个周期性操作函数 severCron ,默认每隔 <code>100 毫秒</code>就会执行一次，该函数会遍历并检查 saveparams 数组中的所有保存条件，只要有一个条件被满足，那么就会执行 bgsave 命令。</li>
+<li>　执行完成之后，dirty 计数器更新为 0 ，lastsave 也更新为执行命令的完成时间。</li>
+</ul>
+<h4 id="RDB文件结构"><a href="#RDB文件结构" class="headerlink" title="RDB文件结构"></a>RDB文件结构</h4><ul>
+<li>简要<br><img src="/2020/02/29/Redis%E4%B9%8BRDB%E6%8C%81%E4%B9%85%E5%8C%96/201A1691-0544-4C53-8E3D-4F90303AE3F2.png" alt="b50148c90f64f2528bebeb26c0c08fd2"></li>
+<li>详解<br>下面是一个 version 9 的 RDB 文件<br><img src="/2020/02/29/Redis%E4%B9%8BRDB%E6%8C%81%E4%B9%85%E5%8C%96/36FBD139-51B0-4B9D-83AC-AF131CBA5801.png" alt="2ce931e146e09d42e6841582c500effb"></li>
+</ul>
+<p>注：RDB文件保存的是二进制数据。</p>
+<h5 id="REDIS部分"><a href="#REDIS部分" class="headerlink" title="REDIS部分"></a>REDIS部分</h5><p>作用：RDB文件标识符。通过这五个字符，程序可以在载入文件时，快速检查所载入的文件是否为RDB文件<br>长度：5字节，保存REDIS这五个字符</p>
+<h5 id="db-version部分"><a href="#db-version部分" class="headerlink" title="db_version部分"></a>db_version部分</h5><p>作用： 代表RDB文件的版本号。<br>长度：4字节，值是一个字符串表示的整数</p>
+<h5 id="databases部分"><a href="#databases部分" class="headerlink" title="databases部分"></a>databases部分</h5><p>作用：包含0或多个数据库及其对应的键值对数据<br>长度：如果服务器数据库状态为空，则为0；如果不为空，则根据键值对的数量、类型和内容，长度也随之而变</p>
+<h5 id="EOF部分"><a href="#EOF部分" class="headerlink" title="EOF部分"></a>EOF部分</h5><p>作用：RDB文件结束符。标志着RDB文件正文内容的结束，读入程序遇到这个值时，代表所有数据库的所有键值对都载入完毕了<br>长度：1字节</p>
+<h5 id="check-sum部分"><a href="#check-sum部分" class="headerlink" title="check_sum部分"></a>check_sum部分</h5><p>作用：检查RDB文件是否有出错或损坏。是程序通过对REDIS、db_version、databases、EOF四个部分的内容进行计算而出的；载入RDB文件时，会将载入数据所计算出的校验和与check_sum进行对比，从而得出是否出错<br>长度：8字节的无符号整数</p>
+<h4 id="优势与劣势"><a href="#优势与劣势" class="headerlink" title="优势与劣势"></a>优势与劣势</h4><h5 id="优势"><a href="#优势" class="headerlink" title="优势"></a>优势</h5><ol>
+<li>它保存了redis 在某个时间点上的数据集。这种文件非常适合用于进行备份和灾难恢复。</li>
+<li>RDB 在恢复大数据集时的速度比 AOF 的恢复速度要快。<h5 id="劣势"><a href="#劣势" class="headerlink" title="劣势"></a>劣势</h5></li>
+<li>影响性能: RDB方式数据没办法做到实时持久化/秒级持久化。因为bgsave每次运行都要执行fork操作创建子进程，属于重量级操作(内存中的数据被克隆了一份，大致2倍的膨胀性需要考虑)，频繁执行成本过高。</li>
+<li>版本不兼容: RDB文件使用特定二进制格式保存，Redis版本演进过程中有多个格式的RDB版本，存在老版本Redis服务无法兼容新版RDB格式的问题。</li>
+<li>数据有丢失: 在一定间隔时间做一次备份，所以如果redis意外down掉的话，就会丢失最后一次快照后的所有修改。</li>
+</ol>
+<h4 id="相关配置"><a href="#相关配置" class="headerlink" title="相关配置"></a>相关配置</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"># RDB自动持久化规则</span><br><span class="line"># 当 900 秒内有至少有 1 个键被改动时，自动进行数据集保存操作</span><br><span class="line">save 900 1</span><br><span class="line"># 当 300 秒内有至少有 10 个键被改动时，自动进行数据集保存操作</span><br><span class="line">save 300 10</span><br><span class="line"># 当 60 秒内有至少有 10000 个键被改动时，自动进行数据集保存操作</span><br><span class="line">save 60 10000</span><br><span class="line"></span><br><span class="line"># RDB持久化文件名</span><br><span class="line">dbfilename dump-&lt;port&gt;.rdb</span><br><span class="line"></span><br><span class="line"># 数据持久化文件存储目录</span><br><span class="line">dir &#x2F;var&#x2F;lib&#x2F;redis</span><br><span class="line"></span><br><span class="line"># bgsave发生错误时是否停止写入，通常为yes</span><br><span class="line">stop-writes-on-bgsave-error yes</span><br><span class="line"></span><br><span class="line"># rdb文件是否使用压缩格式</span><br><span class="line">rdbcompression yes</span><br><span class="line"></span><br><span class="line"># 是否对rdb文件进行校验和检验，通常为yes</span><br><span class="line">rdbchecksum yes</span><br></pre></td></tr></table></figure>
+
+
+<blockquote>
+<p>参考：<br><a href="https://segmentfault.com/a/1190000020518214" target="_blank" rel="noopener">https://segmentfault.com/a/1190000020518214</a><br><a href="https://blog.csdn.net/qq_41594698/article/details/94902254" target="_blank" rel="noopener">https://blog.csdn.net/qq_41594698/article/details/94902254</a></p>
+</blockquote>
+
+      
+    </div>
+    
+    
+    
+
+<div>
+  
+    <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束,感谢您的阅读-------------</div>
+    
+</div>
+
+  
+</div>
+
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    Golden
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://yoursite.com/2020/02/29/Redis%E4%B9%8BRDB%E6%8C%81%E4%B9%85%E5%8C%96/" title="Redis之RDB持久化">http://yoursite.com/2020/02/29/Redis%E4%B9%8BRDB%E6%8C%81%E4%B9%85%E5%8C%96/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/redis%E6%8C%81%E4%B9%85%E5%8C%96/" rel="tag"># redis持久化</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/02/29/Redis%E4%B9%8BAOF%E6%8C%81%E4%B9%85%E5%8C%96/" rel="next" title="Redis之AOF持久化">
+                <i class="fa fa-chevron-left"></i> Redis之AOF持久化
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="Golden" />
+            
+              <p class="site-author-name" itemprop="name">Golden</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/zhao520a1a" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:zhaojinxin_golden@163.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.cnblogs.com/zhaojinxin" target="_blank" title="博客园">
+                      
+                        <i class="fa fa-fw fa-crosshairs"></i>博客园</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.nowcoder.net/golden" target="_blank" title="牛客网">
+                      
+                        <i class="fa fa-fw fa-spinner"></i>牛客网</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.jianshu.com/u/85d91cc782b1" target="_blank" title="简书">
+                      
+                        <i class="fa fa-fw fa-heartbeat"></i>简书</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#定义"><span class="nav-number">1.</span> <span class="nav-text">定义</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#触发方式"><span class="nav-number">2.</span> <span class="nav-text">触发方式</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#自动触发"><span class="nav-number">2.1.</span> <span class="nav-text">自动触发</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#手动触发"><span class="nav-number">2.2.</span> <span class="nav-text">手动触发</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#对比"><span class="nav-number">2.3.</span> <span class="nav-text">对比</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#恢复数据"><span class="nav-number">3.</span> <span class="nav-text">恢复数据</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#停止持久化"><span class="nav-number">4.</span> <span class="nav-text">停止持久化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#RDB自动保存原理"><span class="nav-number">5.</span> <span class="nav-text">RDB自动保存原理</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#redisService结构"><span class="nav-number">5.1.</span> <span class="nav-text">redisService结构</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#dirty-计数器和lastsave-属性"><span class="nav-number">5.2.</span> <span class="nav-text">dirty 计数器和lastsave 属性</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#RDB文件结构"><span class="nav-number">6.</span> <span class="nav-text">RDB文件结构</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#REDIS部分"><span class="nav-number">6.1.</span> <span class="nav-text">REDIS部分</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#db-version部分"><span class="nav-number">6.2.</span> <span class="nav-text">db_version部分</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#databases部分"><span class="nav-number">6.3.</span> <span class="nav-text">databases部分</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#EOF部分"><span class="nav-number">6.4.</span> <span class="nav-text">EOF部分</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#check-sum部分"><span class="nav-number">6.5.</span> <span class="nav-text">check_sum部分</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#优势与劣势"><span class="nav-number">7.</span> <span class="nav-text">优势与劣势</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#优势"><span class="nav-number">7.1.</span> <span class="nav-text">优势</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#劣势"><span class="nav-number">7.2.</span> <span class="nav-text">劣势</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#相关配置"><span class="nav-number">8.</span> <span class="nav-text">相关配置</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Golden</span>
+
+  
+</div>
+
+<!-- 隐藏网页底部 powered By Hexo / 强力驱动
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+-->
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>
+
