@@ -82,26 +82,26 @@
 <meta name="description" content="[TOC]  先思考🤔，再了解，后总结  为什么要改动?遇到的问题：由于JDK中采用链地址法解决 哈希冲突，当冲突越来越多，导致链表越来越长，导致性能下降 。同时jdk1.7采用插法，存在死锁问题。解决方案： 当链表达到一定的阈值（默认为8）并且数组长度要小于64,会进行扩容操作，将一个长链表拆成两个短链表。当链表达到一定的阈值（默认为8）并且数组长度要大于等于64，那就采用红黑树存储；来把时间">
 <meta property="og:type" content="article">
 <meta property="og:title" content="HashMap原理">
-<meta property="og:url" content="http://yoursite.com/2020/03/13/HashMap%E5%8E%9F%E7%90%86/index.html">
+<meta property="og:url" content="https://zhao520a1a.github.io/2020/03/13/HashMap%E5%8E%9F%E7%90%86/index.html">
 <meta property="og:site_name" content="简笔话编程">
 <meta property="og:description" content="[TOC]  先思考🤔，再了解，后总结  为什么要改动?遇到的问题：由于JDK中采用链地址法解决 哈希冲突，当冲突越来越多，导致链表越来越长，导致性能下降 。同时jdk1.7采用插法，存在死锁问题。解决方案： 当链表达到一定的阈值（默认为8）并且数组长度要小于64,会进行扩容操作，将一个长链表拆成两个短链表。当链表达到一定的阈值（默认为8）并且数组长度要大于等于64，那就采用红黑树存储；来把时间">
-<meta property="og:image" content="http://yoursite.com/2020/03/13/HashMap%E5%8E%9F%E7%90%86/9E8D40D7-EAD8-4A07-9F68-8EA32319A369.png">
-<meta property="og:image" content="http://yoursite.com/2020/03/13/HashMap%E5%8E%9F%E7%90%86/D5C5B782-15C6-44B0-BD41-14648DEAED6F.png">
-<meta property="og:image" content="http://yoursite.com/2020/03/13/HashMap%E5%8E%9F%E7%90%86/BC1205EC-D6B3-465F-96D2-6AFBC08E734C.png">
-<meta property="og:image" content="http://yoursite.com/2020/03/13/HashMap%E5%8E%9F%E7%90%86/7FCE1BFB-8FA8-4183-8EBE-176CB0B0F44F.png">
-<meta property="og:image" content="http://yoursite.com/2020/03/13/HashMap%E5%8E%9F%E7%90%86/E7B32DCC-DA92-4D23-B2D9-9C9E066630E1.png">
-<meta property="og:image" content="http://yoursite.com/2020/03/13/HashMap%E5%8E%9F%E7%90%86/707BDA78-49AC-4113-8918-D90AB83AEE4C.png">
-<meta property="og:image" content="http://yoursite.com/2020/03/13/HashMap%E5%8E%9F%E7%90%86/E3C31D58-AAD3-45AE-88E5-6A818A491827.png">
-<meta property="og:image" content="http://yoursite.com/2020/03/13/HashMap%E5%8E%9F%E7%90%86/36639C5C-DC03-415C-9438-FCCF1F8D3A40.png">
-<meta property="og:image" content="http://yoursite.com/2020/03/13/HashMap%E5%8E%9F%E7%90%86/F3382595-C4A1-4166-B58A-69737A31E7DF.png">
-<meta property="og:image" content="http://yoursite.com/2020/03/13/HashMap%E5%8E%9F%E7%90%86/put%E6%96%B9%E6%B3%95%E6%B5%81%E7%A8%8B%E5%9B%BE.png">
-<meta property="og:image" content="http://yoursite.com/2020/03/13/HashMap%E5%8E%9F%E7%90%86/3A706DA9-ED7E-46D5-AE53-1C0D7B6FB379.png">
+<meta property="og:image" content="https://zhao520a1a.github.io/2020/03/13/HashMap%E5%8E%9F%E7%90%86/9E8D40D7-EAD8-4A07-9F68-8EA32319A369.png">
+<meta property="og:image" content="https://zhao520a1a.github.io/2020/03/13/HashMap%E5%8E%9F%E7%90%86/D5C5B782-15C6-44B0-BD41-14648DEAED6F.png">
+<meta property="og:image" content="https://zhao520a1a.github.io/2020/03/13/HashMap%E5%8E%9F%E7%90%86/BC1205EC-D6B3-465F-96D2-6AFBC08E734C.png">
+<meta property="og:image" content="https://zhao520a1a.github.io/2020/03/13/HashMap%E5%8E%9F%E7%90%86/7FCE1BFB-8FA8-4183-8EBE-176CB0B0F44F.png">
+<meta property="og:image" content="https://zhao520a1a.github.io/2020/03/13/HashMap%E5%8E%9F%E7%90%86/E7B32DCC-DA92-4D23-B2D9-9C9E066630E1.png">
+<meta property="og:image" content="https://zhao520a1a.github.io/2020/03/13/HashMap%E5%8E%9F%E7%90%86/707BDA78-49AC-4113-8918-D90AB83AEE4C.png">
+<meta property="og:image" content="https://zhao520a1a.github.io/2020/03/13/HashMap%E5%8E%9F%E7%90%86/E3C31D58-AAD3-45AE-88E5-6A818A491827.png">
+<meta property="og:image" content="https://zhao520a1a.github.io/2020/03/13/HashMap%E5%8E%9F%E7%90%86/36639C5C-DC03-415C-9438-FCCF1F8D3A40.png">
+<meta property="og:image" content="https://zhao520a1a.github.io/2020/03/13/HashMap%E5%8E%9F%E7%90%86/F3382595-C4A1-4166-B58A-69737A31E7DF.png">
+<meta property="og:image" content="https://zhao520a1a.github.io/2020/03/13/HashMap%E5%8E%9F%E7%90%86/put%E6%96%B9%E6%B3%95%E6%B5%81%E7%A8%8B%E5%9B%BE.png">
+<meta property="og:image" content="https://zhao520a1a.github.io/2020/03/13/HashMap%E5%8E%9F%E7%90%86/3A706DA9-ED7E-46D5-AE53-1C0D7B6FB379.png">
 <meta property="article:published_time" content="2020-03-13T06:02:15.665Z">
 <meta property="article:modified_time" content="2020-03-13T06:05:37.311Z">
 <meta property="article:author" content="Golden">
 <meta property="article:tag" content="jdk">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://yoursite.com/2020/03/13/HashMap%E5%8E%9F%E7%90%86/9E8D40D7-EAD8-4A07-9F68-8EA32319A369.png">
+<meta name="twitter:image" content="https://zhao520a1a.github.io/2020/03/13/HashMap%E5%8E%9F%E7%90%86/9E8D40D7-EAD8-4A07-9F68-8EA32319A369.png">
 
 
 
@@ -131,7 +131,7 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2020/03/13/HashMap原理/"/>
+  <link rel="canonical" href="https://zhao520a1a.github.io/2020/03/13/HashMap原理/"/>
 
 
 
@@ -276,7 +276,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/13/HashMap%E5%8E%9F%E7%90%86/">
+    <link itemprop="mainEntityOfPage" href="https://zhao520a1a.github.io/2020/03/13/HashMap%E5%8E%9F%E7%90%86/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Golden">
@@ -440,7 +440,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://yoursite.com/2020/03/13/HashMap%E5%8E%9F%E7%90%86/" title="HashMap原理">http://yoursite.com/2020/03/13/HashMap%E5%8E%9F%E7%90%86/</a>
+    <a href="https://zhao520a1a.github.io/2020/03/13/HashMap%E5%8E%9F%E7%90%86/" title="HashMap原理">https://zhao520a1a.github.io/2020/03/13/HashMap%E5%8E%9F%E7%90%86/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>

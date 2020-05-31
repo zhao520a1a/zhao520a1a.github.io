@@ -82,24 +82,24 @@
 <meta name="description" content="[TOC]  Redis并没有直接使用这些数据结构来实现键值对数据库,而是基于这些数据结构创建了一个对象系统,这个系统包含字符串对象、列表对象、哈希对象、集合对象和有序集合对象这五种类型的对象,而每种对象又通过不同的编码映射到不同的底层数据结构。   查看redis内部数据结构实现    127.0.0.1:6379&gt; lpush lst 123 456    (integer) 2">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Redis-对象系统（redisObject）">
-<meta property="og:url" content="http://yoursite.com/2020/02/29/Redis-%E5%AF%B9%E8%B1%A1%E7%B3%BB%E7%BB%9F%EF%BC%88redisObject%EF%BC%89/index.html">
+<meta property="og:url" content="https://zhao520a1a.github.io/2020/02/29/Redis-%E5%AF%B9%E8%B1%A1%E7%B3%BB%E7%BB%9F%EF%BC%88redisObject%EF%BC%89/index.html">
 <meta property="og:site_name" content="简笔话编程">
 <meta property="og:description" content="[TOC]  Redis并没有直接使用这些数据结构来实现键值对数据库,而是基于这些数据结构创建了一个对象系统,这个系统包含字符串对象、列表对象、哈希对象、集合对象和有序集合对象这五种类型的对象,而每种对象又通过不同的编码映射到不同的底层数据结构。   查看redis内部数据结构实现    127.0.0.1:6379&gt; lpush lst 123 456    (integer) 2">
-<meta property="og:image" content="http://yoursite.com/2020/02/29/Redis-%E5%AF%B9%E8%B1%A1%E7%B3%BB%E7%BB%9F%EF%BC%88redisObject%EF%BC%89/2317326A-2552-4DA1-8F31-03392B51FAFD.png">
-<meta property="og:image" content="http://yoursite.com/2020/02/29/Redis-%E5%AF%B9%E8%B1%A1%E7%B3%BB%E7%BB%9F%EF%BC%88redisObject%EF%BC%89/4B7F286E-9349-4C82-95A8-557FE0C3F1C5.png">
-<meta property="og:image" content="http://yoursite.com/2020/02/29/Redis-%E5%AF%B9%E8%B1%A1%E7%B3%BB%E7%BB%9F%EF%BC%88redisObject%EF%BC%89/51BE57A3-9D49-45EB-9168-C54204359155.png">
-<meta property="og:image" content="http://yoursite.com/2020/02/29/Redis-%E5%AF%B9%E8%B1%A1%E7%B3%BB%E7%BB%9F%EF%BC%88redisObject%EF%BC%89/E7BA2DBB-72A5-4CBE-B107-8744BA721C2B.png">
-<meta property="og:image" content="http://yoursite.com/2020/02/29/Redis-%E5%AF%B9%E8%B1%A1%E7%B3%BB%E7%BB%9F%EF%BC%88redisObject%EF%BC%89/D7FEAE33-745A-46C8-BC86-FC07FAF013D9.png">
-<meta property="og:image" content="http://yoursite.com/2020/02/29/Redis-%E5%AF%B9%E8%B1%A1%E7%B3%BB%E7%BB%9F%EF%BC%88redisObject%EF%BC%89/13E3C7F2-E66F-4C24-BA52-ACD04ED0972F.png">
-<meta property="og:image" content="http://yoursite.com/2020/02/29/Redis-%E5%AF%B9%E8%B1%A1%E7%B3%BB%E7%BB%9F%EF%BC%88redisObject%EF%BC%89/5D9DBFCE-4867-41B5-8533-4E24DF1D6C0E.png">
-<meta property="og:image" content="http://yoursite.com/2020/02/29/Redis-%E5%AF%B9%E8%B1%A1%E7%B3%BB%E7%BB%9F%EF%BC%88redisObject%EF%BC%89/0D0431D1-9C83-46BB-9E4E-13914C488A70.png">
-<meta property="og:image" content="http://yoursite.com/2020/02/29/Redis-%E5%AF%B9%E8%B1%A1%E7%B3%BB%E7%BB%9F%EF%BC%88redisObject%EF%BC%89/99DC6D5D-E26E-438C-94F4-1A146B88BBB5.png">
+<meta property="og:image" content="https://zhao520a1a.github.io/2020/02/29/Redis-%E5%AF%B9%E8%B1%A1%E7%B3%BB%E7%BB%9F%EF%BC%88redisObject%EF%BC%89/2317326A-2552-4DA1-8F31-03392B51FAFD.png">
+<meta property="og:image" content="https://zhao520a1a.github.io/2020/02/29/Redis-%E5%AF%B9%E8%B1%A1%E7%B3%BB%E7%BB%9F%EF%BC%88redisObject%EF%BC%89/4B7F286E-9349-4C82-95A8-557FE0C3F1C5.png">
+<meta property="og:image" content="https://zhao520a1a.github.io/2020/02/29/Redis-%E5%AF%B9%E8%B1%A1%E7%B3%BB%E7%BB%9F%EF%BC%88redisObject%EF%BC%89/51BE57A3-9D49-45EB-9168-C54204359155.png">
+<meta property="og:image" content="https://zhao520a1a.github.io/2020/02/29/Redis-%E5%AF%B9%E8%B1%A1%E7%B3%BB%E7%BB%9F%EF%BC%88redisObject%EF%BC%89/E7BA2DBB-72A5-4CBE-B107-8744BA721C2B.png">
+<meta property="og:image" content="https://zhao520a1a.github.io/2020/02/29/Redis-%E5%AF%B9%E8%B1%A1%E7%B3%BB%E7%BB%9F%EF%BC%88redisObject%EF%BC%89/D7FEAE33-745A-46C8-BC86-FC07FAF013D9.png">
+<meta property="og:image" content="https://zhao520a1a.github.io/2020/02/29/Redis-%E5%AF%B9%E8%B1%A1%E7%B3%BB%E7%BB%9F%EF%BC%88redisObject%EF%BC%89/13E3C7F2-E66F-4C24-BA52-ACD04ED0972F.png">
+<meta property="og:image" content="https://zhao520a1a.github.io/2020/02/29/Redis-%E5%AF%B9%E8%B1%A1%E7%B3%BB%E7%BB%9F%EF%BC%88redisObject%EF%BC%89/5D9DBFCE-4867-41B5-8533-4E24DF1D6C0E.png">
+<meta property="og:image" content="https://zhao520a1a.github.io/2020/02/29/Redis-%E5%AF%B9%E8%B1%A1%E7%B3%BB%E7%BB%9F%EF%BC%88redisObject%EF%BC%89/0D0431D1-9C83-46BB-9E4E-13914C488A70.png">
+<meta property="og:image" content="https://zhao520a1a.github.io/2020/02/29/Redis-%E5%AF%B9%E8%B1%A1%E7%B3%BB%E7%BB%9F%EF%BC%88redisObject%EF%BC%89/99DC6D5D-E26E-438C-94F4-1A146B88BBB5.png">
 <meta property="article:published_time" content="2020-02-29T05:30:10.161Z">
 <meta property="article:modified_time" content="2020-02-29T05:40:00.625Z">
 <meta property="article:author" content="Golden">
 <meta property="article:tag" content="redis内部结构">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://yoursite.com/2020/02/29/Redis-%E5%AF%B9%E8%B1%A1%E7%B3%BB%E7%BB%9F%EF%BC%88redisObject%EF%BC%89/2317326A-2552-4DA1-8F31-03392B51FAFD.png">
+<meta name="twitter:image" content="https://zhao520a1a.github.io/2020/02/29/Redis-%E5%AF%B9%E8%B1%A1%E7%B3%BB%E7%BB%9F%EF%BC%88redisObject%EF%BC%89/2317326A-2552-4DA1-8F31-03392B51FAFD.png">
 
 
 
@@ -129,7 +129,7 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2020/02/29/Redis-对象系统（redisObject）/"/>
+  <link rel="canonical" href="https://zhao520a1a.github.io/2020/02/29/Redis-对象系统（redisObject）/"/>
 
 
 
@@ -274,7 +274,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/02/29/Redis-%E5%AF%B9%E8%B1%A1%E7%B3%BB%E7%BB%9F%EF%BC%88redisObject%EF%BC%89/">
+    <link itemprop="mainEntityOfPage" href="https://zhao520a1a.github.io/2020/02/29/Redis-%E5%AF%B9%E8%B1%A1%E7%B3%BB%E7%BB%9F%EF%BC%88redisObject%EF%BC%89/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Golden">
@@ -481,7 +481,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://yoursite.com/2020/02/29/Redis-%E5%AF%B9%E8%B1%A1%E7%B3%BB%E7%BB%9F%EF%BC%88redisObject%EF%BC%89/" title="Redis-对象系统（redisObject）">http://yoursite.com/2020/02/29/Redis-%E5%AF%B9%E8%B1%A1%E7%B3%BB%E7%BB%9F%EF%BC%88redisObject%EF%BC%89/</a>
+    <a href="https://zhao520a1a.github.io/2020/02/29/Redis-%E5%AF%B9%E8%B1%A1%E7%B3%BB%E7%BB%9F%EF%BC%88redisObject%EF%BC%89/" title="Redis-对象系统（redisObject）">https://zhao520a1a.github.io/2020/02/29/Redis-%E5%AF%B9%E8%B1%A1%E7%B3%BB%E7%BB%9F%EF%BC%88redisObject%EF%BC%89/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>

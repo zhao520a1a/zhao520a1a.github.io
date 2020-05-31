@@ -82,20 +82,20 @@
 <meta name="description" content="[TOC] 定义 RDB 是 Redis 将 server 端的内存中的键值对以二进制的方式，持久化存储的一种文件形式。 文件中，一般会以 对象的长度+对象的格式来存储，只要根据这个格式，就能渐进的遍历整个文件。  Redis 还支持开启 LZF 的压缩算法，可以牺牲 CPU 时间，来减少 RDB 文件的大小；如果开启LZF并且超过20个 bytes 时， 会将压缩后的字符写入文件。  触发方式自">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Redis之RDB持久化">
-<meta property="og:url" content="http://yoursite.com/2020/02/29/Redis%E4%B9%8BRDB%E6%8C%81%E4%B9%85%E5%8C%96/index.html">
+<meta property="og:url" content="https://zhao520a1a.github.io/2020/02/29/Redis%E4%B9%8BRDB%E6%8C%81%E4%B9%85%E5%8C%96/index.html">
 <meta property="og:site_name" content="简笔话编程">
 <meta property="og:description" content="[TOC] 定义 RDB 是 Redis 将 server 端的内存中的键值对以二进制的方式，持久化存储的一种文件形式。 文件中，一般会以 对象的长度+对象的格式来存储，只要根据这个格式，就能渐进的遍历整个文件。  Redis 还支持开启 LZF 的压缩算法，可以牺牲 CPU 时间，来减少 RDB 文件的大小；如果开启LZF并且超过20个 bytes 时， 会将压缩后的字符写入文件。  触发方式自">
-<meta property="og:image" content="http://yoursite.com/2020/02/29/Redis%E4%B9%8BRDB%E6%8C%81%E4%B9%85%E5%8C%96/7241F4E3-2FE8-4A68-B725-1255B55A8DC4.png">
-<meta property="og:image" content="http://yoursite.com/2020/02/29/Redis%E4%B9%8BRDB%E6%8C%81%E4%B9%85%E5%8C%96/A97F3ED8-C7D5-463E-B95C-35D855850CF8.png">
-<meta property="og:image" content="http://yoursite.com/2020/02/29/Redis%E4%B9%8BRDB%E6%8C%81%E4%B9%85%E5%8C%96/5E259A51-871D-4D29-BD79-B13A1B1BDF63.png">
-<meta property="og:image" content="http://yoursite.com/2020/02/29/Redis%E4%B9%8BRDB%E6%8C%81%E4%B9%85%E5%8C%96/201A1691-0544-4C53-8E3D-4F90303AE3F2.png">
-<meta property="og:image" content="http://yoursite.com/2020/02/29/Redis%E4%B9%8BRDB%E6%8C%81%E4%B9%85%E5%8C%96/36FBD139-51B0-4B9D-83AC-AF131CBA5801.png">
+<meta property="og:image" content="https://zhao520a1a.github.io/2020/02/29/Redis%E4%B9%8BRDB%E6%8C%81%E4%B9%85%E5%8C%96/7241F4E3-2FE8-4A68-B725-1255B55A8DC4.png">
+<meta property="og:image" content="https://zhao520a1a.github.io/2020/02/29/Redis%E4%B9%8BRDB%E6%8C%81%E4%B9%85%E5%8C%96/A97F3ED8-C7D5-463E-B95C-35D855850CF8.png">
+<meta property="og:image" content="https://zhao520a1a.github.io/2020/02/29/Redis%E4%B9%8BRDB%E6%8C%81%E4%B9%85%E5%8C%96/5E259A51-871D-4D29-BD79-B13A1B1BDF63.png">
+<meta property="og:image" content="https://zhao520a1a.github.io/2020/02/29/Redis%E4%B9%8BRDB%E6%8C%81%E4%B9%85%E5%8C%96/201A1691-0544-4C53-8E3D-4F90303AE3F2.png">
+<meta property="og:image" content="https://zhao520a1a.github.io/2020/02/29/Redis%E4%B9%8BRDB%E6%8C%81%E4%B9%85%E5%8C%96/36FBD139-51B0-4B9D-83AC-AF131CBA5801.png">
 <meta property="article:published_time" content="2020-02-29T08:06:28.788Z">
 <meta property="article:modified_time" content="2020-02-29T08:07:32.510Z">
 <meta property="article:author" content="Golden">
 <meta property="article:tag" content="redis持久化">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://yoursite.com/2020/02/29/Redis%E4%B9%8BRDB%E6%8C%81%E4%B9%85%E5%8C%96/7241F4E3-2FE8-4A68-B725-1255B55A8DC4.png">
+<meta name="twitter:image" content="https://zhao520a1a.github.io/2020/02/29/Redis%E4%B9%8BRDB%E6%8C%81%E4%B9%85%E5%8C%96/7241F4E3-2FE8-4A68-B725-1255B55A8DC4.png">
 
 
 
@@ -125,7 +125,7 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2020/02/29/Redis之RDB持久化/"/>
+  <link rel="canonical" href="https://zhao520a1a.github.io/2020/02/29/Redis之RDB持久化/"/>
 
 
 
@@ -270,7 +270,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/02/29/Redis%E4%B9%8BRDB%E6%8C%81%E4%B9%85%E5%8C%96/">
+    <link itemprop="mainEntityOfPage" href="https://zhao520a1a.github.io/2020/02/29/Redis%E4%B9%8BRDB%E6%8C%81%E4%B9%85%E5%8C%96/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Golden">
@@ -442,7 +442,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://yoursite.com/2020/02/29/Redis%E4%B9%8BRDB%E6%8C%81%E4%B9%85%E5%8C%96/" title="Redis之RDB持久化">http://yoursite.com/2020/02/29/Redis%E4%B9%8BRDB%E6%8C%81%E4%B9%85%E5%8C%96/</a>
+    <a href="https://zhao520a1a.github.io/2020/02/29/Redis%E4%B9%8BRDB%E6%8C%81%E4%B9%85%E5%8C%96/" title="Redis之RDB持久化">https://zhao520a1a.github.io/2020/02/29/Redis%E4%B9%8BRDB%E6%8C%81%E4%B9%85%E5%8C%96/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>

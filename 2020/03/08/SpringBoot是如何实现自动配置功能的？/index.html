@@ -82,26 +82,26 @@
 <meta name="description" content="[TOC] SpringBoot是如何实现自动配置功能的？所谓自动配置，就是通过预先定义了很多个配置类(带@Configuration注解的类)，并将这些类装载到Spring容器中去。具体实现在AutoConfigurationImportSelector类中。 怎样开启自动配置功能？ SpringBoot项目启动类 12345678@SpringBootApplication &#x2F;&#x2F;声明Sprin">
 <meta property="og:type" content="article">
 <meta property="og:title" content="SpringBoot是如何实现自动配置功能的？">
-<meta property="og:url" content="http://yoursite.com/2020/03/08/SpringBoot%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE%E5%8A%9F%E8%83%BD%E7%9A%84%EF%BC%9F/index.html">
+<meta property="og:url" content="https://zhao520a1a.github.io/2020/03/08/SpringBoot%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE%E5%8A%9F%E8%83%BD%E7%9A%84%EF%BC%9F/index.html">
 <meta property="og:site_name" content="简笔话编程">
 <meta property="og:description" content="[TOC] SpringBoot是如何实现自动配置功能的？所谓自动配置，就是通过预先定义了很多个配置类(带@Configuration注解的类)，并将这些类装载到Spring容器中去。具体实现在AutoConfigurationImportSelector类中。 怎样开启自动配置功能？ SpringBoot项目启动类 12345678@SpringBootApplication &#x2F;&#x2F;声明Sprin">
-<meta property="og:image" content="http://yoursite.com/2020/03/08/SpringBoot%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE%E5%8A%9F%E8%83%BD%E7%9A%84%EF%BC%9F/D93C18D4-3C77-4353-8C29-3A92890E4289.png">
-<meta property="og:image" content="http://yoursite.com/2020/03/08/SpringBoot%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE%E5%8A%9F%E8%83%BD%E7%9A%84%EF%BC%9F/D0019C49-AA58-4038-B1E4-CA720F7B9EA7.png">
-<meta property="og:image" content="http://yoursite.com/2020/03/08/SpringBoot%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE%E5%8A%9F%E8%83%BD%E7%9A%84%EF%BC%9F/1864D1AE-1012-4C31-BDC1-1545007EFA04.png">
-<meta property="og:image" content="http://yoursite.com/2020/03/08/SpringBoot%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE%E5%8A%9F%E8%83%BD%E7%9A%84%EF%BC%9F/ACA85B17-9C69-4F66-9F52-92756352BBAB.png">
-<meta property="og:image" content="http://yoursite.com/2020/03/08/SpringBoot%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE%E5%8A%9F%E8%83%BD%E7%9A%84%EF%BC%9F/B251045C-4B27-4C60-AC6F-8B3BCEC6FA93.png">
-<meta property="og:image" content="http://yoursite.com/2020/03/08/SpringBoot%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE%E5%8A%9F%E8%83%BD%E7%9A%84%EF%BC%9F/48236CB3-BCCF-494C-8CF0-BA7AC638D19C.png">
-<meta property="og:image" content="http://yoursite.com/2020/03/08/SpringBoot%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE%E5%8A%9F%E8%83%BD%E7%9A%84%EF%BC%9F/0FE1E977-D1BD-428A-8A39-1C17738E41F2.png">
-<meta property="og:image" content="http://yoursite.com/2020/03/08/SpringBoot%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE%E5%8A%9F%E8%83%BD%E7%9A%84%EF%BC%9F/B58771CC-E8C0-4982-B4FA-72D4919B3D08.png">
-<meta property="og:image" content="http://yoursite.com/2020/03/08/SpringBoot%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE%E5%8A%9F%E8%83%BD%E7%9A%84%EF%BC%9F/4A50B4CC-EAEA-4BDF-B458-8341A03EB170.png">
-<meta property="og:image" content="http://yoursite.com/2020/03/08/SpringBoot%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE%E5%8A%9F%E8%83%BD%E7%9A%84%EF%BC%9F/B0E99013-CC2F-438A-BC5C-04733DCF921D.png">
-<meta property="og:image" content="http://yoursite.com/2020/03/08/SpringBoot%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE%E5%8A%9F%E8%83%BD%E7%9A%84%EF%BC%9F/8628E8E5-1136-4B01-AA52-11997FEAE42A.png">
+<meta property="og:image" content="https://zhao520a1a.github.io/2020/03/08/SpringBoot%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE%E5%8A%9F%E8%83%BD%E7%9A%84%EF%BC%9F/D93C18D4-3C77-4353-8C29-3A92890E4289.png">
+<meta property="og:image" content="https://zhao520a1a.github.io/2020/03/08/SpringBoot%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE%E5%8A%9F%E8%83%BD%E7%9A%84%EF%BC%9F/D0019C49-AA58-4038-B1E4-CA720F7B9EA7.png">
+<meta property="og:image" content="https://zhao520a1a.github.io/2020/03/08/SpringBoot%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE%E5%8A%9F%E8%83%BD%E7%9A%84%EF%BC%9F/1864D1AE-1012-4C31-BDC1-1545007EFA04.png">
+<meta property="og:image" content="https://zhao520a1a.github.io/2020/03/08/SpringBoot%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE%E5%8A%9F%E8%83%BD%E7%9A%84%EF%BC%9F/ACA85B17-9C69-4F66-9F52-92756352BBAB.png">
+<meta property="og:image" content="https://zhao520a1a.github.io/2020/03/08/SpringBoot%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE%E5%8A%9F%E8%83%BD%E7%9A%84%EF%BC%9F/B251045C-4B27-4C60-AC6F-8B3BCEC6FA93.png">
+<meta property="og:image" content="https://zhao520a1a.github.io/2020/03/08/SpringBoot%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE%E5%8A%9F%E8%83%BD%E7%9A%84%EF%BC%9F/48236CB3-BCCF-494C-8CF0-BA7AC638D19C.png">
+<meta property="og:image" content="https://zhao520a1a.github.io/2020/03/08/SpringBoot%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE%E5%8A%9F%E8%83%BD%E7%9A%84%EF%BC%9F/0FE1E977-D1BD-428A-8A39-1C17738E41F2.png">
+<meta property="og:image" content="https://zhao520a1a.github.io/2020/03/08/SpringBoot%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE%E5%8A%9F%E8%83%BD%E7%9A%84%EF%BC%9F/B58771CC-E8C0-4982-B4FA-72D4919B3D08.png">
+<meta property="og:image" content="https://zhao520a1a.github.io/2020/03/08/SpringBoot%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE%E5%8A%9F%E8%83%BD%E7%9A%84%EF%BC%9F/4A50B4CC-EAEA-4BDF-B458-8341A03EB170.png">
+<meta property="og:image" content="https://zhao520a1a.github.io/2020/03/08/SpringBoot%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE%E5%8A%9F%E8%83%BD%E7%9A%84%EF%BC%9F/B0E99013-CC2F-438A-BC5C-04733DCF921D.png">
+<meta property="og:image" content="https://zhao520a1a.github.io/2020/03/08/SpringBoot%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE%E5%8A%9F%E8%83%BD%E7%9A%84%EF%BC%9F/8628E8E5-1136-4B01-AA52-11997FEAE42A.png">
 <meta property="article:published_time" content="2020-03-08T13:28:44.769Z">
 <meta property="article:modified_time" content="2020-03-08T13:30:41.972Z">
 <meta property="article:author" content="Golden">
 <meta property="article:tag" content="spring自动配置">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://yoursite.com/2020/03/08/SpringBoot%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE%E5%8A%9F%E8%83%BD%E7%9A%84%EF%BC%9F/D93C18D4-3C77-4353-8C29-3A92890E4289.png">
+<meta name="twitter:image" content="https://zhao520a1a.github.io/2020/03/08/SpringBoot%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE%E5%8A%9F%E8%83%BD%E7%9A%84%EF%BC%9F/D93C18D4-3C77-4353-8C29-3A92890E4289.png">
 
 
 
@@ -131,7 +131,7 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2020/03/08/SpringBoot是如何实现自动配置功能的？/"/>
+  <link rel="canonical" href="https://zhao520a1a.github.io/2020/03/08/SpringBoot是如何实现自动配置功能的？/"/>
 
 
 
@@ -276,7 +276,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/08/SpringBoot%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE%E5%8A%9F%E8%83%BD%E7%9A%84%EF%BC%9F/">
+    <link itemprop="mainEntityOfPage" href="https://zhao520a1a.github.io/2020/03/08/SpringBoot%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE%E5%8A%9F%E8%83%BD%E7%9A%84%EF%BC%9F/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Golden">
@@ -466,7 +466,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://yoursite.com/2020/03/08/SpringBoot%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE%E5%8A%9F%E8%83%BD%E7%9A%84%EF%BC%9F/" title="SpringBoot是如何实现自动配置功能的？">http://yoursite.com/2020/03/08/SpringBoot%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE%E5%8A%9F%E8%83%BD%E7%9A%84%EF%BC%9F/</a>
+    <a href="https://zhao520a1a.github.io/2020/03/08/SpringBoot%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE%E5%8A%9F%E8%83%BD%E7%9A%84%EF%BC%9F/" title="SpringBoot是如何实现自动配置功能的？">https://zhao520a1a.github.io/2020/03/08/SpringBoot%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE%E5%8A%9F%E8%83%BD%E7%9A%84%EF%BC%9F/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>

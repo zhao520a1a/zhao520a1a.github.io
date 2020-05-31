@@ -82,16 +82,16 @@
 <meta name="description" content="指导原则几乎不需要指向接口类型的指针interface的合理性验证1var _ http.Handler &#x3D; (*Handler)(nil)  指针可以调用值方法！内部状态的 slices 或 maps输入输出要复制Channel 的 size 要么是 1，要么是无缓冲的，其他尺寸要严格审查使用defer释放资源12p.Lock()defer p.Unlock()  Defer 的开销非常小，只">
 <meta property="og:type" content="article">
 <meta property="og:title" content="GO代码风格总结（私藏）">
-<meta property="og:url" content="http://yoursite.com/2020/05/31/GO%E4%BB%A3%E7%A0%81%E9%A3%8E%E6%A0%BC%E6%80%BB%E7%BB%93%EF%BC%88%E7%A7%81%E8%97%8F%EF%BC%89/index.html">
+<meta property="og:url" content="https://zhao520a1a.github.io/2020/05/31/GO%E4%BB%A3%E7%A0%81%E9%A3%8E%E6%A0%BC%E6%80%BB%E7%BB%93%EF%BC%88%E7%A7%81%E8%97%8F%EF%BC%89/index.html">
 <meta property="og:site_name" content="简笔话编程">
 <meta property="og:description" content="指导原则几乎不需要指向接口类型的指针interface的合理性验证1var _ http.Handler &#x3D; (*Handler)(nil)  指针可以调用值方法！内部状态的 slices 或 maps输入输出要复制Channel 的 size 要么是 1，要么是无缓冲的，其他尺寸要严格审查使用defer释放资源12p.Lock()defer p.Unlock()  Defer 的开销非常小，只">
-<meta property="og:image" content="http://yoursite.com/2020/05/31/GO%E4%BB%A3%E7%A0%81%E9%A3%8E%E6%A0%BC%E6%80%BB%E7%BB%93%EF%BC%88%E7%A7%81%E8%97%8F%EF%BC%89/132.jpeg">
+<meta property="og:image" content="https://zhao520a1a.github.io/2020/05/31/GO%E4%BB%A3%E7%A0%81%E9%A3%8E%E6%A0%BC%E6%80%BB%E7%BB%93%EF%BC%88%E7%A7%81%E8%97%8F%EF%BC%89/132.jpeg">
 <meta property="article:published_time" content="2020-05-31T03:41:53.935Z">
 <meta property="article:modified_time" content="2020-05-31T03:41:53.935Z">
 <meta property="article:author" content="Golden">
 <meta property="article:tag" content="Go入门">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://yoursite.com/2020/05/31/GO%E4%BB%A3%E7%A0%81%E9%A3%8E%E6%A0%BC%E6%80%BB%E7%BB%93%EF%BC%88%E7%A7%81%E8%97%8F%EF%BC%89/132.jpeg">
+<meta name="twitter:image" content="https://zhao520a1a.github.io/2020/05/31/GO%E4%BB%A3%E7%A0%81%E9%A3%8E%E6%A0%BC%E6%80%BB%E7%BB%93%EF%BC%88%E7%A7%81%E8%97%8F%EF%BC%89/132.jpeg">
 
 
 
@@ -121,7 +121,7 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2020/05/31/GO代码风格总结（私藏）/"/>
+  <link rel="canonical" href="https://zhao520a1a.github.io/2020/05/31/GO代码风格总结（私藏）/"/>
 
 
 
@@ -266,7 +266,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/31/GO%E4%BB%A3%E7%A0%81%E9%A3%8E%E6%A0%BC%E6%80%BB%E7%BB%93%EF%BC%88%E7%A7%81%E8%97%8F%EF%BC%89/">
+    <link itemprop="mainEntityOfPage" href="https://zhao520a1a.github.io/2020/05/31/GO%E4%BB%A3%E7%A0%81%E9%A3%8E%E6%A0%BC%E6%80%BB%E7%BB%93%EF%BC%88%E7%A7%81%E8%97%8F%EF%BC%89/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Golden">
@@ -528,7 +528,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://yoursite.com/2020/05/31/GO%E4%BB%A3%E7%A0%81%E9%A3%8E%E6%A0%BC%E6%80%BB%E7%BB%93%EF%BC%88%E7%A7%81%E8%97%8F%EF%BC%89/" title="GO代码风格总结（私藏）">http://yoursite.com/2020/05/31/GO%E4%BB%A3%E7%A0%81%E9%A3%8E%E6%A0%BC%E6%80%BB%E7%BB%93%EF%BC%88%E7%A7%81%E8%97%8F%EF%BC%89/</a>
+    <a href="https://zhao520a1a.github.io/2020/05/31/GO%E4%BB%A3%E7%A0%81%E9%A3%8E%E6%A0%BC%E6%80%BB%E7%BB%93%EF%BC%88%E7%A7%81%E8%97%8F%EF%BC%89/" title="GO代码风格总结（私藏）">https://zhao520a1a.github.io/2020/05/31/GO%E4%BB%A3%E7%A0%81%E9%A3%8E%E6%A0%BC%E6%80%BB%E7%BB%93%EF%BC%88%E7%A7%81%E8%97%8F%EF%BC%89/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>

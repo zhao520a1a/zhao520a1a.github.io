@@ -82,18 +82,18 @@
 <meta name="description" content="[TOC]  引言：没有直接使用C语音的传统字符串表示，即：以空字符串结尾的字符数组，以下简称C字符串。而是自己构建名为SDS（simple dynamic string）的抽象类型。  为什么Redis使用SDS而不是C字符串？基于对字符串的安全性、效率以及功能方面的要求，C字符串不能满足。SDS具有以下优点：  常数复杂度获取字符串长度 - C字符串不记录自身长度 杜绝缓冲区溢出 - SDS会">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Redis-简单动态字符串(SDS)">
-<meta property="og:url" content="http://yoursite.com/2020/02/29/Redis-%E7%AE%80%E5%8D%95%E5%8A%A8%E6%80%81%E5%AD%97%E7%AC%A6%E4%B8%B2(SDS)/index.html">
+<meta property="og:url" content="https://zhao520a1a.github.io/2020/02/29/Redis-%E7%AE%80%E5%8D%95%E5%8A%A8%E6%80%81%E5%AD%97%E7%AC%A6%E4%B8%B2(SDS)/index.html">
 <meta property="og:site_name" content="简笔话编程">
 <meta property="og:description" content="[TOC]  引言：没有直接使用C语音的传统字符串表示，即：以空字符串结尾的字符数组，以下简称C字符串。而是自己构建名为SDS（simple dynamic string）的抽象类型。  为什么Redis使用SDS而不是C字符串？基于对字符串的安全性、效率以及功能方面的要求，C字符串不能满足。SDS具有以下优点：  常数复杂度获取字符串长度 - C字符串不记录自身长度 杜绝缓冲区溢出 - SDS会">
-<meta property="og:image" content="http://yoursite.com/2020/02/29/Redis-%E7%AE%80%E5%8D%95%E5%8A%A8%E6%80%81%E5%AD%97%E7%AC%A6%E4%B8%B2(SDS)/75214435-D430-495D-8550-44D86559C5C5.png">
-<meta property="og:image" content="http://yoursite.com/2020/02/29/Redis-%E7%AE%80%E5%8D%95%E5%8A%A8%E6%80%81%E5%AD%97%E7%AC%A6%E4%B8%B2(SDS)/411AB69A-7601-44FC-A49A-95408A9EDD69.png">
-<meta property="og:image" content="http://yoursite.com/2020/02/29/Redis-%E7%AE%80%E5%8D%95%E5%8A%A8%E6%80%81%E5%AD%97%E7%AC%A6%E4%B8%B2(SDS)/51E6893D-A211-4E01-BB9D-A186298E9540.png">
+<meta property="og:image" content="https://zhao520a1a.github.io/2020/02/29/Redis-%E7%AE%80%E5%8D%95%E5%8A%A8%E6%80%81%E5%AD%97%E7%AC%A6%E4%B8%B2(SDS)/75214435-D430-495D-8550-44D86559C5C5.png">
+<meta property="og:image" content="https://zhao520a1a.github.io/2020/02/29/Redis-%E7%AE%80%E5%8D%95%E5%8A%A8%E6%80%81%E5%AD%97%E7%AC%A6%E4%B8%B2(SDS)/411AB69A-7601-44FC-A49A-95408A9EDD69.png">
+<meta property="og:image" content="https://zhao520a1a.github.io/2020/02/29/Redis-%E7%AE%80%E5%8D%95%E5%8A%A8%E6%80%81%E5%AD%97%E7%AC%A6%E4%B8%B2(SDS)/51E6893D-A211-4E01-BB9D-A186298E9540.png">
 <meta property="article:published_time" content="2020-02-29T05:31:00.604Z">
 <meta property="article:modified_time" content="2020-02-29T05:40:36.976Z">
 <meta property="article:author" content="Golden">
 <meta property="article:tag" content="redis内部结构">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://yoursite.com/2020/02/29/Redis-%E7%AE%80%E5%8D%95%E5%8A%A8%E6%80%81%E5%AD%97%E7%AC%A6%E4%B8%B2(SDS)/75214435-D430-495D-8550-44D86559C5C5.png">
+<meta name="twitter:image" content="https://zhao520a1a.github.io/2020/02/29/Redis-%E7%AE%80%E5%8D%95%E5%8A%A8%E6%80%81%E5%AD%97%E7%AC%A6%E4%B8%B2(SDS)/75214435-D430-495D-8550-44D86559C5C5.png">
 
 
 
@@ -123,7 +123,7 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2020/02/29/Redis-简单动态字符串(SDS)/"/>
+  <link rel="canonical" href="https://zhao520a1a.github.io/2020/02/29/Redis-简单动态字符串(SDS)/"/>
 
 
 
@@ -268,7 +268,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/02/29/Redis-%E7%AE%80%E5%8D%95%E5%8A%A8%E6%80%81%E5%AD%97%E7%AC%A6%E4%B8%B2(SDS)/">
+    <link itemprop="mainEntityOfPage" href="https://zhao520a1a.github.io/2020/02/29/Redis-%E7%AE%80%E5%8D%95%E5%8A%A8%E6%80%81%E5%AD%97%E7%AC%A6%E4%B8%B2(SDS)/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Golden">
@@ -439,7 +439,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://yoursite.com/2020/02/29/Redis-%E7%AE%80%E5%8D%95%E5%8A%A8%E6%80%81%E5%AD%97%E7%AC%A6%E4%B8%B2(SDS)/" title="Redis-简单动态字符串(SDS)">http://yoursite.com/2020/02/29/Redis-%E7%AE%80%E5%8D%95%E5%8A%A8%E6%80%81%E5%AD%97%E7%AC%A6%E4%B8%B2(SDS)/</a>
+    <a href="https://zhao520a1a.github.io/2020/02/29/Redis-%E7%AE%80%E5%8D%95%E5%8A%A8%E6%80%81%E5%AD%97%E7%AC%A6%E4%B8%B2(SDS)/" title="Redis-简单动态字符串(SDS)">https://zhao520a1a.github.io/2020/02/29/Redis-%E7%AE%80%E5%8D%95%E5%8A%A8%E6%80%81%E5%AD%97%E7%AC%A6%E4%B8%B2(SDS)/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>

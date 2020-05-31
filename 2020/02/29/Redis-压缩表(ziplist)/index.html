@@ -82,23 +82,23 @@
 <meta name="description" content="[TOC] 定义压缩表没有数据结构代码定义，完全是通过一系列特殊编码的连续内存块组成的顺序性数据结构。它为了节约内存而而开发的。即：通过特殊的编码方式将数据存储在连续的内存中。 用途 在3.2之前是列表键的底层实现之一，在3.2之后被quicklist替代。 是有序集合键的底层实现之一。 是哈希键的底层实现之一。（ 当一个哈希只包含少量键值对,并且每个键值对的键和值要么就是小整数值,要么就是长度比">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Redis-压缩表(ziplist)">
-<meta property="og:url" content="http://yoursite.com/2020/02/29/Redis-%E5%8E%8B%E7%BC%A9%E8%A1%A8(ziplist)/index.html">
+<meta property="og:url" content="https://zhao520a1a.github.io/2020/02/29/Redis-%E5%8E%8B%E7%BC%A9%E8%A1%A8(ziplist)/index.html">
 <meta property="og:site_name" content="简笔话编程">
 <meta property="og:description" content="[TOC] 定义压缩表没有数据结构代码定义，完全是通过一系列特殊编码的连续内存块组成的顺序性数据结构。它为了节约内存而而开发的。即：通过特殊的编码方式将数据存储在连续的内存中。 用途 在3.2之前是列表键的底层实现之一，在3.2之后被quicklist替代。 是有序集合键的底层实现之一。 是哈希键的底层实现之一。（ 当一个哈希只包含少量键值对,并且每个键值对的键和值要么就是小整数值,要么就是长度比">
-<meta property="og:image" content="http://yoursite.com/2020/02/29/Redis-%E5%8E%8B%E7%BC%A9%E8%A1%A8(ziplist)/ADDA7AC4-1825-4575-8FC2-D3A17A73B5C6.png">
-<meta property="og:image" content="http://yoursite.com/2020/02/29/Redis-%E5%8E%8B%E7%BC%A9%E8%A1%A8(ziplist)/223B660E-96BA-449E-957F-C8C06DC070CC.png">
-<meta property="og:image" content="http://yoursite.com/2020/02/29/Redis-%E5%8E%8B%E7%BC%A9%E8%A1%A8(ziplist)/8257C83C-3D96-4705-83B6-3440AC8899F8.png">
-<meta property="og:image" content="http://yoursite.com/2020/02/29/Redis-%E5%8E%8B%E7%BC%A9%E8%A1%A8(ziplist)/E50C5DA8-79B6-475F-B82C-0521382145B7.png">
-<meta property="og:image" content="http://yoursite.com/2020/02/29/Redis-%E5%8E%8B%E7%BC%A9%E8%A1%A8(ziplist)/6B681D3A-EEBF-44A8-A542-5BA1536424BF.png">
-<meta property="og:image" content="http://yoursite.com/2020/02/29/Redis-%E5%8E%8B%E7%BC%A9%E8%A1%A8(ziplist)/6ACF8189-B76A-4A1A-A035-7DC5B4F1C4CA.png">
-<meta property="og:image" content="http://yoursite.com/2020/02/29/Redis-%E5%8E%8B%E7%BC%A9%E8%A1%A8(ziplist)/22C3F9A4-2791-42AC-8A94-CE6E4F988889.png">
-<meta property="og:image" content="http://yoursite.com/2020/02/29/Redis-%E5%8E%8B%E7%BC%A9%E8%A1%A8(ziplist)/CFE0134B-D1D9-4231-9A41-80A0A3E2D50C.png">
+<meta property="og:image" content="https://zhao520a1a.github.io/2020/02/29/Redis-%E5%8E%8B%E7%BC%A9%E8%A1%A8(ziplist)/ADDA7AC4-1825-4575-8FC2-D3A17A73B5C6.png">
+<meta property="og:image" content="https://zhao520a1a.github.io/2020/02/29/Redis-%E5%8E%8B%E7%BC%A9%E8%A1%A8(ziplist)/223B660E-96BA-449E-957F-C8C06DC070CC.png">
+<meta property="og:image" content="https://zhao520a1a.github.io/2020/02/29/Redis-%E5%8E%8B%E7%BC%A9%E8%A1%A8(ziplist)/8257C83C-3D96-4705-83B6-3440AC8899F8.png">
+<meta property="og:image" content="https://zhao520a1a.github.io/2020/02/29/Redis-%E5%8E%8B%E7%BC%A9%E8%A1%A8(ziplist)/E50C5DA8-79B6-475F-B82C-0521382145B7.png">
+<meta property="og:image" content="https://zhao520a1a.github.io/2020/02/29/Redis-%E5%8E%8B%E7%BC%A9%E8%A1%A8(ziplist)/6B681D3A-EEBF-44A8-A542-5BA1536424BF.png">
+<meta property="og:image" content="https://zhao520a1a.github.io/2020/02/29/Redis-%E5%8E%8B%E7%BC%A9%E8%A1%A8(ziplist)/6ACF8189-B76A-4A1A-A035-7DC5B4F1C4CA.png">
+<meta property="og:image" content="https://zhao520a1a.github.io/2020/02/29/Redis-%E5%8E%8B%E7%BC%A9%E8%A1%A8(ziplist)/22C3F9A4-2791-42AC-8A94-CE6E4F988889.png">
+<meta property="og:image" content="https://zhao520a1a.github.io/2020/02/29/Redis-%E5%8E%8B%E7%BC%A9%E8%A1%A8(ziplist)/CFE0134B-D1D9-4231-9A41-80A0A3E2D50C.png">
 <meta property="article:published_time" content="2020-02-29T05:30:18.645Z">
 <meta property="article:modified_time" content="2020-02-29T05:41:15.654Z">
 <meta property="article:author" content="Golden">
 <meta property="article:tag" content="redis内部结构">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://yoursite.com/2020/02/29/Redis-%E5%8E%8B%E7%BC%A9%E8%A1%A8(ziplist)/ADDA7AC4-1825-4575-8FC2-D3A17A73B5C6.png">
+<meta name="twitter:image" content="https://zhao520a1a.github.io/2020/02/29/Redis-%E5%8E%8B%E7%BC%A9%E8%A1%A8(ziplist)/ADDA7AC4-1825-4575-8FC2-D3A17A73B5C6.png">
 
 
 
@@ -128,7 +128,7 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2020/02/29/Redis-压缩表(ziplist)/"/>
+  <link rel="canonical" href="https://zhao520a1a.github.io/2020/02/29/Redis-压缩表(ziplist)/"/>
 
 
 
@@ -273,7 +273,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/02/29/Redis-%E5%8E%8B%E7%BC%A9%E8%A1%A8(ziplist)/">
+    <link itemprop="mainEntityOfPage" href="https://zhao520a1a.github.io/2020/02/29/Redis-%E5%8E%8B%E7%BC%A9%E8%A1%A8(ziplist)/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Golden">
@@ -458,7 +458,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://yoursite.com/2020/02/29/Redis-%E5%8E%8B%E7%BC%A9%E8%A1%A8(ziplist)/" title="Redis-压缩表(ziplist)">http://yoursite.com/2020/02/29/Redis-%E5%8E%8B%E7%BC%A9%E8%A1%A8(ziplist)/</a>
+    <a href="https://zhao520a1a.github.io/2020/02/29/Redis-%E5%8E%8B%E7%BC%A9%E8%A1%A8(ziplist)/" title="Redis-压缩表(ziplist)">https://zhao520a1a.github.io/2020/02/29/Redis-%E5%8E%8B%E7%BC%A9%E8%A1%A8(ziplist)/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>
