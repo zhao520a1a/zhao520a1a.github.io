@@ -85,14 +85,14 @@
 <meta property="og:url" content="https://zhao520a1a.github.io/2020/07/26/shell%E5%AE%9E%E7%8E%B0SSH%E8%87%AA%E5%8A%A8%E7%99%BB%E9%99%86/index.html">
 <meta property="og:site_name" content="简笔话编程">
 <meta property="og:description" content="[TOC]  作为一个工具人，时刻保持着偷懒意识，在类unix系统中，不要浪费了shell这种神奇的工具，让计算机为我们服务~   基础知识，复习一下脚本的运行方式通过文件名执行 .&#x2F;file_name.sh注：需要执行权限，可通过 sudo chmod +x .&#x2F;file_name.sh 添加 指定脚本解释器来执行文件 sh file_name.shsh file_name.sh 就是指定了脚本">
-<meta property="og:image" content="https://images.pexels.com/photos/1938123/pexels-photo-1938123.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500">
+<meta property="og:image" content="https://cdn.colorhub.me/xzDOaNr7Fxor-PyQZV6C1f2rIGocJ4nh--BrR6e-e20/auto/0/500/ce/0/bG9jYWw6Ly8vZjUv/NDkvZjhjZDJiZmVk/MTBiOTFlMjA1ZDli/NTU5NDQwOGQ4ZGRk/MWIzZjU0OS5qcGVn.jpg">
 <meta property="og:image" content="https://zhao520a1a.github.io/2020/07/26/shell%E5%AE%9E%E7%8E%B0SSH%E8%87%AA%E5%8A%A8%E7%99%BB%E9%99%86/image-20200726174911885.png">
-<meta property="article:published_time" content="2020-07-26T12:23:49.700Z">
-<meta property="article:modified_time" content="2020-07-26T12:23:49.700Z">
+<meta property="article:published_time" content="2020-07-26T13:55:02.434Z">
+<meta property="article:modified_time" content="2020-07-26T13:55:02.434Z">
 <meta property="article:author" content="Golden">
 <meta property="article:tag" content="golden java">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://images.pexels.com/photos/1938123/pexels-photo-1938123.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500">
+<meta name="twitter:image" content="https://cdn.colorhub.me/xzDOaNr7Fxor-PyQZV6C1f2rIGocJ4nh--BrR6e-e20/auto/0/500/ce/0/bG9jYWw6Ly8vZjUv/NDkvZjhjZDJiZmVk/MTBiOTFlMjA1ZDli/NTU5NDQwOGQ4ZGRk/MWIzZjU0OS5qcGVn.jpg">
 
 
 
@@ -296,7 +296,7 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-26T20:23:49+08:00">
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-26T21:55:02+08:00">
                 2020-07-26
               </time>
             
@@ -338,7 +338,7 @@
 <blockquote>
 <p>作为一个工具人，时刻保持着<code>偷懒</code>意识，在类unix系统中，不要浪费了<code>shell</code>这种神奇的工具，让计算机为我们服务~</p>
 </blockquote>
-<p><img src="https://images.pexels.com/photos/1938123/pexels-photo-1938123.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500" alt="瞅瞅你"></p>
+<p><img src="https://cdn.colorhub.me/xzDOaNr7Fxor-PyQZV6C1f2rIGocJ4nh--BrR6e-e20/auto/0/500/ce/0/bG9jYWw6Ly8vZjUv/NDkvZjhjZDJiZmVk/MTBiOTFlMjA1ZDli/NTU5NDQwOGQ4ZGRk/MWIzZjU0OS5qcGVn.jpg" alt="瞅瞅你"></p>
 <h3 id="基础知识，复习一下"><a href="#基础知识，复习一下" class="headerlink" title="基础知识，复习一下"></a>基础知识，复习一下</h3><h4 id="脚本的运行方式"><a href="#脚本的运行方式" class="headerlink" title="脚本的运行方式"></a>脚本的运行方式</h4><h5 id="通过文件名执行-file-name-sh"><a href="#通过文件名执行-file-name-sh" class="headerlink" title="通过文件名执行 ./file_name.sh"></a>通过文件名执行 ./file_name.sh</h5><p>注：需要执行权限，可通过 <code>sudo chmod +x ./file_name.sh</code> 添加</p>
 <h5 id="指定脚本解释器来执行文件-sh-file-name-sh"><a href="#指定脚本解释器来执行文件-sh-file-name-sh" class="headerlink" title="指定脚本解释器来执行文件 sh file_name.sh"></a>指定脚本解释器来执行文件 sh file_name.sh</h5><p><code>sh file_name.sh</code> 就是指定了脚本解释器 <code>/bin/sh</code>来解释执行脚本；常见的脚本解释器还有：<code>/bin/bash</code>等，我们可以使用<code>ls -l /bin/*sh</code>命令来查看当前可用的脚本解释器；</p>
 <h5 id="使用-file-name或source命令执行脚本"><a href="#使用-file-name或source命令执行脚本" class="headerlink" title="使用. ./file_name或source命令执行脚本"></a>使用. ./file_name或source命令执行脚本</h5><p>这种方式不会像前两种方式一样fork一个子进程去执行脚本，而是使用当前shell环境执行。我们不必重启shell或者重新登录系统，就能使当前的更改生效。一般用于 .bashrc或者.bash_profile被修改的时候，</p>
@@ -398,7 +398,7 @@
 
 <p>再使用 <code>. ~./bash_profile</code>或<code>source ~./bash_profile</code>  </p>
 <p>从此，我们无论在哪个目录，只要输入<code>alias_name</code>命令，回车，真正的一键登陆！</p>
-<h4 id="iTerm2-工具自动登录"><a href="#iTerm2-工具自动登录" class="headerlink" title="iTerm2 工具自动登录"></a>iTerm2 工具自动登录</h4><p><img src="/2020/07/26/shell%E5%AE%9E%E7%8E%B0SSH%E8%87%AA%E5%8A%A8%E7%99%BB%E9%99%86/image-20200726174911885.png" alt="6f23ad67a7a0433e056b198f03bd0552"></p>
+<h4 id="iTerm2-工具自动登录"><a href="#iTerm2-工具自动登录" class="headerlink" title="iTerm2 工具自动登录"></a>iTerm2 工具自动登录</h4><p><img src="https://zhao520a1a.github.io/2020/07/26/shell%E5%AE%9E%E7%8E%B0SSH%E8%87%AA%E5%8A%A8%E7%99%BB%E9%99%86/image-20200726174911885.png" alt></p>
 <p>参考：</p>
 <p><a href="https://www.cnblogs.com/qiumingcheng/p/11544569.html" target="_blank" rel="noopener">https://www.cnblogs.com/qiumingcheng/p/11544569.html</a></p>
 <blockquote>
