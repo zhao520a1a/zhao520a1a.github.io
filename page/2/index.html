@@ -261,6 +261,224 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://zhao520a1a.github.io/2020/02/29/Redis%E4%B9%8BAOF%E6%8C%81%E4%B9%85%E5%8C%96/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Golden">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简笔话编程">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/02/29/Redis%E4%B9%8BAOF%E6%8C%81%E4%B9%85%E5%8C%96/" itemprop="url">Redis之AOF持久化</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-02-29T16:06:15+08:00">
+                2020-02-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/redis/" itemprop="url" rel="index">
+                    <span itemprop="name">redis</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>[TOC]</p>
+<blockquote>
+<p>当redis server启动时，如果没有开启AOF模式，则加载AOF文件，否则将加载RDB文件。<br>如果redis中数据发生变化，那么不会直接写到硬盘里，而是先写到AOF缓冲区aof_buf中。</p>
+</blockquote>
+<h4 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h4><p>AOF是append-only file的简称。<br><code>通过保存Redis服务器所执行的写命令来记录数据库状态。</code><br>注意：<br><code>PUBSUB命令</code>和<code>SCRIPT LOAD命令</code>虽然没有修改数据库，但是也会将这两个命令写入AOF文件中。<br>因为，PUBSUB命令行频道的所有订阅者发送消息的行为带有副作用，接收到消息的客户端可能会因此发生改变。同理SCRIPT LOAD命令，它修改了数据库状态，也是一个带有副作用的命令。</p>
+<h4 id="相关配置"><a href="#相关配置" class="headerlink" title="相关配置"></a>相关配置</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"># 开启AOF持久化方式</span><br><span class="line">appendonly yes</span><br><span class="line"></span><br><span class="line"># AOF持久化文件名</span><br><span class="line">appendfilename appendonly-&lt;port&gt;.aof</span><br><span class="line"></span><br><span class="line"># 每秒把缓冲区的数据同步到磁盘</span><br><span class="line">appendfsync everysec</span><br><span class="line"></span><br><span class="line"># 数据持久化文件存储目录</span><br><span class="line">dir &#x2F;var&#x2F;lib&#x2F;redis</span><br><span class="line"></span><br><span class="line"># 是否在执行重写时不同步数据到AOF文件</span><br><span class="line"># 这里的 yes，就是执行重写时不同步数据到AOF文件</span><br><span class="line">no-appendfsync-on-rewrite yes</span><br><span class="line"></span><br><span class="line"># 触发AOF文件执行重写的最小尺寸</span><br><span class="line">auto-aof-rewrite-min-size 64mb</span><br><span class="line"></span><br><span class="line"># 触发AOF文件执行重写的增长率</span><br><span class="line">auto-aof-rewrite-percentage 100</span><br></pre></td></tr></table></figure>
+
+<h4 id="AOF持久化实现"><a href="#AOF持久化实现" class="headerlink" title="AOF持久化实现"></a>AOF持久化实现</h4><ul>
+<li>AOF持久化需要三个过程：</li>
+</ul>
+<ol>
+<li>命令追加：写到aof_buf中；</li>
+<li>写入文件：执行write操作；</li>
+<li>同步文件：同步到磁盘中。</li>
+</ol>
+<ul>
+<li>Redis进程是一个事件循环，如果发现有写命令，那么这些命令会以Redis通信协议的格式添加到aof_buf中（命令追加），并调用flushAppendOnlyFile()，考虑是否将aof_buf中数据写入保存到AOF文件中（写入和同步）。<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span>(<span class="number">1</span>)&#123;</span><br><span class="line">     processFileEvents(); <span class="comment">// 处理文件事件</span></span><br><span class="line">     </span><br><span class="line">     processTimeEvents(); <span class="comment">// 处理时间事件</span></span><br><span class="line">    </span><br><span class="line">     flushAppendOnlyFile(); <span class="comment">// 是否将aof_buf中的内容写入和同步到AOF文件里面</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+flushAppendOnlyFile()的行为由服务器的<code>appendfsync配置项</code>决定。<table>
+<thead>
+<tr>
+<th>appendfsync选项</th>
+<th>flushAppendOnlyFile函数行为</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>always</td>
+<td>将aof_buf中的内容<code>写入并同步</code>到AOF文件中</td>
+</tr>
+<tr>
+<td>everysec</td>
+<td>将aof_buf中内容写入AOF文件中，如果上次同步AOF文件的时间距离现在<code>超过1s</code>，那么再次同步AOF文件。这个操作是由一个线程专门负责执行的</td>
+</tr>
+<tr>
+<td>no</td>
+<td>将aof_buf中的内容写入到AOF文件中，但并不对AOF同步，何时<code>同步交给OS</code>【即：当用户调用write函数，并不会直接写入磁盘，而是<u>将数据暂存在内存缓冲区</u>中，等缓冲区被填满或者超过指定时限后，会将数据同步到磁盘中（flush）】</td>
+</tr>
+<tr>
+<td>注：appendfsync选项默认值为everysec。</td>
+<td></td>
+</tr>
+<tr>
+<td>appendfsync选项对比：</td>
+<td></td>
+</tr>
+<tr>
+<td><img src="/2020/02/29/Redis%E4%B9%8BAOF%E6%8C%81%E4%B9%85%E5%8C%96/09E7475D-D476-432F-8141-6B3CB9415E8C.png" alt="b2c54eb5b91d9330f424cb7c46fcf18b"></td>
+<td></td>
+</tr>
+</tbody></table>
+</li>
+</ul>
+<h4 id="AOF文件重写"><a href="#AOF文件重写" class="headerlink" title="AOF文件重写"></a>AOF文件重写</h4><blockquote>
+<p>当满足一定条件时，AOF重写可由 Redis 自行触发，也可通过bgrewriteaof 命令手动触发重写操作。</p>
+</blockquote>
+<p><code>实际上，AOF文件重写并不需要对现有文件进行任何读取、分析或者写入操作；而是通过读取服务器当前的数据库状态来实现的。</code></p>
+<ul>
+<li><p>AOF重新通过bgRewriteAOF命令来完成，这时会<code>fork一个子进程</code>，这样主进程还可以继续处理命令。除此之外，子进程带有主进程的数据副本，可以在避免锁的情况下，保证数据的安全性。</p>
+</li>
+<li><p>面临的问题：数据不一致<br>在重写期间，主进程继续处理命令，而新的命令有可能还会对现在有数据进行修改，这会导致当前数据库中的数据和生成的AOF文件不一致。<br>解决方案：<br>Redis增加了一个<code>AOF重写缓冲区</code>rewrite_buf，主进程接收到新的写命令之后，会把这个命令的协议内容追到rewrite_buf中。<br>这样主进程在处理命令的时候，一面将命令追加到aof_buf中，一面将写命令追加到rewrite_buf中。也就是说在<u>重写的时候，也会更新旧文件，这是为了防止重写AOF失败</u>。<br>当子进程重写完毕之后，会给父进程发送一个信号，父进程接受到这个信号以后，会调用一个信号处理函数，完成以下工作：<br><u>1. 将rewrite_buf中的数据全部写到新的AOF文件中。</u></p>
+</li>
+</ul>
+<p>2.）修改新的AOF文件的文件名（主进程会短暂阻塞），覆盖旧的文件。</p>
+<p>整体流程：<br><img src="/2020/02/29/Redis%E4%B9%8BAOF%E6%8C%81%E4%B9%85%E5%8C%96/95A91F9D-062A-48FC-96A3-E65D4146D999.jpg" alt="bda52f88687c57e87122439aa1d9c6fc"></p>
+<h4 id="AOF-和-RDB对比"><a href="#AOF-和-RDB对比" class="headerlink" title="AOF 和 RDB对比"></a>AOF 和 RDB对比</h4><p><img src="/2020/02/29/Redis%E4%B9%8BAOF%E6%8C%81%E4%B9%85%E5%8C%96/D6992DF7-76F1-48A0-BD93-27BC384788AA.png" alt="e9320f771c56a06a88aadd87ca4e0b84"></p>
+<h4 id="如何选择使用哪种持久化方式？"><a href="#如何选择使用哪种持久化方式？" class="headerlink" title="如何选择使用哪种持久化方式？"></a>如何选择使用哪种持久化方式？</h4><ul>
+<li>一般来说， 如果想达到足以媲美 PostgreSQL 的数据安全性， 你应该同时使用两种持久化功能。</li>
+<li>如果你非常关心你的数据， 但仍然可以承受数分钟以内的数据丢失， 那么你可以只使用 RDB 持久化。</li>
+<li>有很多用户都只使用 AOF 持久化， 但并不推荐这种方式： 因为定时生成 RDB 快照（snapshot）非常便于进行数据库备份， 并且 RDB 恢复数据集的速度也要比 AOF 恢复的速度要快</li>
+</ul>
+<blockquote>
+<p>参考：<a href="https://segmentfault.com/a/1190000016021217" target="_blank" rel="noopener">https://segmentfault.com/a/1190000016021217</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+<div>
+  
+</div>
+
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://zhao520a1a.github.io/2020/02/29/Redis%E4%B9%8B%E6%BA%90%E7%A0%81%E7%BB%93%E6%9E%84%E5%B1%9E%E6%80%A7/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1981,148 +2199,11 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://zhao520a1a.github.io/2020/02/29/hello-world/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Golden">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简笔话编程">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/02/29/hello-world/" itemprop="url">Hello World</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-02-29T09:29:12+08:00">
-                2020-02-29
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html" target="_blank" rel="noopener">Deployment</a></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-<div>
-  
-</div>
-
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-hand-o-left" aria-label="accessibility.prev_page"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-hand-o-left" aria-label="accessibility.prev_page"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-hand-o-right" aria-label="accessibility.next_page"></i></a>
   </nav>
 
 
@@ -2171,7 +2252,7 @@
               
          	<a href="/archives">  
  	    
-                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-count">21</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
