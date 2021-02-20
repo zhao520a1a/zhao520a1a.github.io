@@ -261,6 +261,263 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://zhao520a1a.github.io/2021/02/20/%E5%AD%98%E5%82%A8%E6%A0%91%E7%BB%93%E6%9E%84/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Golden">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简笔话编程">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2021/02/20/%E5%AD%98%E5%82%A8%E6%A0%91%E7%BB%93%E6%9E%84/" itemprop="url">存储树结构</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-02-20T21:38:14+08:00">
+                2021-02-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/DB/" itemprop="url" rel="index">
+                    <span itemprop="name">DB</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>[TOC]</p>
+<blockquote>
+<p> 下文主要想和大家分享，在DB中存储和查询树的几种方式；</p>
+</blockquote>
+<h3 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h3><p>那么理想中的树型结构应具备哪些特点呢？</p>
+<blockquote>
+<p>数据存储冗余小、直观性强；方便返回整个树型结构数据；可以很轻松的返回某一子树（方便分层加载）；快整获以某节点的祖谱路径；插入、删除、移动节点效率高等等。</p>
+</blockquote>
+<h3 id="方案一：-父ID-递归算法"><a href="#方案一：-父ID-递归算法" class="headerlink" title="方案一： 父ID + 递归算法"></a>方案一： 父ID + 递归算法</h3><blockquote>
+<p>使用递归算法。category表中一个字段id，一个字段fid(父id)。这样可以根据WHERE id = fid来判断上一级内容，运用递归至最顶层。</p>
+</blockquote>
+<h4 id="优点："><a href="#优点：" class="headerlink" title="优点："></a>优点：</h4><ul>
+<li>数据库结构设计简单，程序上实现容易</li>
+<li>增删改分类很轻松</li>
+<li>用频率最多的，大部分开源程序也是这么处理，不过一般都只用到四级分类。</li>
+</ul>
+<h4 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h4><ul>
+<li>分类组装数据时，读取不太方便，如果分类到更多级，那是不可取的办法。</li>
+</ul>
+<p>注：这种方案有很多变种，可以通过加额外的字段如层数或者缓存存储，一定程度上提高效率</p>
+<h3 id="方案二：父ID集合字段"><a href="#方案二：父ID集合字段" class="headerlink" title="方案二：父ID集合字段"></a>方案二：父ID集合字段</h3><blockquote>
+<p>设置fid字段类型为varchar，将父类id都集中在这个字段里，用符号隔开，比如：1,3,6。这样更容易得到各上级分类的ID。</p>
+</blockquote>
+<p>查询某个分类下所有分类的时候可以使用：SELECT * FROM category WHERE pid LIKE “1,3%”。</p>
+<p>优点：</p>
+<ul>
+<li>相比于递归算法，在读取数据方面优势非常大</li>
+<li>数据库结构设计简单</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>若查找该分类的所有 父分类 或者 子分类 查询的效率也不是很高，至少也要二次query。</li>
+<li>在增删改分类非常麻烦</li>
+<li>倘若递增到无限级，还需考虑存储字段是否达到要求</li>
+</ul>
+<p>注： 自我感觉，这算是一种奇淫技巧，可维护性差</p>
+<h3 id="方案三：前序遍历树模型（The-Nested-Set-Model）。"><a href="#方案三：前序遍历树模型（The-Nested-Set-Model）。" class="headerlink" title="方案三：前序遍历树模型（The Nested Set Model）。"></a>方案三：前序遍历树模型（The Nested Set Model）。</h3><h4 id="原理："><a href="#原理：" class="headerlink" title="原理："></a>原理：</h4><p>先把树按照水平方式摆开。从根节点开始（“Food”），然后它的左边写上1。然后按照树的顺序（从上到下）给“Fruit”的左边写上2。这样，你沿着树的边界走啊走（这就是“遍历”），然后同时在每个节点的左边和右边写上数字。最后，我们回到了根节点“Food”在右边写上18。 </p>
+<p><img src="https://gitee.com/zhaojinxin_golden/article-images/raw/master/typora/o_NestedTree.jpg" alt="o_NestedTree"></p>
+<p>左右值暗示了每个节点之间的关系。例如：“Red”有3和6两个值，所以，它是有拥有1-18值的“Food”节点的后续。同样的，我们可以推断所有左值大于2并且右值小于11的节点，都是有2-11的“Fruit” 节点的后续。因此，树的结构就通过左值和右值储存下来了。这种数遍整棵树算节点的方法叫做“改进前序遍历树”算法。</p>
+<p>表结构设计：</p>
+<p><img src="https://gitee.com/zhaojinxin_golden/article-images/raw/master/typora/o_NestedDBDesign.jpg" alt="o_NestedDBDesign"></p>
+<h4 id="问题1-：-怎样通过一个SQL语句把所有的分类都查询出来呢，而且要求如果是子类的话前面要打几个空格以表现是子分类？"><a href="#问题1-：-怎样通过一个SQL语句把所有的分类都查询出来呢，而且要求如果是子类的话前面要打几个空格以表现是子分类？" class="headerlink" title="问题1 ： 怎样通过一个SQL语句把所有的分类都查询出来呢，而且要求如果是子类的话前面要打几个空格以表现是子分类？"></a>问题1 ： 怎样通过一个SQL语句把所有的分类都查询出来呢，而且要求如果是子类的话前面要打几个空格以表现是子分类？</h4><p>要想查询出所有分类很好办：SELECT * FROM category WHERE lft&gt;1 AND lft&lt;18 ORDER BY lft </p>
+<p>但如何区分谁是谁的子类却分不清，那么怎么办呢?</p>
+<p>观察发现，如果相邻的两条记录的右值第一条的右值比第二条的大那么就是他的父类，比如：food的右值是18而fruit的右值是11 那么food是fruit的父类，但是又要考虑到多级目录。</p>
+<p>于是有了下面的设计：用一个数组来存储上一条记录的右值，再把它和本条记录的右值比较，如果前者比后者小，说明不是父子关系，就弹出数组，否则就保留，之后根据数组的大小来打印空格。这样就解决了这个问题。</p>
+<h4 id="问题2-怎样进行插入、删除和修改操作"><a href="#问题2-怎样进行插入、删除和修改操作" class="headerlink" title="问题2: 怎样进行插入、删除和修改操作"></a>问题2: 怎样进行插入、删除和修改操作</h4><ul>
+<li><p>插入：插入操作很简单找到其父节点，之后把左值和右值大于父节点左值的节点的左右值加上2，之后再插入本节点，左右值分别为父节点左值加一和加二，可以用一个事务来操作：</p>
+</li>
+<li><p>删除：</p>
+<p>​       1.得到要删除节点的左右值，并得到他们的差再加一，@mywidth = @rgt - @lft + 1;         2.删除左右值在本节点之间的节点         3.修改条件为大于本节点右值的所有节点，操作为把他们的左右值都减去</p>
+</li>
+<li><p>移动： 咱没发现什么规律，只好先删除再插入</p>
+</li>
+</ul>
+<h4 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h4><ul>
+<li>查询方便，但是增删改操作有点繁琐，适合更新操作不是很多，查询多的场景</li>
+</ul>
+<h3 id="方案四：闭包表-ClosureTable"><a href="#方案四：闭包表-ClosureTable" class="headerlink" title="方案四：闭包表(ClosureTable)"></a>方案四：闭包表(ClosureTable)</h3><h4 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h4><p>ClosureTable以一张表存储节点之间的关系、其中包含了任何两个有关系（上下级）节点的关联信息。本质上是表中包含了所有的路径信息，还在带上了路径中每个节点的位置（距离）。</p>
+<img src="https://gitee.com/zhaojinxin_golden/article-images/raw/master/typora/ac4be83f01f35528573a587534cc7ae9.jpg" alt="ac4be83f01f35528573a587534cc7ae9" style="zoom:50%;">
+
+<p>定义关系表CategoryTree，其包含3个字段：</p>
+<blockquote>
+<p>ancestor 祖先：上级节点的id descendant 子代：下级节点的id distance 距离：子代到祖先中间隔了几级</p>
+</blockquote>
+<p>原因：这三个字段的组合是唯一的，因为在树中，一条路径可以标识一个节点，所以可以直接把它们的组合作为主键。</p>
+<h4 id="问题1：-怎样方便的处理查询操作"><a href="#问题1：-怎样方便的处理查询操作" class="headerlink" title="问题1： 怎样方便的处理查询操作"></a>问题1： 怎样方便的处理查询操作</h4><p>4.1 子节点查询</p>
+<p>查询id为5的节点的直属子节点：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT descendant FROM CategoryTree WHERE ancestor&#x3D;5 AND distance&#x3D;1</span><br></pre></td></tr></table></figure>
+
+<p>查询所有子节点：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT descendant FROM CategoryTree WHERE ancestor&#x3D;5 AND distance&gt;0</span><br></pre></td></tr></table></figure>
+
+<p>查询某个上级节点的子节点，换句话说就是查询具有指定上级节点的节点，也就是ancestor字段等于上级节点id即可，第二个距离distance决定了查询的对象是由上级往下那一层的，等于1就是往下一层（直属子节点），大于0就是所有子节点。这两个查询都是一句完成。 4.2 路径查询</p>
+<p>查询由根节点到id为10的节点之间的所有节点，按照层级由小到大排序</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT ancestor FROM CategoryTree WHERE descendant&#x3D;10 ORDER BY distance DESC</span><br></pre></td></tr></table></figure>
+
+<p>查询id为10的节点（含）到id为3的节点（不含）之间的所有节点，按照层级由小到大排序</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">SELECT ancestor FROM CategoryTree WHERE descendant&#x3D;10 AND </span><br><span class="line">distance&lt;(SELECT distance FROM CategoryTree WHERE descendant&#x3D;10 AND ancestor&#x3D;3) </span><br><span class="line">ORDER BY distance DESC</span><br></pre></td></tr></table></figure>
+
+<p>查询路径，只需要知道descendant即可，因为descendant字段所在的行就是记录这个节点与其上级节点的关系。如果要过滤掉一些则可以限制distance的值。 4.3 查询节点所在的层级（深度）</p>
+<p>查询id为5的节点是第几级的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT distance FROM CategoryTree WHERE descendant&#x3D;5 AND ancestor&#x3D;0</span><br></pre></td></tr></table></figure>
+
+<p>查询id为5的节点是id为10的节点往下第几级</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT distance FROM CategoryTree WHERE descendant&#x3D;5 AND ancestor&#x3D;10</span><br></pre></td></tr></table></figure>
+
+<p>查询层级（深度）非常简单，因为distance字段就是。直接以上下级的节点id为条件，查询距离即可。 4.4 查询某一层的所有节点</p>
+<p>查询所有第三层的节点</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT descendant FROM CategoryTree WHERE ancestor&#x3D;0 AND distance&#x3D;3</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="问题2：怎样进行插入、删除和修改操作"><a href="#问题2：怎样进行插入、删除和修改操作" class="headerlink" title="问题2：怎样进行插入、删除和修改操作"></a>问题2：怎样进行插入、删除和修改操作</h4><ul>
+<li><p>插入： 当一个节点插入到某个父节点下方时，它将具有与父节点相似的路径，然后再加上一个自身连接即可。</p>
+<p>因此，插入操作需要两条语句，第一条复制父节点的所有记录，并把这些记录的distance加一，因为子节点到每个上级节点的距离都比它的父节点多一。当然descendant也要改成自己的。</p>
+<p>例如：把id为10的节点插入到id为5的节点下方</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">INSERT INTO CategoryTree(ancestor , descendant , distance)(</span><br><span class="line">  SELECT</span><br><span class="line">    ancestor ,</span><br><span class="line">    10 ,</span><br><span class="line">    distance + 1</span><br><span class="line">  FROM</span><br><span class="line">    CategoryTree</span><br><span class="line">  WHERE</span><br><span class="line">    descendant &#x3D; 5</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>然后就是加入自身连接的记录。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">INSERT INTO CategoryTree(ancestor,descendant,distance) VALUES(10,10,0)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>删除：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DELETE FROM CategoryTree WHERE descendant&#x3D;5</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>移动： 因为新位置所在的深度、路径都可能不一样，这就导致移动操作不是仅靠UPDATE语句能完成的，因此选择删除+插入实现移动。如果存在子树，上级节点的移动还将导致下级节点的路径改变，所以移动上级节点之后还需要修复下级节点的记录，这就需要递归所有下级节点。</p>
+</li>
+</ul>
+<h4 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h4><p>对于树结构常用的查询都能够很方便的处理。</p>
+<h4 id="缺点-1"><a href="#缺点-1" class="headerlink" title="缺点"></a>缺点</h4><p>插入和移动就不是很方便</p>
+<h4 id="扩展阅读"><a href="#扩展阅读" class="headerlink" title="扩展阅读"></a>扩展阅读</h4><p><a href="https://www.percona.com/blog/2011/02/14/moving-subtrees-in-closure-table/" target="_blank" rel="noopener">https://www.percona.com/blog/2011/02/14/moving-subtrees-in-closure-table/</a></p>
+<p><a href="https://technobytz.com/closure_table_store_hierarchical_data.html" target="_blank" rel="noopener">https://technobytz.com/closure_table_store_hierarchical_data.html</a></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+<div>
+  
+</div>
+
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://zhao520a1a.github.io/2020/11/20/Go%20%E5%8F%AF%E7%BB%B4%E6%8A%A4%E6%80%A7%E5%BB%BA%E8%AE%AE/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2330,203 +2587,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://zhao520a1a.github.io/2020/02/29/Redis%E4%B9%8BRDB%E6%8C%81%E4%B9%85%E5%8C%96/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Golden">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简笔话编程">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/02/29/Redis%E4%B9%8BRDB%E6%8C%81%E4%B9%85%E5%8C%96/" itemprop="url">Redis之RDB持久化</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-02-29T16:06:28+08:00">
-                2020-02-29
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/redis/" itemprop="url" rel="index">
-                    <span itemprop="name">redis</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>[TOC]</p>
-<h4 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h4><ul>
-<li>RDB 是 Redis 将 server 端的内存中的键值对以二进制的方式，持久化存储的一种文件形式。 文件中，一般会以 <code>对象的长度+对象</code>的格式来存储，只要根据这个格式，就能渐进的遍历整个文件。 </li>
-<li>Redis 还支持开启 LZF 的压缩算法，可以牺牲 CPU 时间，来减少 RDB 文件的大小；如果开启LZF并且超过20个 bytes 时， 会将压缩后的字符写入文件。</li>
-</ul>
-<h4 id="触发方式"><a href="#触发方式" class="headerlink" title="触发方式"></a>触发方式</h4><h5 id="自动触发"><a href="#自动触发" class="headerlink" title="自动触发"></a>自动触发</h5><p>Redis通过配置save参数，来触发RDB持久化条件。<br>　　默认如下配置：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">save 900 1：表示900 秒内如果至少有 1 个 key 的值变化，则保存</span><br><span class="line">save 300 10：表示300 秒内如果至少有 10 个 key 的值变化，则保存</span><br><span class="line">save 60 10000：表示60 秒内如果至少有 10000 个 key 的值变化，则保存</span><br></pre></td></tr></table></figure>
-
-<h5 id="手动触发"><a href="#手动触发" class="headerlink" title="手动触发"></a>手动触发</h5><p>提供了两种命令</p>
-<ul>
-<li>save<br>该命令会阻塞当前Redis服务器，执行save命令期间，Redis不能处理其他命令，直到RDB过程完成为止。</li>
-<li>bgsave<br>执行该命令时，Redis会在后台异步进行快照操作，同时还可以响应客户端请求。具体操作是Redis进程执行fork操作创建子进程，RDB持久化过程由子进程负责，完成后自动结束。阻塞只发生在fork阶段，一般时间很短。<h5 id="对比"><a href="#对比" class="headerlink" title="对比"></a>对比</h5><img src="/2020/02/29/Redis%E4%B9%8BRDB%E6%8C%81%E4%B9%85%E5%8C%96/7241F4E3-2FE8-4A68-B725-1255B55A8DC4.png" alt="eaa6b0418d701f629c40eb6aba3618b1"></li>
-</ul>
-<h4 id="恢复数据"><a href="#恢复数据" class="headerlink" title="恢复数据"></a>恢复数据</h4><ul>
-<li>将备份文件 (dump.rdb) 移动到 redis 安装目录并启动服务即可，redis就会自动加载文件数据至内存了。</li>
-<li>Redis 服务器在载入 RDB 文件期间，会一直处于阻塞状态，直到载入工作完成为止。<br>注：获取 redis 的安装目录可以使用 config get dir 命令<br><img src="/2020/02/29/Redis%E4%B9%8BRDB%E6%8C%81%E4%B9%85%E5%8C%96/A97F3ED8-C7D5-463E-B95C-35D855850CF8.png" alt="02ec04e9b969264920938a8651add762"></li>
-</ul>
-<h4 id="停止持久化"><a href="#停止持久化" class="headerlink" title="停止持久化"></a>停止持久化</h4><p>当只想利用Redis的缓存功能，并不像使用 Redis 的持久化功能， 可以将redis.conf 中，save 行注释掉或者直接一个空字符串<code>save &quot;&quot;</code>, 来停用保存功能</p>
-<h4 id="RDB自动保存原理"><a href="#RDB自动保存原理" class="headerlink" title="RDB自动保存原理"></a>RDB自动保存原理</h4><h5 id="redisService结构"><a href="#redisService结构" class="headerlink" title="redisService结构"></a>redisService结构</h5><p>Redis的服务器状态，使用redisService结构保存</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">redisService</span>&#123;</span></span><br><span class="line">     <span class="comment">//1、记录保存save条件的数组</span></span><br><span class="line">     <span class="class"><span class="keyword">struct</span> <span class="title">saveparam</span> *<span class="title">saveparams</span>;</span></span><br><span class="line">     <span class="comment">//2、修改计数器</span></span><br><span class="line">     <span class="keyword">long</span> <span class="keyword">long</span> dirty;</span><br><span class="line">     <span class="comment">//3、上一次执行保存的时间</span></span><br><span class="line">     <span class="keyword">time_t</span> lastsave;</span><br><span class="line"> </span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">saveparam</span>&#123;</span></span><br><span class="line">     <span class="comment">//秒数</span></span><br><span class="line">     <span class="keyword">time_t</span> seconds;</span><br><span class="line">     <span class="comment">//修改数</span></span><br><span class="line">     <span class="keyword">int</span> changes;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<p>举例：<br>在 redis.conf 配置文件中进行了关于save 的配置，在服务器状态中的saveparam 数组将会是如下的样子：<br><img src="/2020/02/29/Redis%E4%B9%8BRDB%E6%8C%81%E4%B9%85%E5%8C%96/5E259A51-871D-4D29-BD79-B13A1B1BDF63.png" alt="4d222bb5fe42c52358d7470ec490afd7"></p>
-<h5 id="dirty-计数器和lastsave-属性"><a href="#dirty-计数器和lastsave-属性" class="headerlink" title="dirty 计数器和lastsave 属性"></a>dirty 计数器和lastsave 属性</h5><p>　　dirty 计数器： 记录距离上一次成功执行 save 命令或者 bgsave 命令之后，Redis服务器进行了多少次修改（包括写入、删除、更新等操作）。</p>
-<p>　　lastsave 属性： 它是一个时间戳，记录上一次成功执行 save 命令或者 bgsave 命令的时间。</p>
-<p>-　通过这两个命令，当服务器成功执行一次修改操作，那么dirty 计数器就会加 1，而lastsave 属性记录上一次执行save或bgsave的时间。</p>
-<ul>
-<li>Redis 服务器还有一个周期性操作函数 severCron ,默认每隔 <code>100 毫秒</code>就会执行一次，该函数会遍历并检查 saveparams 数组中的所有保存条件，只要有一个条件被满足，那么就会执行 bgsave 命令。</li>
-<li>　执行完成之后，dirty 计数器更新为 0 ，lastsave 也更新为执行命令的完成时间。</li>
-</ul>
-<h4 id="RDB文件结构"><a href="#RDB文件结构" class="headerlink" title="RDB文件结构"></a>RDB文件结构</h4><ul>
-<li>简要<br><img src="/2020/02/29/Redis%E4%B9%8BRDB%E6%8C%81%E4%B9%85%E5%8C%96/201A1691-0544-4C53-8E3D-4F90303AE3F2.png" alt="b50148c90f64f2528bebeb26c0c08fd2"></li>
-<li>详解<br>下面是一个 version 9 的 RDB 文件<br><img src="/2020/02/29/Redis%E4%B9%8BRDB%E6%8C%81%E4%B9%85%E5%8C%96/36FBD139-51B0-4B9D-83AC-AF131CBA5801.png" alt="2ce931e146e09d42e6841582c500effb"></li>
-</ul>
-<p>注：RDB文件保存的是二进制数据。</p>
-<h5 id="REDIS部分"><a href="#REDIS部分" class="headerlink" title="REDIS部分"></a>REDIS部分</h5><p>作用：RDB文件标识符。通过这五个字符，程序可以在载入文件时，快速检查所载入的文件是否为RDB文件<br>长度：5字节，保存REDIS这五个字符</p>
-<h5 id="db-version部分"><a href="#db-version部分" class="headerlink" title="db_version部分"></a>db_version部分</h5><p>作用： 代表RDB文件的版本号。<br>长度：4字节，值是一个字符串表示的整数</p>
-<h5 id="databases部分"><a href="#databases部分" class="headerlink" title="databases部分"></a>databases部分</h5><p>作用：包含0或多个数据库及其对应的键值对数据<br>长度：如果服务器数据库状态为空，则为0；如果不为空，则根据键值对的数量、类型和内容，长度也随之而变</p>
-<h5 id="EOF部分"><a href="#EOF部分" class="headerlink" title="EOF部分"></a>EOF部分</h5><p>作用：RDB文件结束符。标志着RDB文件正文内容的结束，读入程序遇到这个值时，代表所有数据库的所有键值对都载入完毕了<br>长度：1字节</p>
-<h5 id="check-sum部分"><a href="#check-sum部分" class="headerlink" title="check_sum部分"></a>check_sum部分</h5><p>作用：检查RDB文件是否有出错或损坏。是程序通过对REDIS、db_version、databases、EOF四个部分的内容进行计算而出的；载入RDB文件时，会将载入数据所计算出的校验和与check_sum进行对比，从而得出是否出错<br>长度：8字节的无符号整数</p>
-<h4 id="优势与劣势"><a href="#优势与劣势" class="headerlink" title="优势与劣势"></a>优势与劣势</h4><h5 id="优势"><a href="#优势" class="headerlink" title="优势"></a>优势</h5><ol>
-<li>它保存了redis 在某个时间点上的数据集。这种文件非常适合用于进行备份和灾难恢复。</li>
-<li>RDB 在恢复大数据集时的速度比 AOF 的恢复速度要快。<h5 id="劣势"><a href="#劣势" class="headerlink" title="劣势"></a>劣势</h5></li>
-<li>影响性能: RDB方式数据没办法做到实时持久化/秒级持久化。因为bgsave每次运行都要执行fork操作创建子进程，属于重量级操作(内存中的数据被克隆了一份，大致2倍的膨胀性需要考虑)，频繁执行成本过高。</li>
-<li>版本不兼容: RDB文件使用特定二进制格式保存，Redis版本演进过程中有多个格式的RDB版本，存在老版本Redis服务无法兼容新版RDB格式的问题。</li>
-<li>数据有丢失: 在一定间隔时间做一次备份，所以如果redis意外down掉的话，就会丢失最后一次快照后的所有修改。</li>
-</ol>
-<h4 id="相关配置"><a href="#相关配置" class="headerlink" title="相关配置"></a>相关配置</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"># RDB自动持久化规则</span><br><span class="line"># 当 900 秒内有至少有 1 个键被改动时，自动进行数据集保存操作</span><br><span class="line">save 900 1</span><br><span class="line"># 当 300 秒内有至少有 10 个键被改动时，自动进行数据集保存操作</span><br><span class="line">save 300 10</span><br><span class="line"># 当 60 秒内有至少有 10000 个键被改动时，自动进行数据集保存操作</span><br><span class="line">save 60 10000</span><br><span class="line"></span><br><span class="line"># RDB持久化文件名</span><br><span class="line">dbfilename dump-&lt;port&gt;.rdb</span><br><span class="line"></span><br><span class="line"># 数据持久化文件存储目录</span><br><span class="line">dir &#x2F;var&#x2F;lib&#x2F;redis</span><br><span class="line"></span><br><span class="line"># bgsave发生错误时是否停止写入，通常为yes</span><br><span class="line">stop-writes-on-bgsave-error yes</span><br><span class="line"></span><br><span class="line"># rdb文件是否使用压缩格式</span><br><span class="line">rdbcompression yes</span><br><span class="line"></span><br><span class="line"># 是否对rdb文件进行校验和检验，通常为yes</span><br><span class="line">rdbchecksum yes</span><br></pre></td></tr></table></figure>
-
-
-<blockquote>
-<p>参考：<br><a href="https://segmentfault.com/a/1190000020518214" target="_blank" rel="noopener">https://segmentfault.com/a/1190000020518214</a><br><a href="https://blog.csdn.net/qq_41594698/article/details/94902254" target="_blank" rel="noopener">https://blog.csdn.net/qq_41594698/article/details/94902254</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-<div>
-  
-</div>
-
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2580,7 +2640,7 @@
               
          	<a href="/archives">  
  	    
-                  <span class="site-state-item-count">21</span>
+                  <span class="site-state-item-count">22</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2591,7 +2651,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-count">5</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -2602,7 +2662,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-count">8</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -2673,7 +2733,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>

@@ -261,6 +261,203 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://zhao520a1a.github.io/2020/02/29/Redis%E4%B9%8BRDB%E6%8C%81%E4%B9%85%E5%8C%96/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Golden">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简笔话编程">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/02/29/Redis%E4%B9%8BRDB%E6%8C%81%E4%B9%85%E5%8C%96/" itemprop="url">Redis之RDB持久化</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-02-29T16:06:28+08:00">
+                2020-02-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/redis/" itemprop="url" rel="index">
+                    <span itemprop="name">redis</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>[TOC]</p>
+<h4 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h4><ul>
+<li>RDB 是 Redis 将 server 端的内存中的键值对以二进制的方式，持久化存储的一种文件形式。 文件中，一般会以 <code>对象的长度+对象</code>的格式来存储，只要根据这个格式，就能渐进的遍历整个文件。 </li>
+<li>Redis 还支持开启 LZF 的压缩算法，可以牺牲 CPU 时间，来减少 RDB 文件的大小；如果开启LZF并且超过20个 bytes 时， 会将压缩后的字符写入文件。</li>
+</ul>
+<h4 id="触发方式"><a href="#触发方式" class="headerlink" title="触发方式"></a>触发方式</h4><h5 id="自动触发"><a href="#自动触发" class="headerlink" title="自动触发"></a>自动触发</h5><p>Redis通过配置save参数，来触发RDB持久化条件。<br>　　默认如下配置：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">save 900 1：表示900 秒内如果至少有 1 个 key 的值变化，则保存</span><br><span class="line">save 300 10：表示300 秒内如果至少有 10 个 key 的值变化，则保存</span><br><span class="line">save 60 10000：表示60 秒内如果至少有 10000 个 key 的值变化，则保存</span><br></pre></td></tr></table></figure>
+
+<h5 id="手动触发"><a href="#手动触发" class="headerlink" title="手动触发"></a>手动触发</h5><p>提供了两种命令</p>
+<ul>
+<li>save<br>该命令会阻塞当前Redis服务器，执行save命令期间，Redis不能处理其他命令，直到RDB过程完成为止。</li>
+<li>bgsave<br>执行该命令时，Redis会在后台异步进行快照操作，同时还可以响应客户端请求。具体操作是Redis进程执行fork操作创建子进程，RDB持久化过程由子进程负责，完成后自动结束。阻塞只发生在fork阶段，一般时间很短。<h5 id="对比"><a href="#对比" class="headerlink" title="对比"></a>对比</h5><img src="/2020/02/29/Redis%E4%B9%8BRDB%E6%8C%81%E4%B9%85%E5%8C%96/7241F4E3-2FE8-4A68-B725-1255B55A8DC4.png" alt="eaa6b0418d701f629c40eb6aba3618b1"></li>
+</ul>
+<h4 id="恢复数据"><a href="#恢复数据" class="headerlink" title="恢复数据"></a>恢复数据</h4><ul>
+<li>将备份文件 (dump.rdb) 移动到 redis 安装目录并启动服务即可，redis就会自动加载文件数据至内存了。</li>
+<li>Redis 服务器在载入 RDB 文件期间，会一直处于阻塞状态，直到载入工作完成为止。<br>注：获取 redis 的安装目录可以使用 config get dir 命令<br><img src="/2020/02/29/Redis%E4%B9%8BRDB%E6%8C%81%E4%B9%85%E5%8C%96/A97F3ED8-C7D5-463E-B95C-35D855850CF8.png" alt="02ec04e9b969264920938a8651add762"></li>
+</ul>
+<h4 id="停止持久化"><a href="#停止持久化" class="headerlink" title="停止持久化"></a>停止持久化</h4><p>当只想利用Redis的缓存功能，并不像使用 Redis 的持久化功能， 可以将redis.conf 中，save 行注释掉或者直接一个空字符串<code>save &quot;&quot;</code>, 来停用保存功能</p>
+<h4 id="RDB自动保存原理"><a href="#RDB自动保存原理" class="headerlink" title="RDB自动保存原理"></a>RDB自动保存原理</h4><h5 id="redisService结构"><a href="#redisService结构" class="headerlink" title="redisService结构"></a>redisService结构</h5><p>Redis的服务器状态，使用redisService结构保存</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">redisService</span>&#123;</span></span><br><span class="line">     <span class="comment">//1、记录保存save条件的数组</span></span><br><span class="line">     <span class="class"><span class="keyword">struct</span> <span class="title">saveparam</span> *<span class="title">saveparams</span>;</span></span><br><span class="line">     <span class="comment">//2、修改计数器</span></span><br><span class="line">     <span class="keyword">long</span> <span class="keyword">long</span> dirty;</span><br><span class="line">     <span class="comment">//3、上一次执行保存的时间</span></span><br><span class="line">     <span class="keyword">time_t</span> lastsave;</span><br><span class="line"> </span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">saveparam</span>&#123;</span></span><br><span class="line">     <span class="comment">//秒数</span></span><br><span class="line">     <span class="keyword">time_t</span> seconds;</span><br><span class="line">     <span class="comment">//修改数</span></span><br><span class="line">     <span class="keyword">int</span> changes;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>举例：<br>在 redis.conf 配置文件中进行了关于save 的配置，在服务器状态中的saveparam 数组将会是如下的样子：<br><img src="/2020/02/29/Redis%E4%B9%8BRDB%E6%8C%81%E4%B9%85%E5%8C%96/5E259A51-871D-4D29-BD79-B13A1B1BDF63.png" alt="4d222bb5fe42c52358d7470ec490afd7"></p>
+<h5 id="dirty-计数器和lastsave-属性"><a href="#dirty-计数器和lastsave-属性" class="headerlink" title="dirty 计数器和lastsave 属性"></a>dirty 计数器和lastsave 属性</h5><p>　　dirty 计数器： 记录距离上一次成功执行 save 命令或者 bgsave 命令之后，Redis服务器进行了多少次修改（包括写入、删除、更新等操作）。</p>
+<p>　　lastsave 属性： 它是一个时间戳，记录上一次成功执行 save 命令或者 bgsave 命令的时间。</p>
+<p>-　通过这两个命令，当服务器成功执行一次修改操作，那么dirty 计数器就会加 1，而lastsave 属性记录上一次执行save或bgsave的时间。</p>
+<ul>
+<li>Redis 服务器还有一个周期性操作函数 severCron ,默认每隔 <code>100 毫秒</code>就会执行一次，该函数会遍历并检查 saveparams 数组中的所有保存条件，只要有一个条件被满足，那么就会执行 bgsave 命令。</li>
+<li>　执行完成之后，dirty 计数器更新为 0 ，lastsave 也更新为执行命令的完成时间。</li>
+</ul>
+<h4 id="RDB文件结构"><a href="#RDB文件结构" class="headerlink" title="RDB文件结构"></a>RDB文件结构</h4><ul>
+<li>简要<br><img src="/2020/02/29/Redis%E4%B9%8BRDB%E6%8C%81%E4%B9%85%E5%8C%96/201A1691-0544-4C53-8E3D-4F90303AE3F2.png" alt="b50148c90f64f2528bebeb26c0c08fd2"></li>
+<li>详解<br>下面是一个 version 9 的 RDB 文件<br><img src="/2020/02/29/Redis%E4%B9%8BRDB%E6%8C%81%E4%B9%85%E5%8C%96/36FBD139-51B0-4B9D-83AC-AF131CBA5801.png" alt="2ce931e146e09d42e6841582c500effb"></li>
+</ul>
+<p>注：RDB文件保存的是二进制数据。</p>
+<h5 id="REDIS部分"><a href="#REDIS部分" class="headerlink" title="REDIS部分"></a>REDIS部分</h5><p>作用：RDB文件标识符。通过这五个字符，程序可以在载入文件时，快速检查所载入的文件是否为RDB文件<br>长度：5字节，保存REDIS这五个字符</p>
+<h5 id="db-version部分"><a href="#db-version部分" class="headerlink" title="db_version部分"></a>db_version部分</h5><p>作用： 代表RDB文件的版本号。<br>长度：4字节，值是一个字符串表示的整数</p>
+<h5 id="databases部分"><a href="#databases部分" class="headerlink" title="databases部分"></a>databases部分</h5><p>作用：包含0或多个数据库及其对应的键值对数据<br>长度：如果服务器数据库状态为空，则为0；如果不为空，则根据键值对的数量、类型和内容，长度也随之而变</p>
+<h5 id="EOF部分"><a href="#EOF部分" class="headerlink" title="EOF部分"></a>EOF部分</h5><p>作用：RDB文件结束符。标志着RDB文件正文内容的结束，读入程序遇到这个值时，代表所有数据库的所有键值对都载入完毕了<br>长度：1字节</p>
+<h5 id="check-sum部分"><a href="#check-sum部分" class="headerlink" title="check_sum部分"></a>check_sum部分</h5><p>作用：检查RDB文件是否有出错或损坏。是程序通过对REDIS、db_version、databases、EOF四个部分的内容进行计算而出的；载入RDB文件时，会将载入数据所计算出的校验和与check_sum进行对比，从而得出是否出错<br>长度：8字节的无符号整数</p>
+<h4 id="优势与劣势"><a href="#优势与劣势" class="headerlink" title="优势与劣势"></a>优势与劣势</h4><h5 id="优势"><a href="#优势" class="headerlink" title="优势"></a>优势</h5><ol>
+<li>它保存了redis 在某个时间点上的数据集。这种文件非常适合用于进行备份和灾难恢复。</li>
+<li>RDB 在恢复大数据集时的速度比 AOF 的恢复速度要快。<h5 id="劣势"><a href="#劣势" class="headerlink" title="劣势"></a>劣势</h5></li>
+<li>影响性能: RDB方式数据没办法做到实时持久化/秒级持久化。因为bgsave每次运行都要执行fork操作创建子进程，属于重量级操作(内存中的数据被克隆了一份，大致2倍的膨胀性需要考虑)，频繁执行成本过高。</li>
+<li>版本不兼容: RDB文件使用特定二进制格式保存，Redis版本演进过程中有多个格式的RDB版本，存在老版本Redis服务无法兼容新版RDB格式的问题。</li>
+<li>数据有丢失: 在一定间隔时间做一次备份，所以如果redis意外down掉的话，就会丢失最后一次快照后的所有修改。</li>
+</ol>
+<h4 id="相关配置"><a href="#相关配置" class="headerlink" title="相关配置"></a>相关配置</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"># RDB自动持久化规则</span><br><span class="line"># 当 900 秒内有至少有 1 个键被改动时，自动进行数据集保存操作</span><br><span class="line">save 900 1</span><br><span class="line"># 当 300 秒内有至少有 10 个键被改动时，自动进行数据集保存操作</span><br><span class="line">save 300 10</span><br><span class="line"># 当 60 秒内有至少有 10000 个键被改动时，自动进行数据集保存操作</span><br><span class="line">save 60 10000</span><br><span class="line"></span><br><span class="line"># RDB持久化文件名</span><br><span class="line">dbfilename dump-&lt;port&gt;.rdb</span><br><span class="line"></span><br><span class="line"># 数据持久化文件存储目录</span><br><span class="line">dir &#x2F;var&#x2F;lib&#x2F;redis</span><br><span class="line"></span><br><span class="line"># bgsave发生错误时是否停止写入，通常为yes</span><br><span class="line">stop-writes-on-bgsave-error yes</span><br><span class="line"></span><br><span class="line"># rdb文件是否使用压缩格式</span><br><span class="line">rdbcompression yes</span><br><span class="line"></span><br><span class="line"># 是否对rdb文件进行校验和检验，通常为yes</span><br><span class="line">rdbchecksum yes</span><br></pre></td></tr></table></figure>
+
+
+<blockquote>
+<p>参考：<br><a href="https://segmentfault.com/a/1190000020518214" target="_blank" rel="noopener">https://segmentfault.com/a/1190000020518214</a><br><a href="https://blog.csdn.net/qq_41594698/article/details/94902254" target="_blank" rel="noopener">https://blog.csdn.net/qq_41594698/article/details/94902254</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+<div>
+  
+</div>
+
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://zhao520a1a.github.io/2020/02/29/Redis%E4%B9%8BAOF%E6%8C%81%E4%B9%85%E5%8C%96/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1987,218 +2184,6 @@ flushAppendOnlyFile()的行为由服务器的<code>appendfsync配置项</code>�
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://zhao520a1a.github.io/2020/02/29/Redis-%E5%AD%97%E5%85%B8(dict)/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Golden">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简笔话编程">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/02/29/Redis-%E5%AD%97%E5%85%B8(dict)/" itemprop="url">Redis-字典(dict)</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-02-29T13:28:40+08:00">
-                2020-02-29
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/redis/" itemprop="url" rel="index">
-                    <span itemprop="name">redis</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>[TOC]</p>
-<blockquote>
-<p>字典，又称为符号表、关联数组、映射，是一种用于保存键值对的抽象数据结构。<br>Redis使用C语言并没有内置中这种数据结构，所以Redis构建了自己的字典实现。</p>
-</blockquote>
-<h4 id="用途"><a href="#用途" class="headerlink" title="用途"></a>用途</h4><ol>
-<li>是哈希键的底层实现之一；当一个哈希键包含了数量比较多的元素，或者包含的元素都是比较长的字符串时，就会选用字典作为哈希键的底层实现。</li>
-<li>Redis的数据库就是使用字典作为底层实现的，对数据的CURD操作也是对构建在对字典的操作上的。</li>
-</ol>
-<h5 id="字典的结构"><a href="#字典的结构" class="headerlink" title="字典的结构"></a>字典的结构</h5><ul>
-<li><p>整体结构图<br><img src="/2020/02/29/Redis-%E5%AD%97%E5%85%B8(dict)/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3N1bnNoaW5lX1lH,size_16,color_FFFFFF,t_70" alt="e04ff99fcb3c0ca48467a96407184e1c"></p>
-</li>
-<li><p>dict结构，在Redis中的字典dict.h/dict中定义：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">dict</span>&#123;</span></span><br><span class="line">    <span class="comment">//类型特定函数(dictType保存了一簇用于操作特定类型键值对的函数，Redis会为用途不同的字典设置不同的类型特定函数)</span></span><br><span class="line">    dictType *type;</span><br><span class="line">    <span class="comment">//私有数据（保存了需要传给dictType类型特定函数的可选参数）</span></span><br><span class="line">    <span class="keyword">void</span> *privdata;</span><br><span class="line">    <span class="comment">//哈希表(数组中每一项都是一个dictht哈希表，一般情况下，字典只是用ht[0]哈希表，ht[1]只会在对hr[0]进行rehash时使用)</span></span><br><span class="line">    dictht ht[<span class="number">2</span>];</span><br><span class="line">    <span class="comment">//rehash索引（记录rehash目前进度）</span></span><br><span class="line">    <span class="comment">//未在进行rehash时，值为-1(rehashing not in progress if rehashidx == -1)</span></span><br><span class="line">    <span class="keyword">int</span> rehashidx;</span><br><span class="line">&#125;dict;</span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<p>dictType结构:</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">dictType</span>&#123;</span></span><br><span class="line">    <span class="comment">//计算哈希值的函数</span></span><br><span class="line">    <span class="function"><span class="keyword">unsigned</span> <span class="title">int</span> <span class="params">(*hashFunction)</span><span class="params">(<span class="keyword">const</span> <span class="keyword">void</span> *key)</span></span>;</span><br><span class="line">    <span class="comment">//复制键的函数</span></span><br><span class="line">    <span class="keyword">void</span> *(*keyDup)(<span class="keyword">void</span> *privdata,<span class="keyword">const</span> <span class="keyword">void</span> *key);</span><br><span class="line">    <span class="comment">//复制值的函数</span></span><br><span class="line">    <span class="keyword">void</span> *(*valDup)(<span class="keyword">void</span> *privdata,<span class="keyword">const</span> <span class="keyword">void</span> *obj);</span><br><span class="line">    <span class="comment">//对比键的函数</span></span><br><span class="line">    <span class="keyword">int</span> (*keyCompare)(<span class="keyword">void</span> *privdata,<span class="keyword">const</span> <span class="keyword">void</span> *key1,<span class="keyword">const</span> <span class="keyword">void</span> *key2);</span><br><span class="line">    <span class="comment">//销毁键的函数</span></span><br><span class="line">    <span class="keyword">void</span> (*keyDestructor)(<span class="keyword">void</span> privdata,<span class="keyword">void</span> *key);</span><br><span class="line">    <span class="comment">//销毁值的函数</span></span><br><span class="line">    <span class="keyword">void</span> (*valDestructor)(<span class="keyword">void</span> *privdata,<span class="keyword">void</span> *obj);</span><br><span class="line">&#125;dictType;</span><br></pre></td></tr></table></figure>
-
-
-<ul>
-<li><p>dictht结构，Redis字典所使用的哈希表有dict.h/dictht定义：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">dictht</span>&#123;</span></span><br><span class="line">    <span class="comment">//哈希表数组</span></span><br><span class="line">    dictEntry **table;</span><br><span class="line">    <span class="comment">//哈希表大小(即table数组大小)</span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">long</span> <span class="built_in">size</span>;</span><br><span class="line">    <span class="comment">//哈希表大小掩码，用于计算索引值</span></span><br><span class="line">    <span class="comment">//总是等于size-1</span></span><br><span class="line">    <span class="comment">//这个属性和哈希值一起决定一个键应该被放到table数组的哪个索引上面。</span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">long</span> sizemask;</span><br><span class="line">    <span class="comment">//该哈希表已有节点的数量</span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">long</span> used;</span><br><span class="line">&#125;dictht;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>dictEntry结构，哈希表节点使用dictEntry结构表示。 table属性是一个数组，数组中的每个元素都是一个指向dict.h/dictEntry结构的指针。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">dictEntry</span>&#123;</span></span><br><span class="line">    <span class="comment">//键</span></span><br><span class="line">    <span class="keyword">void</span> *key;</span><br><span class="line">    <span class="comment">//值</span></span><br><span class="line">    <span class="keyword">union</span>&#123;</span><br><span class="line">        <span class="keyword">void</span> *val;</span><br><span class="line">        uint64_tu64;</span><br><span class="line">        int64_ts64;</span><br><span class="line">    &#125;v;</span><br><span class="line">    <span class="comment">//指向下个哈希表节点，形成链表</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">dictEntry</span> *<span class="title">next</span>;</span></span><br><span class="line">&#125;dictEntry;</span><br></pre></td></tr></table></figure>
-
-
-</li>
-</ul>
-<h4 id="字典的实现"><a href="#字典的实现" class="headerlink" title="字典的实现"></a>字典的实现</h4><h5 id="计算哈希值和索引值"><a href="#计算哈希值和索引值" class="headerlink" title="计算哈希值和索引值"></a>计算哈希值和索引值</h5><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//使用字典设置的哈希函数，计算键key的哈希值</span></span><br><span class="line">hash = dict -&gt; type -&gt; hashFunction(key);</span><br><span class="line"><span class="comment">//使用哈希表的sizemask属性和哈希值，计算出索引值</span></span><br><span class="line"><span class="comment">//根据情况不同，ht[x]可以是ht[0]或者ht[1]</span></span><br><span class="line">index = hash &amp; dict -&gt; ht[x].sizemask;</span><br></pre></td></tr></table></figure>
-<p>注：此处hash值算法为MurmurHash2。MurmurHash算法要比MD5算法要快，且有很好的随机分布性.</p>
-<h5 id="解决键冲突"><a href="#解决键冲突" class="headerlink" title="解决键冲突"></a>解决键冲突</h5><blockquote>
-<p>键冲突：有两个或以上数量的键被分配到了哈希表数组的同一个索引上面。<br>Redis使用链地址法解决键冲突。</p>
-</blockquote>
-<p><img src="/2020/02/29/Redis-%E5%AD%97%E5%85%B8(dict)/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3N1bnNoaW5lX1lH,size_16,color_FFFFFF,t_70_2" alt="b7c4e7b2b8b48772c79c1872b35f5ac3"><br>注：因为dictEntry结点组成的链表没有指向链表表尾的指针（即图4-6的k1节点），所以为了速度考虑，程序总是将新节点添加到链表的表头位置（复杂度为O(1)），排在其他已有节点的前面。</p>
-<h5 id="rehash"><a href="#rehash" class="headerlink" title="rehash"></a>rehash</h5><blockquote>
-<ol>
-<li>当哈希表保存的键值对数量太多或者太少时，程序需要对哈希表的大小进行相应的扩展或者收缩。</li>
-<li>rahash：指的是重新计算键的哈希值和索引值，然后将键值对放置到ht[1]哈希表的指定位置上。</li>
-</ol>
-</blockquote>
-<p><code>负载因子 = 哈希表已保存节点数量 / 哈希表大小</code></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">load_factor &#x3D; ht[0].used &#x2F; ht[0].size;</span><br></pre></td></tr></table></figure>
-
-<h6 id="扩展触发条件"><a href="#扩展触发条件" class="headerlink" title="扩展触发条件"></a>扩展触发条件</h6><p>（1）服务器目前没有在执行BGSAVE命令或者BGREWRITEAOF命令，并且哈希表的负载因子大于等于1。<br>（2）服务器目前正在执行BGSAVE命令或者BGREWRITEAOF命令，并且哈希表的负载因子大于等于5。</p>
-<h6 id="收缩触发条件"><a href="#收缩触发条件" class="headerlink" title="收缩触发条件"></a>收缩触发条件</h6><p>哈希表负载因子小于0.1；</p>
-<h6 id="扩展或收缩步骤"><a href="#扩展或收缩步骤" class="headerlink" title="扩展或收缩步骤"></a>扩展或收缩步骤</h6><ol>
-<li>为字典的ht[1]哈希表分配空间，分配空间的大小取决于<br>①要执行的操作–扩展或收缩<br>②ht[0]当前包含的键值对数量（即ht[0].used的值），<br>扩展:大小为第一个大于等于 ht[0].used*2 的 2^n。<br>收缩:大小为第一个大于等于 ht[0].used 的 2^n。</li>
-<li>将保存在ht[0]中的所有键值对rehash到ht[1]上。</li>
-<li>当ht[0]包含的所有键值对都迁移到了ht[1]之后（ht[0]变为空表）,释放ht[0]，将ht[1]设置为ht[0]，并创建一个新的ht[1]空的哈希表，为下次rehash做准备。</li>
-</ol>
-<h6 id="渐进式rehash详细步骤"><a href="#渐进式rehash详细步骤" class="headerlink" title="渐进式rehash详细步骤"></a>渐进式rehash详细步骤</h6><ol>
-<li>为ht[1]分配空间。</li>
-<li>在字典中维持一个索引计数器变量rehashidx，并将它的值设置为0，0表示rehash工作正式开始。</li>
-<li>在rehash期间，每次对字典执行添加、删除、查找或者更新操作时，程序除了执行指定的操作以外，还会顺带将ht[0]哈希表在rehashidx索引上的所有键值对rehash到ht[1]，当rehash工作完成之后，程序将rehashidx属性的值增一。</li>
-<li>随着自点操作的不断执行，最终在某个时间点上，ht[0]的所有兼职对都会被rehash至ht[1]，这时程序将rehashidx属性的值设为-1,-1表示rehash操作已完成。<br>注：在进行渐进式rehash的过程中，字典会同时使用ht[0]和ht[1]两个哈希表，所以<u>在渐进式rehash进行期间，字典的删除（delete）、查找（find）、更新（update）等操作会在两个哈希表上进行。</u>例：要在字典里面查找一个键的话，程序会先在ht[0]里面进行查找，如果没找到的话，就会继续到ht[1]里面进行查找。<br>另外，添加操作则只在ht[1]中执行，这一措施保证了ht[0]包含的键值对数量会只减不增，并随着rehash操作的执行而最终变成空表。<br>注意:观察在整个rehash过程中，字典的rehashidx属性是如何变化的。<br><img src="/2020/02/29/Redis-%E5%AD%97%E5%85%B8(dict)/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3N1bnNoaW5lX1lH,size_16,color_FFFFFF,t_70_1" alt="17825916f0ee1f5385efbcc982948504"><br>&nbsp;</li>
-</ol>
-<h6 id="思考题"><a href="#思考题" class="headerlink" title="思考题"></a>思考题</h6><p><code>为什么触发扩展条件的负载因子不同？</code><br>原因： 在执行BGSAVE或BGREWRITEAOF命令时，Redis需要创建当前服务器进程的子进程，而大多数操作系统都采用写时复制（copy-on-write）技术来优化子进程的使用效率，所以在子进程存在期间，服务器会提高执行扩展操作所需的负载因子，从而尽可能地避免在子进程存在期间进行哈希表扩展操作，这可以避免不必要的内存写入操作，最大限度的节约内存。<br><code>为什么rehash是分多次、渐进式地完成的</code><br>原因：哈希表里保存的键值对数量非常庞大时（像四百万、四千万、四亿个键值对），一次性、集中式地完成庞大的计算量可能会导致服务器在一段时间内停止服务。<code>采用分而治之的方式，将rehash键值对所需的计算工作均摊到对字典的每个添加、删除、查找和更新操作上，从而避免了集中式rehash而带来的庞大计算量。</code></p>
-<h4 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h4><ol>
-<li>字典被广泛用于实现Redis的各种功能，其中包括数据库和哈希键。</li>
-<li>Redis中的字典使用哈希表作为底层实现，每个字典带有两个哈希表，一个平时使用，另一个仅在rehash时使用。</li>
-<li>当字典被用作数据库的底层实现，或者哈希键的底层实现时，Redis使用MurmurHash2算法来计算键的哈希值。</li>
-<li>哈希表使用<code>链地址法来解决键冲突</code>，被分配到同一个索引上的多个键值对会连接成一个单向链表。</li>
-<li>在对哈希表进行扩展或者收缩操作时，程序需要将现有哈希表包含的所有键值对rehash到新哈希表里面，并且这个rehash过程并不是一次性地完成的，而是渐进式地完成的。</li>
-</ol>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-<div>
-  
-</div>
-
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2252,7 +2237,7 @@ flushAppendOnlyFile()的行为由服务器的<code>appendfsync配置项</code>�
               
          	<a href="/archives">  
  	    
-                  <span class="site-state-item-count">21</span>
+                  <span class="site-state-item-count">22</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2263,7 +2248,7 @@ flushAppendOnlyFile()的行为由服务器的<code>appendfsync配置项</code>�
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-count">5</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -2274,7 +2259,7 @@ flushAppendOnlyFile()的行为由服务器的<code>appendfsync配置项</code>�
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-count">8</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -2345,7 +2330,7 @@ flushAppendOnlyFile()的行为由服务器的<code>appendfsync配置项</code>�
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>
