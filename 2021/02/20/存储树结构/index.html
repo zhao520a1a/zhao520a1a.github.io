@@ -89,7 +89,7 @@
 <meta property="og:image" content="https://gitee.com/zhaojinxin_golden/article-images/raw/master/typora/o_NestedTree.jpg">
 <meta property="og:image" content="https://gitee.com/zhaojinxin_golden/article-images/raw/master/typora/o_NestedDBDesign.jpg">
 <meta property="article:published_time" content="2021-02-20T13:38:14.487Z">
-<meta property="article:modified_time" content="2021-02-21T14:30:28.571Z">
+<meta property="article:modified_time" content="2021-02-21T14:34:55.968Z">
 <meta property="article:author" content="Golden">
 <meta property="article:tag" content="树型结构存储">
 <meta name="twitter:card" content="summary">
@@ -409,29 +409,29 @@
 <li>子节点查询</li>
 </ol>
 <p>查询 id 为5的节点的直属子节点：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT descendant FROM CategoryTree WHERE ancestor&#x3D;5 AND distance&#x3D;1</span><br></pre></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> descendant <span class="keyword">FROM</span> CategoryTree <span class="keyword">WHERE</span> ancestor=<span class="number">5</span> <span class="keyword">AND</span> distance=<span class="number">1</span></span><br></pre></td></tr></table></figure>
 
 <p>查询 id 为5的节点的子孙节点：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT descendant FROM CategoryTree WHERE ancestor&#x3D;5 AND distance&gt;0</span><br></pre></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> descendant <span class="keyword">FROM</span> CategoryTree <span class="keyword">WHERE</span> ancestor=<span class="number">5</span> <span class="keyword">AND</span> distance&gt;<span class="number">0</span></span><br></pre></td></tr></table></figure>
 
 <ol start="2">
 <li>路径查询</li>
 </ol>
 <p>查询由根节点到 id 为10的节点之间的所有节点，按照层级由小到大排序</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT ancestor FROM CategoryTree WHERE descendant&#x3D;10 ORDER BY distance DESC</span><br></pre></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> ancestor <span class="keyword">FROM</span> CategoryTree <span class="keyword">WHERE</span> descendant=<span class="number">10</span> <span class="keyword">ORDER</span> <span class="keyword">BY</span> distance <span class="keyword">DESC</span></span><br></pre></td></tr></table></figure>
 
 <p>查询 id 为10的节点（含）到id为3的节点（不含）之间的所有节点，按照层级由小到大排序</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT ancestor FROM CategoryTree WHERE descendant &#x3D; 10 AND distance &lt; ( SELECT distance FROM CategoryTree WHERE descendant &#x3D; 10 AND ancestor &#x3D; 3) ORDER BY distance DESC</span><br></pre></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> ancestor <span class="keyword">FROM</span> CategoryTree <span class="keyword">WHERE</span> descendant = <span class="number">10</span> <span class="keyword">AND</span> distance &lt; ( <span class="keyword">SELECT</span> distance <span class="keyword">FROM</span> CategoryTree <span class="keyword">WHERE</span> descendant = <span class="number">10</span> <span class="keyword">AND</span> ancestor = <span class="number">3</span>) <span class="keyword">ORDER</span> <span class="keyword">BY</span> distance <span class="keyword">DESC</span></span><br></pre></td></tr></table></figure>
 
 <p>注：查询路径，只需要知道 descendant 即可，因为 descendant 字段所在的行就是记录这个节点与其上级节点的关系。如果要过滤掉一些则可以限制 distance 的值。</p>
 <ol start="3">
 <li>查询节点所在的层级（深度）</li>
 </ol>
 <p>查询id为5的节点是第几级的</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT distance FROM CategoryTree WHERE descendant&#x3D;5 AND ancestor&#x3D;0</span><br></pre></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> distance <span class="keyword">FROM</span> CategoryTree <span class="keyword">WHERE</span> descendant=<span class="number">5</span> <span class="keyword">AND</span> ancestor=<span class="number">0</span></span><br></pre></td></tr></table></figure>
 
 <p>查询id为5的节点是id为10的节点往下第几级</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT distance FROM CategoryTree WHERE descendant&#x3D;5 AND ancestor&#x3D;10</span><br></pre></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> distance <span class="keyword">FROM</span> CategoryTree <span class="keyword">WHERE</span> descendant=<span class="number">5</span> <span class="keyword">AND</span> ancestor=<span class="number">10</span></span><br></pre></td></tr></table></figure>
 
 <p>注：查询层级（深度）非常简单，因为distance字段就代表层级；直接以上下级的节点id为条件，查询距离即可。 </p>
 <ol start="4">
@@ -444,13 +444,13 @@
 <li><p>插入： 当一个节点插入到某个父节点下方时，它将具有与父节点相似的路径，然后再加上一个自身连接即可。</p>
 <p>因此，插入操作需要两条语句，第一条复制父节点的所有记录，并把这些记录的distance加一，因为子节点到每个上级节点的距离都比它的父节点多一。当然descendant也要改成自己的。</p>
 <p>例如：把id为10的节点插入到id为5的节点下方</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">INSERT INTO CategoryTree(ancestor , descendant , distance)(</span><br><span class="line">  SELECT</span><br><span class="line">    ancestor ,</span><br><span class="line">    10 ,</span><br><span class="line">    distance + 1</span><br><span class="line">  FROM</span><br><span class="line">    CategoryTree</span><br><span class="line">  WHERE</span><br><span class="line">    descendant &#x3D; 5</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> CategoryTree(ancestor , descendant , distance)(</span><br><span class="line">  <span class="keyword">SELECT</span></span><br><span class="line">    ancestor ,</span><br><span class="line">    <span class="number">10</span> ,</span><br><span class="line">    distance + <span class="number">1</span></span><br><span class="line">  <span class="keyword">FROM</span></span><br><span class="line">    CategoryTree</span><br><span class="line">  <span class="keyword">WHERE</span></span><br><span class="line">    descendant = <span class="number">5</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
 
 <p>然后就是加入自身连接的记录。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">INSERT INTO CategoryTree(ancestor,descendant,distance) VALUES(10,10,0)</span><br></pre></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> CategoryTree(ancestor,descendant,distance) <span class="keyword">VALUES</span>(<span class="number">10</span>,<span class="number">10</span>,<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>删除：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DELETE FROM CategoryTree WHERE descendant&#x3D;5</span><br></pre></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DELETE</span> <span class="keyword">FROM</span> CategoryTree <span class="keyword">WHERE</span> descendant=<span class="number">5</span></span><br></pre></td></tr></table></figure>
 </li>
 <li><p>移动： 因为新位置所在的深度、路径都可能不一样，这就导致移动操作不是仅靠UPDATE语句能完成的，因此选择删除+插入实现移动。如果存在子树，上级节点的移动还将导致下级节点的路径改变，所以移动上级节点之后还需要修复下级节点的记录，这就需要递归所有下级节点。</p>
 </li>
@@ -469,7 +469,7 @@
 <p>如何通过一个SQL语句把所有的分类都查询出来呢，而且要求如果是子类的话前面要打几个空格以表现是子分类？</p>
 </blockquote>
 <p>查询所有分类很好办</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT * FROM category WHERE lft&gt;1 AND lft&lt;18 ORDER BY lft</span><br></pre></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> <span class="keyword">category</span> <span class="keyword">WHERE</span> lft&gt;<span class="number">1</span> <span class="keyword">AND</span> lft&lt;<span class="number">18</span> <span class="keyword">ORDER</span> <span class="keyword">BY</span> lft</span><br></pre></td></tr></table></figure>
 
 <p>但如何区分谁是谁的子类呢?</p>
 <p>观察发现，如果相邻的两条记录，第一条的右值比第二条右值大那么就是他的父类，比如：Food 的右值是18而 Fruit 的右值是11 那么food是fruit的父类，但是又要考虑到多级目录。</p>
