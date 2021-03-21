@@ -1,6 +1,6 @@
 ---
-tags: [redis持久化]    
-categories: redis
+tags: [redis]    
+categories: [Redis,内部结构]
 ---
 [TOC]
 > 当redis server启动时，如果没有开启AOF模式，则加载AOF文件，否则将加载RDB文件。

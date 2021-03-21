@@ -1,6 +1,6 @@
 ---
-tags: [jdk]   
-categories: java 
+tags: [java]   
+categories: [Java,jdk] 
 ---
 
 

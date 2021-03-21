@@ -1,7 +1,7 @@
 
 ---
 tags: [jdk]    
-categories: java 
+categories: [Java,jdk] 
 ---
 
 [TOC]

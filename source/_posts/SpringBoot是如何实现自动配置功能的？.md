@@ -1,6 +1,6 @@
 ---
-tags: [spring自动配置]   
-categories: SpringBoot
+tags: [SpringBoot]   
+categories: [Java, SpringBoot]
 ---
 
 [TOC]

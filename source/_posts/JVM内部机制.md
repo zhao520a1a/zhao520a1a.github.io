@@ -1,6 +1,6 @@
 ---
 tags: [jvm]    
-categories: java
+categories: [Java,jvm]
 ---
 
 

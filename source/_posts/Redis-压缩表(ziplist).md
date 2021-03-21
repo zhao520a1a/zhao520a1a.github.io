@@ -1,6 +1,6 @@
 ---
 tags: [redis内部结构]   
-categories: redis
+categories: [Redis,内部结构]
 ---
 
 [TOC]

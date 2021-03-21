@@ -1,7 +1,5 @@
 ---
-tags: [Go入门]    
-categories: Go 
-
+categories: [Go,代码风格] 
 ---
 ![77db407342d98de1dbfe6016af86c359](GO代码风格总结（私藏）.resources/132.jpeg)
 
