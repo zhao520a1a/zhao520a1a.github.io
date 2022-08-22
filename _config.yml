@@ -100,5 +100,5 @@ theme: next
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
   type: git
-  repo: https://github.com/zhao520a1a/zhao520a1a.github.io.git
+  repo: git@golden.github.com:zhao520a1a/zhao520a1a.github.io.git
   branch: master
