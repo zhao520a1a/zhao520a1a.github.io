@@ -1,7 +1,4 @@
 
-
-
-
 安装依赖：npm install
 
 创建文章：hexo n XXX
