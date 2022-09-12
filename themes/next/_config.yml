@@ -129,9 +129,12 @@ scheme: Mist
 social:
   GitHub: https://github.com/zhao520a1a || github
   E-Mail: mailto:zhaojinxin_golden@163.com || envelope
-  博客园: https://www.cnblogs.com/zhaojinxin || crosshairs
-  牛客网: https://blog.nowcoder.net/golden || spinner
-  简书: https://www.jianshu.com/u/85d91cc782b1 || heartbeat
+  ProcessOn: https://www.processon.com/u/5ab9cb2de4b018c271cab8d4/profile  || area-chart
+  牛客网: https://blog.nowcoder.net/golden || code
+  B 站: https://space.bilibili.com/334383730 || video-camera
+  微信公众号: https://zhao520a1a.github.io/about/index/qrCode.png || wechat
+  #  博客园: https://www.cnblogs.com/zhaojinxin || crosshairs
+  #  简书: https://www.jianshu.com/u/85d91cc782b1 || heartbeat
   #Google: https://plus.google.com/yourname || google
   #Twitter: https://twitter.com/yourname || twitter
   #FB Page: https://www.facebook.com/yourname || facebook
@@ -150,9 +153,9 @@ social_icons:
 links_icon: link
 links_title: Links
 links_layout: block
-#links_layout: inline
-#links:
-  #Title: http://example.com/
+  #links_layout: inline
+  #links:
+#Title: http://example.com/
 
 # Sidebar Avatar
 # in theme directory(source/images): /images/avatar.gif
@@ -238,8 +241,8 @@ post_wordcount:
   totalcount: false
   separated_meta: true
 
-# Wechat Subscriber
-#wechat_subscriber:
+  # Wechat Subscriber
+  #wechat_subscriber:
   #enabled: true
   #qcode: /path/to/your/wechatqcode ex. /uploads/wechat-qcode.jpg
   #description: ex. subscribe to my blog by scanning my public wechat account
@@ -417,18 +420,18 @@ gitment:
   proxy_gateway: # Address of api proxy, See: https://github.com/aimingoo/intersect
   redirect_protocol: # Protocol of redirect_uri with force_redirect_protocol when mint enabled
 
-# Baidu Share
-# Available value:
-#    button | slide
-# Warning: Baidu Share does not support https.
-#baidushare:
-##  type: button
+  # Baidu Share
+  # Available value:
+  #    button | slide
+  # Warning: Baidu Share does not support https.
+  #baidushare:
+  ##  type: button
 
-# Share
-# This plugin is more useful in China, make sure you known how to use it.
-# And you can find the use guide at official webiste: http://www.jiathis.com/.
-# Warning: JiaThis does not support https.
-#jiathis:
+  # Share
+  # This plugin is more useful in China, make sure you known how to use it.
+  # And you can find the use guide at official webiste: http://www.jiathis.com/.
+  # Warning: JiaThis does not support https.
+  #jiathis:
   ##uid: Get this uid from http://www.jiathis.com/
 #add_this_id:
 
@@ -499,7 +502,7 @@ duoshuo_info:
 # Facebook SDK Support.
 # https://github.com/iissnan/hexo-theme-next/pull/410
 facebook_sdk:
-  enable:       false
+  enable: false
   app_id:       #<app_id>
   fb_admin:     #<user_id>
   like_button:  #true
@@ -509,18 +512,18 @@ facebook_sdk:
 # This plugin depends on Facebook SDK.
 # If facebook_sdk.enable is false, Facebook comments plugin is unavailable.
 facebook_comments_plugin:
-  enable:       false
+  enable: false
   num_of_posts: 10    # min posts num is 1
-  width:        100%  # default width is 550px
-  scheme:       light # default scheme is light (light or dark)
+  width: 100%  # default width is 550px
+  scheme: light # default scheme is light (light or dark)
 
 # VKontakte API Support.
 # To get your AppID visit https://vk.com/editapp?act=create
 vkontakte_api:
-  enable:       false
+  enable: false
   app_id:       #<app_id>
-  like:         true
-  comments:     true
+  like: true
+  comments: true
   num_of_posts: 10
 
 # Star rating support to each article.
@@ -528,7 +531,7 @@ vkontakte_api:
 rating:
   enable: false
   id:     #<app_id>
-  color:  fc6423
+  color: fc6423
 # ---------------------------------------------------------------
 
 # Show number of visitors to each article.
