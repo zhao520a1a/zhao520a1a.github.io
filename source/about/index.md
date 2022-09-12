@@ -10,4 +10,4 @@ Golden 是一个程序猿呀！！
 ![公众号](https://zhao520a1a.github.io/about/index/qrCode.png)
 
 ### [思维笔记](https://www.processon.com/u/5ab9cb2de4b018c271cab8d4/profile)
-![processOn](https://zhao520a1a.github.io/about/index/processon.png)
+![processOn](https://zhao520a1a.github.io/about/index/processOn.png)
