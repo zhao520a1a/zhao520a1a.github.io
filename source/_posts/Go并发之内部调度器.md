@@ -1,6 +1,6 @@
 ---
-tags: [goroutine]    
-categories: [Go,调度] 
+tags: [go]   
+categories: [源码解读]
 ---
 
 

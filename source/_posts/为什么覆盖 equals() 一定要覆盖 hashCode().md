@@ -1,7 +1,7 @@
 
 ---
-tags: [jdk]    
-categories: [Java,jdk] 
+tags: [map]    
+categories: [数据存储] 
 ---
 
 [TOC]

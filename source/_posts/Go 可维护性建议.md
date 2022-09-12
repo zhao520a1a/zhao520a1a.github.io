@@ -1,5 +1,6 @@
 ---
-categories: [Go,代码风格] 
+tags: [go]   
+categories: [编码规范]
 ---
  
 > 思维导图

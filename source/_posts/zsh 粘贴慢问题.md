@@ -1,6 +1,6 @@
 ---
 tags: [zsh]
-categories: [Q&A] 
+categories: [开发工具] 
 ---
  
 ### 问题描述

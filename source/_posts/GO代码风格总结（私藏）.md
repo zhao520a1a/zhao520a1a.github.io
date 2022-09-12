@@ -1,6 +1,8 @@
 ---
-categories: [Go,代码风格] 
+tags: [go]   
+categories: [编码规范]
 ---
+
 ![77db407342d98de1dbfe6016af86c359](GO代码风格总结（私藏）.resources/132.jpeg)
 
 ### 指导原则

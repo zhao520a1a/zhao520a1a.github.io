@@ -1,8 +1,7 @@
 ---
-tags: [jvm]    
-categories: [Java,jvm]
+tags: [java]   
+categories: [源码解读]
 ---
-
 
 [TOC]
 > 本文是以jdk1.8的hotspot虚拟机为范例，介绍JVM的内部机制的。

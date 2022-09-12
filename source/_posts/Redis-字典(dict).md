@@ -1,8 +1,7 @@
 ---
 tags: [redis]   
-categories: [Redis,内部结构]
+categories: [源码解读]
 ---
-
 
 [TOC]
 

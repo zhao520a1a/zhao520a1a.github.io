@@ -1,7 +1,8 @@
 ---
-tags: [redis]    
-categories: [Redis,内部结构]
+tags: [redis]   
+categories: [源码解读]
 ---
+
 [TOC]
 > 当redis server启动时，如果没有开启AOF模式，则加载AOF文件，否则将加载RDB文件。
 如果redis中数据发生变化，那么不会直接写到硬盘里，而是先写到AOF缓冲区aof_buf中。
