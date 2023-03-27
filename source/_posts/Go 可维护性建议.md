@@ -1,10 +1,15 @@
 ---
+title: Go 可维护性建议
 tags: [go]   
 categories: [编码规范]
+date: 2022-06-02
+cover: https://zhao520a1a.github.io/2022/06/02/Go%20%E5%8F%AF%E7%BB%B4%E6%8A%A4%E6%80%A7%E5%BB%BA%E8%AE%AE/title.jpg
+top_img:  https://zhao520a1a.github.io/2022/06/02/Go%20%E5%8F%AF%E7%BB%B4%E6%8A%A4%E6%80%A7%E5%BB%BA%E8%AE%AE/top.jpg
 ---
- 
+
 > 思维导图
-> ![](http://assets.processon.com/chart_image/5fb9210b7d9c0857dda9786f.png?_=1616316539063)
+<img src="http://assets.processon.com/chart_image/5fb9210b7d9c0857dda9786f.png?_=1616316539063" style="zoom: 150%;" />
+
 
 ### 1. 指导原则 
 

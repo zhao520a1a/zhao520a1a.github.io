@@ -1,4 +1,5 @@
 ---
+title: JVM内部机制
 tags: [java]   
 categories: [源码解读]
 ---

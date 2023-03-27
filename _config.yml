@@ -3,10 +3,10 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: 简笔话编程
-subtitle: 'Golden是一只程序猿'
+title: 发光の金子吖
+subtitle: ''
 description: ''
-keywords: golden java
+keywords: 
 author: Golden
 language: zh-Hans
 timezone: 'Asia/Shanghai'
@@ -94,7 +94,8 @@ ignore:
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
 #theme: landscape
-theme: next
+#theme: next
+theme: butterfly
 
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html

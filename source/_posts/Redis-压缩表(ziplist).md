@@ -1,4 +1,5 @@
 ---
+title: Redis-压缩表(ziplist)
 tags: [redis]   
 categories: [源码解读]
 ---

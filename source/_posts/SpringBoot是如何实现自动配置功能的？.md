@@ -1,4 +1,5 @@
 ---
+title: SpringBoot是如何实现自动配置功能的？
 tags: [java]   
 categories: [源码解读]
 ---

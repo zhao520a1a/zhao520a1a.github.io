@@ -1,4 +1,5 @@
 ---
+title: HashMap原理
 tags: [java]   
 categories: [源码解读]
 ---

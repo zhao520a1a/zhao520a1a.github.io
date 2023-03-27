@@ -1,4 +1,5 @@
 ---
+title: shell实现SSH自动登陆
 tags: [zsh]
 categories: [开发工具]
 ---

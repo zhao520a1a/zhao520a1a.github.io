@@ -1,4 +1,5 @@
 ---
+title: zsh 粘贴慢问题
 tags: [zsh]
 categories: [开发工具] 
 ---

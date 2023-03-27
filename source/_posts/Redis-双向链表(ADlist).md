@@ -1,4 +1,5 @@
 ---
+title: Redis-双向链表(ADlist)
 tags: [redis]   
 categories: [源码解读]
 ---

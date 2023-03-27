@@ -1,4 +1,5 @@
 ---
+title: GO代码风格总结（私藏）
 tags: [go]   
 categories: [编码规范]
 ---

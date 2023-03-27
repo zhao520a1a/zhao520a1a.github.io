@@ -1,5 +1,6 @@
 
 ---
+title: 为什么覆盖 equals() 一定要覆盖 hashCode()
 tags: [map]    
 categories: [数据存储] 
 ---

@@ -1,4 +1,5 @@
 ---
+title: Redis-快速列表(quicklist)
 tags: [redis]   
 categories: [源码解读]
 ---
