@@ -29,7 +29,8 @@ archive_dir: archives
 category_dir: categories
 code_dir: downloads/code
 i18n_dir: :lang
-skip_render:
+# 跳过指定文件的渲染，设置的路径是相对于source目录的路径。
+skip_render: [_posts/隐藏资料/**,_posts/草稿箱/**,]
 
 # Writing
 new_post_name: :title.md # File name of new posts
