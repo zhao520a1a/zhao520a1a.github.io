@@ -686,7 +686,7 @@ aside:
     category: true
   card_author:
     enable: true
-    description: 简单是复杂的，但清晰是值得努力的
+    description: 一个乐观的悲观主义者
     button:
       enable: true
       icon: fab fa-github
