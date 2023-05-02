@@ -1,0 +1,282 @@
+<!DOCTYPE html><html lang="zh-Hans" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>Go 调度篇 | 发光の金子吖</title><meta name="author" content="Golden"><meta name="copyright" content="Golden"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Go 调度都发生了啥?">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Go 调度篇">
+<meta property="og:url" content="https://zhao520a1a.github.io/2022/03/01/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/Go%20%E8%B0%83%E5%BA%A6%E7%AF%87/index.html">
+<meta property="og:site_name" content="发光の金子吖">
+<meta property="og:description" content="Go 调度都发生了啥?">
+<meta property="og:locale">
+<meta property="og:image" content="https://github.com/zhao520a1a/zhao520a1a.github.io/blob/hexo/source/cover/Go-scheduler.jpg?raw=true">
+<meta property="article:published_time" content="2022-02-28T16:00:00.000Z">
+<meta property="article:modified_time" content="2023-05-02T13:55:32.891Z">
+<meta property="article:author" content="Golden">
+<meta property="article:tag" content="go">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://github.com/zhao520a1a/zhao520a1a.github.io/blob/hexo/source/cover/Go-scheduler.jpg?raw=true"><link rel="shortcut icon" href="/img/logo.png"><link rel="canonical" href="https://zhao520a1a.github.io/2022/03/01/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/Go%20%E8%B0%83%E5%BA%A6%E7%AF%87/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Go 调度篇',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-05-02 21:55:32'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.0.0-rc1"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/avatar.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">34</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">10</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://github.com/zhao520a1a/zhao520a1a.github.io/blob/hexo/source/cover/Go-scheduler.jpg?raw=true')"><nav id="nav"><span id="blog-info"><a href="/" title="发光の金子吖"><img class="site-icon" src="/img/logo.png"/><span class="site-name">发光の金子吖</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Go 调度篇</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-02-28T16:00:00.000Z" title="发表于 2022-03-01 00:00:00">2022-03-01</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-05-02T13:55:32.891Z" title="更新于 2023-05-02 21:55:32">2023-05-02</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/">内部原理</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Go 调度篇"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h3 id="导读"><a href="#导读" class="headerlink" title="导读"></a>导读</h3><p>调度在计算机中是分配工作所需资源的方法. linux的调度为CPU找到可运行的线程. 而Go的调度是为M(线程)找到P(内存, 执行票据)和可运行的G.</p>
+<p>首先，带着问题去思考🤔：</p>
+<ul>
+<li>Go的调度为什么说是轻量的?</li>
+<li>Go调度都发生了啥?</li>
+<li>Go的网络和锁会不会阻塞线程?</li>
+<li>什么时候会阻塞线程?</li>
+<li>Go是怎样实现少量内核线程支撑大量 Goroutine 的并发运行？</li>
+<li>为了最大限度利用计算资源，Go 调度器是如何处理线程阻塞的场景？<br>相信你认真阅读完本文，这些问题都会找到答案！</li>
+</ul>
+<h3 id="背景常识"><a href="#背景常识" class="headerlink" title="背景常识"></a>背景常识</h3><p>调度的进化：Process -&gt; Thread(LWP, lightweight process) -&gt; goroutine (一种 lightweight userspace thread)其实就是一个不断共享, 不断减少切换成本的过程.</p>
+<p>理解调度, 首先要理解两个概念: 运行和阻塞</p>
+<ul>
+<li><p>线程其实并不是真正运行的实体, 线程只是代表一个执行流和其状态。真正运行驱动流程往前的其实是 CPU。</p>
+</li>
+<li><p><strong>线程的运行, 其实是被运行。其阻塞, 其实是切换出调度队列, 不再去调度执行这个执行流。</strong> 其他执行流满足其条件, 便会把被移出调度队列的执行流重新放回调度队列，协程也同理。</p>
+<p>注意：goroutine 的形式只是协程的一种形式</p>
+</li>
+<li><p>线程、协程只是一个执行流, 并不是运行实体；</p>
+</li>
+</ul>
+<h3 id="GM-模型（go-1-0）"><a href="#GM-模型（go-1-0）" class="headerlink" title="GM 模型（go 1.0）"></a>GM 模型（go 1.0）</h3><blockquote>
+<p>Go 目前使用的调度器是 2012 年重新设计的，因为之前的 GM 模型调度器性能存在问题，所以使用 4 年就被废弃了；</p>
+</blockquote>
+<p>一个全局队列放待运行的 G 和新生成 G，M 寻找可运行的 G 等操作都在全局队列中操作, 这个过程中需要加线程级别的锁。</p>
+<img src="/2022/03/01/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/Go%20%E8%B0%83%E5%BA%A6%E7%AF%87/6164f0db0791290cc7837974.png" alt="image-20211012102137300" style="zoom:80%;">
+
+<h4 id="存在的问题"><a href="#存在的问题" class="headerlink" title="存在的问题"></a>存在的问题</h4><ul>
+<li><p>全局调度锁问题</p>
+<p>M 想要执行、放回 G 都必须访问全局 G 队列，并且 M 有多个，即：多线程访问同一资源需要加锁进行保证互斥 &#x2F; 同步，所以全局队列是有互斥锁进行保护的，而单一的全局调度锁(Sched.Lock)和集中的状态，会导致伸缩性下降；</p>
+</li>
+<li><p>G 的传递问题</p>
+<p>M 之间转移 G 会造成延迟和额外的系统负载。比如当 G 中包含创建新协程的时候，M 创建了 G’，为了继续执行 G，需要把 G’交给 M’执行，也造成了很差的局部性，因为 G’和 G 是相关的，最好放在 M 上执行，而不是其他 M’；</p>
+</li>
+<li><p>Pre-M 的内存问题</p>
+</li>
+</ul>
+<p>每个 M 都需要 memory cache 和其他类型的 cache(比如 stack alloc), 然而实际上只有 M 在运行 Go 代码时才需要这些 Per-M Cache, 阻塞在系统调用的 M 并不需要这些 cache. 正在运行 Go 代码的 M 与进行系统调用的 M 的比例可能高达 1:100, 这造成了很大的内存消耗；</p>
+<h4 id="优化思路"><a href="#优化思路" class="headerlink" title="优化思路"></a>优化思路</h4><ul>
+<li>是不是可以给运行的 M 加个本地队列?</li>
+<li>是不是可以剥夺阻塞的 M 的 mcache 给其他 M 使用?</li>
+</ul>
+<h3 id="GMP-模型（go-1-0-）"><a href="#GMP-模型（go-1-0-）" class="headerlink" title="GMP 模型（go 1.0+）"></a>GMP 模型（go 1.0+）</h3><blockquote>
+<p><strong>进程是资源的最小单位，线程是调度的最小单位。</strong>Go 的 runtime 把 G 当作最小调度单位了，那么在加一个资源的最小单位不就得了么，这个时候在 M 和 G 之间的 P 就呼之欲出了。</p>
+</blockquote>
+<h4 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h4><p>G：goroutine 一个计算任务</p>
+<p>M： machine 系统线程，执行实体</p>
+<p>P： processor 虚拟处理器</p>
+<h4 id="举例说明"><a href="#举例说明" class="headerlink" title="举例说明"></a>举例说明</h4><p>通过经典的地鼠推车搬砖的模型来说明 M、P、G 其三者关系：</p>
+<p>地鼠的工作任务是：工地上有若干砖头，地鼠借助小车把砖头运送到火种上去烧制。M 就可以看作图中的地鼠，P 就是小车，G 就是小车里装的砖。</p>
+<p>注：地鼠(M) 如果没有小车(P)是没办法运砖的，小车(P)的数量决定了能够干活的地鼠(M)数量，在 Go 程序里面对应的是活动线程数。</p>
+<img src="/2022/03/01/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/Go%20%E8%B0%83%E5%BA%A6%E7%AF%87/61161ffa1e085306e879d60e.png" alt="img" style="zoom: 67%;">
+
+<h4 id="全景大图"><a href="#全景大图" class="headerlink" title="全景大图"></a>全景大图</h4><img src="/2022/03/01/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/Go%20%E8%B0%83%E5%BA%A6%E7%AF%87/60ec529d7d9c083127204049.png" alt="img" style="zoom:80%;">
+
+<ul>
+<li><p>每个 p 均有本地队列，通过增加本地队列减少锁操作：</p>
+</li>
+<li><p>一个 P 最多包含 257 个 G：一个 126 容量的本地队列 + 优先级最高的 runnext</p>
+</li>
+<li><p>如果一个 P 上的 G 超过了 257 个，还有一个全局队列，如果超过了就会放在全局队列上，全局队列是个链表，无限长。</p>
+</li>
+</ul>
+<h4 id="相关源码"><a href="#相关源码" class="headerlink" title="相关源码"></a>相关源码</h4><p>编译器将 go 关键字编译为生成一个协程结构体</p>
+  <img src="/2022/03/01/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/Go%20%E8%B0%83%E5%BA%A6%E7%AF%87/61656bb11efad41d8252294b.png" alt="img">
+
+<h3 id="调度器"><a href="#调度器" class="headerlink" title="调度器"></a>调度器</h3><h4 id="调度循环"><a href="#调度循环" class="headerlink" title="调度循环"></a>调度循环</h4><p>M 执行 G 时四个方法周而复始，<a target="_blank" rel="noopener" href="https://www.figma.com/proto/JYM6TcdzBx7WtanhcJX0rP/bootstrap-(Copy)?page-id=5106:2&node-%20id=5106:3&scaling=scale-down">动态演示图</a></p>
+<img src="/2022/03/01/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/Go%20%E8%B0%83%E5%BA%A6%E7%AF%87/60ec540b1e085309641a9e6b.png" alt="img">
+
+<h4 id="调度策略"><a href="#调度策略" class="headerlink" title="调度策略"></a>调度策略</h4><p>从 P 寻找可用的 G 的具体过程如下，下面逻辑来源于源码中 findrunnable()方法：</p>
+<ol>
+<li><p>如果 P 的 runnext 存在有就用这个 G【不加锁】，如果没有往下做</p>
+</li>
+<li><p>从 P 的 local queue 中顺序拿一下【不加锁】，如果 local queue 为空没有往下走</p>
+</li>
+<li><p>从全局队列中拿一个【加锁】，顺便从全局队列拿出 128 个给这个 P（如果全局队列中没有 128 个就都给它，省的以后总来要），如果全区队列为空就继续往下走</p>
+</li>
+<li><p>从 netpoll 中拿，如果有返回第一个，剩下的通过 injectglist 放到全局队列中【加锁】，如果没有往下走</p>
+</li>
+<li><p>通过 runqsteal 函数随机从其他的 P 的本地队列中偷一半给当前 P，然后将偷到的最后一个返回，如果还没有，那就算了，将 P 设置为空闲状态并且将 M 从 P 中拿下来，但是不会 kill M。</p>
+</li>
+</ol>
+<p>上面其实涉及了两种调度机制：</p>
+<ul>
+<li>hand off 机制： 当本线程因为 G 进行系统调用阻塞时，线程释放绑定的 P，把 P 转移给其他空闲的线程执行，</li>
+<li>work-stealing 机制：当本线程无可运行的 G 时，尝试从其他线程绑定的 P 偷取 G，而不是销毁线程。</li>
+</ul>
+<h3 id="调度优化"><a href="#调度优化" class="headerlink" title="调度优化"></a>调度优化</h3><blockquote>
+<p>如果正在执行的 goroutine 阻塞了线程 M 怎么办？P 上 LRQ 中的 goroutine 会获取不到调度么？</p>
+</blockquote>
+<p>主要的 4 种阻塞场景：</p>
+<h4 id="场景-1：原子、互斥量或通道操作"><a href="#场景-1：原子、互斥量或通道操作" class="headerlink" title="场景 1：原子、互斥量或通道操作"></a>场景 1：原子、互斥量或通道操作</h4><p>调度器将把当前阻塞的 goroutine 切换出去，重新调度 LRQ 上的其他 goroutine；即：用户代码中的协程同步造成的阻塞, 仅仅是切换协程, 而不阻塞线程；</p>
+<h4 id="场景-2：调用-sleep-方法"><a href="#场景-2：调用-sleep-方法" class="headerlink" title="场景 2：调用 sleep 方法"></a>场景 2：调用 sleep 方法</h4><p>Go 程序后台有一个<strong>监控线程 sysmon</strong>，它监控那些长时间运行的 G 任务然后设置可以抢占的标识符，别的 goroutine 就可以抢先进来执行。只要下次这个 goroutine 进行函数调用，那么就会被强占，同时也会保护现场，然后重新放入 P 的本地队列里面等待下次执行。</p>
+<h4 id="场景-3：调用一些系统方法"><a href="#场景-3：调用一些系统方法" class="headerlink" title="场景 3：调用一些系统方法"></a>场景 3：调用一些系统方法</h4><p>这种情况下，进行系统调用的 goroutine 将阻塞当前 M。此时需要调度器的介入。<br>例如：同步系统调用（如文件 I&#x2F;O）会导致 M 阻塞的情况，G1 将进行同步系统调用以阻塞 M1。<br><img src="/2022/03/01/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/Go%20%E8%B0%83%E5%BA%A6%E7%AF%87/61656d0363768921fa1a6a62.png" style="zoom:50%;"></p>
+<p>调度器介入后：监控线程 sysmon 识别出 G1 已导致 M1 阻塞，会将 M1 与 P 分离，同时也将 G1 带走。然后调度器引入新的 M2 来服务 P。此时，可以从 LRQ 中选择 G2 并在 M2 上进行上下文切换。<br><img src="/2022/03/01/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/Go%20%E8%B0%83%E5%BA%A6%E7%AF%87/61656d417d9c0866513442c1.png" style="zoom:50%;"><br>阻塞的系统调用完成后：G1 可以移回 LRQ 并再次由 P 执行。为防止这种情况再次发生，M1 将被放在旁边以备将来重复使用。<br><img src="/2022/03/01/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/Go%20%E8%B0%83%E5%BA%A6%E7%AF%87/61656d787d9c086651344331.png" style="zoom: 50%;"></p>
+<h4 id="场景-4：网络-IO-请求操作"><a href="#场景-4：网络-IO-请求操作" class="headerlink" title="场景 4：网络 IO 请求操作"></a>场景 4：网络 IO 请求操作</h4><p>Go 通过使用**网络轮询器(NetPoller)**进行网络系统调用，防止 goroutine 在进行这些系统调用时阻塞 M。这可以让 M 执行 P 的 LRQ 中其他的 goroutines，而不需要创建新的 M。从而减少操作系统上的调度负载；<br>下面展示它的工作原理：<br>G1 正在 M 上执行，还有 3 个 goroutine 在 LRQ 上等待执行。网络轮询器空闲着，什么都没干。<br><img src="/2022/03/01/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/Go%20%E8%B0%83%E5%BA%A6%E7%AF%87/61656deaf346fb06a9e6fc73.png" style="zoom:50%;"><br>接下来，G1 想要进行网络系统调用，因此它被移动到网络轮询器并且处理异步网络系统调用。然后，M 可以从 LRQ 执行另外的 goroutine。此时，G2 就被上下文切换到 M 上了。<br><img src="/2022/03/01/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/Go%20%E8%B0%83%E5%BA%A6%E7%AF%87/61656e395653bb1336d853b4.png" style="zoom: 50%;"><br>最后，异步网络系统调用由网络轮询器完成，G1 被移回到 P 的 LRQ 中。一旦 G1 可以在 M 上进行上下文切换，它负责的 Go 相关代码就可以再次执行。这里的最大优势是，执行网络系统调用不需要额外的 M。网络轮询器使用系统线程，它时刻处理一个有效的事件循环。<br><img src="http://cdn.processon.com/61656e280e3e746edca6eaf0?e=1634040888&token=trhI0BY8QfVrIGn9nENop6JAc6l5nZuxhjQ62UfM:8JK4PRG8-Xr9g0m1-vMHYh2BSdE=" style="zoom:50%;"></p>
+<h3 id="G-状态流转"><a href="#G-状态流转" class="headerlink" title="G 状态流转"></a>G 状态流转</h3><h4 id="G-状态列表"><a href="#G-状态列表" class="headerlink" title="G 状态列表"></a>G 状态列表</h4><img src="/2022/03/01/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/Go%20%E8%B0%83%E5%BA%A6%E7%AF%87/6164f81c63768921fa1855e2.png" alt="img" style="zoom: 67%;">
+
+<h4 id="G-状态流转图"><a href="#G-状态流转图" class="headerlink" title="G 状态流转图"></a>G 状态流转图</h4><img src="/2022/03/01/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/Go%20%E8%B0%83%E5%BA%A6%E7%AF%87/6164f7cff346fb06a9e4e9a8.png" alt="img" style="zoom:80%;">
+
+<h4 id="举例说明-1"><a href="#举例说明-1" class="headerlink" title="举例说明"></a>举例说明</h4><img src="/2022/03/01/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/Go%20%E8%B0%83%E5%BA%A6%E7%AF%87/61655659e0b34d7c7daa7ccf.png" alt="img" style="zoom:50%;">
+
+<h3 id="G-抢占（Preemption）"><a href="#G-抢占（Preemption）" class="headerlink" title="G 抢占（Preemption）"></a>G 抢占（Preemption）</h3><h4 id="抢占的触发时机"><a href="#抢占的触发时机" class="headerlink" title="抢占的触发时机"></a>抢占的触发时机</h4><ul>
+<li>GC STW</li>
+<li>栈扫描</li>
+<li>后台监控</li>
+</ul>
+<h3 id="应用案例"><a href="#应用案例" class="headerlink" title="应用案例"></a>应用案例</h3><h4 id="为什么-Go-服务容器化之后延迟变高？"><a href="#为什么-Go-服务容器化之后延迟变高？" class="headerlink" title="为什么 Go 服务容器化之后延迟变高？"></a>为什么 Go 服务容器化之后延迟变高？</h4><p>现象：被容器限制了 4C 的服务跑在 96C 的机器上，相比于物理机部署的延时高了很多。</p>
+<p>原因：因为 Go 启动的时候读的宿主机的 CPU 核心数，启动了 96 个 P，96 个 P 都在找 G 去执行但是只有 4C 的处理时间，导致大量 CPU 耗费在找 G 和上下文切换。</p>
+<p>解决方案：引入 uber 的 automaxprocs 库</p>
+<h4 id="Go-服务最好不要用太多的-CPU"><a href="#Go-服务最好不要用太多的-CPU" class="headerlink" title="Go 服务最好不要用太多的 CPU"></a>Go 服务最好不要用太多的 CPU</h4><p>因为创建的<code>系统线程不会被kill</code>，如果开启 100 系统线程空闲之后，那岂不是这个 100 个系统线程都不会被 kill 就在那静静的等着。因此 Go 服务最好不要用太多的 CPU，几百个线程就将近一个 G 的内存了，你这台机器要是再部署多个就尴尬了。</p>
+<h3 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h3><ul>
+<li><p>本文相关 脑图分享：<a target="_blank" rel="noopener" href="https://www.processon.com/view/link/604ef417e0b34d1578d9ddb6">https://www.processon.com/view/link/604ef417e0b34d1578d9ddb6</a></p>
+</li>
+<li><p>本文相关 PPT 分享：<a target="_blank" rel="noopener" href="https://yuque.antfin.com/zhaojinxin.zjx/fy19pc/zdtmxw">https://yuque.antfin.com/zhaojinxin.zjx/fy19pc/zdtmxw</a></p>
+</li>
+</ul>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p><a target="_blank" rel="noopener" href="https://gitee.com/zhaojinxin_golden/article-images/blob/master/go/gopher%20meetup-%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BAGolang%20Runtime-yifhao-full.pptx">深入浅出 GolangRuntime</a><br><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/7bjefYPhI03t9HRny42zkA">为什么 Go 服务容器化之后延迟变高</a></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://zhao520a1a.github.io">Golden</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://zhao520a1a.github.io/2022/03/01/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/Go%20%E8%B0%83%E5%BA%A6%E7%AF%87/">https://zhao520a1a.github.io/2022/03/01/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/Go%20%E8%B0%83%E5%BA%A6%E7%AF%87/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://zhao520a1a.github.io" target="_blank">发光の金子吖</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/go/">go</a></div><div class="post_share"><div class="social-share" data-image="https://github.com/zhao520a1a/zhao520a1a.github.io/blob/hexo/source/cover/Go-scheduler.jpg?raw=true" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2022/04/01/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/Go%20%E5%86%85%E5%AD%98%E7%AF%87/" title="Go 内存篇"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Go 内存篇</div></div></a></div><div class="next-post pull-right"><a href="/2021/12/01/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/TiDB/" title="TiDB"><img class="cover" src="https://cdn.thenewstack.io/media/2017/04/2cb7769e-tidb.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">TiDB</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2023/04/09/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/Go%20JSON%20%E5%BA%93%E8%B0%83%E7%A0%94/" title="Go JSON 库调研"><img class="cover" src="https://github.com/zhao520a1a/zhao520a1a.github.io/blob/hexo/source/cover/Go-json-pkg.jpg?raw=true" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-04-09</div><div class="title">Go JSON 库调研</div></div></a></div><div><a href="/2022/06/21/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/GO%E4%BB%A3%E7%A0%81%E9%A3%8E%E6%A0%BC%E6%80%BB%E7%BB%93%EF%BC%88%E7%A7%81%E8%97%8F%EF%BC%89/" title="代码风格规范"><img class="cover" src="https://github.com/zhao520a1a/zhao520a1a.github.io/blob/hexo/source/cover/Go.png?raw=true" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-06-21</div><div class="title">代码风格规范</div></div></a></div><div><a href="/2022/05/09/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/Go%20%E5%8F%AF%E7%BB%B4%E6%8A%A4%E6%80%A7%E5%BB%BA%E8%AE%AE/" title="Go 可维护性建议"><img class="cover" src="https://github.com/zhao520a1a/zhao520a1a.github.io/blob/hexo/source/cover/Go-design.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-05-09</div><div class="title">Go 可维护性建议</div></div></a></div><div><a href="/2022/05/01/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/Go%20GC%E7%AF%87/" title="Go GC篇"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-05-01</div><div class="title">Go GC篇</div></div></a></div><div><a href="/2022/04/01/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/Go%20%E5%86%85%E5%AD%98%E7%AF%87/" title="Go 内存篇"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-04-01</div><div class="title">Go 内存篇</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Golden</div><div class="author-info__description">一个乐观的悲观主义者</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">34</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">10</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://space.bilibili.com/334383730"><i class="fab fa-bilibili"></i><span>关注一下</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/zhao520a1a" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="https://space.bilibili.com/334383730" target="_blank" title="B 站"><i class="fab fa-bilibili"></i></a><a class="social-icon" href="https://zhao520a1a.github.io/about/index/qrCode.png" target="_blank" title="微信公众号"><i class="fab fa-weixin"></i></a><a class="social-icon" href="https://www.processon.com/u/5ab9cb2de4b018c271cab8d4/profile" target="_blank" title="ProcessOn"><i class="far fa-lightbulb"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">喜欢即可关注，关注即可进步，OVER!</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AF%BC%E8%AF%BB"><span class="toc-number">1.</span> <span class="toc-text">导读</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%83%8C%E6%99%AF%E5%B8%B8%E8%AF%86"><span class="toc-number">2.</span> <span class="toc-text">背景常识</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#GM-%E6%A8%A1%E5%9E%8B%EF%BC%88go-1-0%EF%BC%89"><span class="toc-number">3.</span> <span class="toc-text">GM 模型（go 1.0）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AD%98%E5%9C%A8%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-number">3.1.</span> <span class="toc-text">存在的问题</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BC%98%E5%8C%96%E6%80%9D%E8%B7%AF"><span class="toc-number">3.2.</span> <span class="toc-text">优化思路</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#GMP-%E6%A8%A1%E5%9E%8B%EF%BC%88go-1-0-%EF%BC%89"><span class="toc-number">4.</span> <span class="toc-text">GMP 模型（go 1.0+）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="toc-number">4.1.</span> <span class="toc-text">基本概念</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%BE%E4%BE%8B%E8%AF%B4%E6%98%8E"><span class="toc-number">4.2.</span> <span class="toc-text">举例说明</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%A8%E6%99%AF%E5%A4%A7%E5%9B%BE"><span class="toc-number">4.3.</span> <span class="toc-text">全景大图</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%9B%B8%E5%85%B3%E6%BA%90%E7%A0%81"><span class="toc-number">4.4.</span> <span class="toc-text">相关源码</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B0%83%E5%BA%A6%E5%99%A8"><span class="toc-number">5.</span> <span class="toc-text">调度器</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%B0%83%E5%BA%A6%E5%BE%AA%E7%8E%AF"><span class="toc-number">5.1.</span> <span class="toc-text">调度循环</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%B0%83%E5%BA%A6%E7%AD%96%E7%95%A5"><span class="toc-number">5.2.</span> <span class="toc-text">调度策略</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B0%83%E5%BA%A6%E4%BC%98%E5%8C%96"><span class="toc-number">6.</span> <span class="toc-text">调度优化</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9C%BA%E6%99%AF-1%EF%BC%9A%E5%8E%9F%E5%AD%90%E3%80%81%E4%BA%92%E6%96%A5%E9%87%8F%E6%88%96%E9%80%9A%E9%81%93%E6%93%8D%E4%BD%9C"><span class="toc-number">6.1.</span> <span class="toc-text">场景 1：原子、互斥量或通道操作</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9C%BA%E6%99%AF-2%EF%BC%9A%E8%B0%83%E7%94%A8-sleep-%E6%96%B9%E6%B3%95"><span class="toc-number">6.2.</span> <span class="toc-text">场景 2：调用 sleep 方法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9C%BA%E6%99%AF-3%EF%BC%9A%E8%B0%83%E7%94%A8%E4%B8%80%E4%BA%9B%E7%B3%BB%E7%BB%9F%E6%96%B9%E6%B3%95"><span class="toc-number">6.3.</span> <span class="toc-text">场景 3：调用一些系统方法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9C%BA%E6%99%AF-4%EF%BC%9A%E7%BD%91%E7%BB%9C-IO-%E8%AF%B7%E6%B1%82%E6%93%8D%E4%BD%9C"><span class="toc-number">6.4.</span> <span class="toc-text">场景 4：网络 IO 请求操作</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#G-%E7%8A%B6%E6%80%81%E6%B5%81%E8%BD%AC"><span class="toc-number">7.</span> <span class="toc-text">G 状态流转</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#G-%E7%8A%B6%E6%80%81%E5%88%97%E8%A1%A8"><span class="toc-number">7.1.</span> <span class="toc-text">G 状态列表</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#G-%E7%8A%B6%E6%80%81%E6%B5%81%E8%BD%AC%E5%9B%BE"><span class="toc-number">7.2.</span> <span class="toc-text">G 状态流转图</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%BE%E4%BE%8B%E8%AF%B4%E6%98%8E-1"><span class="toc-number">7.3.</span> <span class="toc-text">举例说明</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#G-%E6%8A%A2%E5%8D%A0%EF%BC%88Preemption%EF%BC%89"><span class="toc-number">8.</span> <span class="toc-text">G 抢占（Preemption）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8A%A2%E5%8D%A0%E7%9A%84%E8%A7%A6%E5%8F%91%E6%97%B6%E6%9C%BA"><span class="toc-number">8.1.</span> <span class="toc-text">抢占的触发时机</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BA%94%E7%94%A8%E6%A1%88%E4%BE%8B"><span class="toc-number">9.</span> <span class="toc-text">应用案例</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88-Go-%E6%9C%8D%E5%8A%A1%E5%AE%B9%E5%99%A8%E5%8C%96%E4%B9%8B%E5%90%8E%E5%BB%B6%E8%BF%9F%E5%8F%98%E9%AB%98%EF%BC%9F"><span class="toc-number">9.1.</span> <span class="toc-text">为什么 Go 服务容器化之后延迟变高？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Go-%E6%9C%8D%E5%8A%A1%E6%9C%80%E5%A5%BD%E4%B8%8D%E8%A6%81%E7%94%A8%E5%A4%AA%E5%A4%9A%E7%9A%84-CPU"><span class="toc-number">9.2.</span> <span class="toc-text">Go 服务最好不要用太多的 CPU</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B6%E4%BB%96"><span class="toc-number">10.</span> <span class="toc-text">其他</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">11.</span> <span class="toc-text">参考</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2023/04/09/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/Go%20JSON%20%E5%BA%93%E8%B0%83%E7%A0%94/" title="Go JSON 库调研"><img src="https://github.com/zhao520a1a/zhao520a1a.github.io/blob/hexo/source/cover/Go-json-pkg.jpg?raw=true" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Go JSON 库调研"/></a><div class="content"><a class="title" href="/2023/04/09/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/Go%20JSON%20%E5%BA%93%E8%B0%83%E7%A0%94/" title="Go JSON 库调研">Go JSON 库调研</a><time datetime="2023-04-08T16:00:00.000Z" title="发表于 2023-04-09 00:00:00">2023-04-09</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/02/02/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/Copilot/" title="copilot 使用指南"><img src="https://github.com/zhao520a1a/zhao520a1a.github.io/blob/hexo/source/cover/Copilot.png?raw=true" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="copilot 使用指南"/></a><div class="content"><a class="title" href="/2023/02/02/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/Copilot/" title="copilot 使用指南">copilot 使用指南</a><time datetime="2023-02-01T16:00:00.000Z" title="发表于 2023-02-02 00:00:00">2023-02-02</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/06/21/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/GO%E4%BB%A3%E7%A0%81%E9%A3%8E%E6%A0%BC%E6%80%BB%E7%BB%93%EF%BC%88%E7%A7%81%E8%97%8F%EF%BC%89/" title="代码风格规范"><img src="https://github.com/zhao520a1a/zhao520a1a.github.io/blob/hexo/source/cover/Go.png?raw=true" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="代码风格规范"/></a><div class="content"><a class="title" href="/2022/06/21/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/GO%E4%BB%A3%E7%A0%81%E9%A3%8E%E6%A0%BC%E6%80%BB%E7%BB%93%EF%BC%88%E7%A7%81%E8%97%8F%EF%BC%89/" title="代码风格规范">代码风格规范</a><time datetime="2022-06-20T16:00:00.000Z" title="发表于 2022-06-21 00:00:00">2022-06-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/05/09/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/Go%20%E5%8F%AF%E7%BB%B4%E6%8A%A4%E6%80%A7%E5%BB%BA%E8%AE%AE/" title="Go 可维护性建议"><img src="https://github.com/zhao520a1a/zhao520a1a.github.io/blob/hexo/source/cover/Go-design.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Go 可维护性建议"/></a><div class="content"><a class="title" href="/2022/05/09/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/Go%20%E5%8F%AF%E7%BB%B4%E6%8A%A4%E6%80%A7%E5%BB%BA%E8%AE%AE/" title="Go 可维护性建议">Go 可维护性建议</a><time datetime="2022-05-08T16:00:00.000Z" title="发表于 2022-05-09 00:00:00">2022-05-09</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2022/05/01/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/Go%20GC%E7%AF%87/" title="Go GC篇">Go GC篇</a><time datetime="2022-04-30T16:00:00.000Z" title="发表于 2022-05-01 00:00:00">2022-05-01</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2021 - 2023 By Golden</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
