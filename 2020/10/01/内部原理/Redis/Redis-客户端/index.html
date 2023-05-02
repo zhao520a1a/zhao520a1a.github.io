@@ -1,0 +1,217 @@
+<!DOCTYPE html><html lang="zh-Hans" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>Redis-客户端 | 发光の金子吖</title><meta name="author" content="Golden"><meta name="copyright" content="Golden"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Redis服务器是一对多服务器程序，对于每个与服务器连接的客户端，服务器都为这些客户端建立了相应的redisClient结构，保存了客户端的状态信息。  客户端分类普通客户端Lua脚本的伪客户端AOF文件的伪客户端 客户端通用属性包括下面这些信息： 12345678910111213int flags：套接字描述符robj* name：名字int flags：标志sds querybuf：输入缓">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Redis-客户端">
+<meta property="og:url" content="https://zhao520a1a.github.io/2020/10/01/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/Redis/Redis-%E5%AE%A2%E6%88%B7%E7%AB%AF/index.html">
+<meta property="og:site_name" content="发光の金子吖">
+<meta property="og:description" content="Redis服务器是一对多服务器程序，对于每个与服务器连接的客户端，服务器都为这些客户端建立了相应的redisClient结构，保存了客户端的状态信息。  客户端分类普通客户端Lua脚本的伪客户端AOF文件的伪客户端 客户端通用属性包括下面这些信息： 12345678910111213int flags：套接字描述符robj* name：名字int flags：标志sds querybuf：输入缓">
+<meta property="og:locale">
+<meta property="og:image" content="https://i.ytimg.com/vi/h2OlLxe5x8M/maxresdefault.jpg">
+<meta property="article:published_time" content="2020-09-30T16:00:00.000Z">
+<meta property="article:modified_time" content="2023-05-02T12:39:30.313Z">
+<meta property="article:author" content="Golden">
+<meta property="article:tag" content="redis">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.ytimg.com/vi/h2OlLxe5x8M/maxresdefault.jpg"><link rel="shortcut icon" href="/img/logo.png"><link rel="canonical" href="https://zhao520a1a.github.io/2020/10/01/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/Redis/Redis-%E5%AE%A2%E6%88%B7%E7%AB%AF/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Redis-客户端',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-05-02 20:39:30'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.0.0-rc1"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/avatar.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">31</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">9</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://i.ytimg.com/vi/h2OlLxe5x8M/maxresdefault.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="发光の金子吖"><img class="site-icon" src="/img/logo.png"/><span class="site-name">发光の金子吖</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Redis-客户端</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2020-09-30T16:00:00.000Z" title="发表于 2020-10-01 00:00:00">2020-10-01</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-05-02T12:39:30.313Z" title="更新于 2023-05-02 20:39:30">2023-05-02</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/">内部原理</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Redis-客户端"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><blockquote>
+<p>Redis服务器是一对多服务器程序，对于每个与服务器连接的客户端，服务器都为这些客户端建立了相应的redisClient结构，保存了客户端的状态信息。</p>
+</blockquote>
+<h4 id="客户端分类"><a href="#客户端分类" class="headerlink" title="客户端分类"></a>客户端分类</h4><p>普通客户端<br>Lua脚本的伪客户端<br>AOF文件的伪客户端</p>
+<h4 id="客户端通用属性"><a href="#客户端通用属性" class="headerlink" title="客户端通用属性"></a>客户端通用属性</h4><p>包括下面这些信息：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">int flags：套接字描述符</span><br><span class="line">robj* name：名字</span><br><span class="line">int flags：标志</span><br><span class="line">sds querybuf：输入缓冲区</span><br><span class="line">robj **argv：命令与命令参数</span><br><span class="line">int argc：命令参数的个数</span><br><span class="line">struct redisCommand *cmd： 命令的实现函数</span><br><span class="line">char buf[]: 固定大小的输出缓冲区，默认16KB</span><br><span class="line">int bufpos: 记录buf数组已使用的字节数量</span><br><span class="line">authenticated：身份验证标识</span><br><span class="line">time_t ctime：创建客户端的时间</span><br><span class="line">time_t lastinteraction：客户端与服务器最后一次进行互动的时间</span><br><span class="line">time_t obuf_soft_limit_reached_time：输出缓冲区第一次到达软性限制的时间</span><br></pre></td></tr></table></figure>
+<h5 id="套接字描述符fd"><a href="#套接字描述符fd" class="headerlink" title="套接字描述符fd"></a>套接字描述符fd</h5><ul>
+<li>伪客户端 ： fd &#x3D; -1</li>
+<li>普通客户端： fd &gt; -1<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">redis&gt; CLIENT list</span><br><span class="line">addr=127.0.0.1:53428 fd=6 name= age=1242 idle=0 ...</span><br><span class="line">addr=127.0.0.1:53469 fd=7 name= age=4 idle=4 .</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h5 id="名字"><a href="#名字" class="headerlink" title="名字"></a>名字</h5><p>如果客户端没有为自己设置名字，那么客户端状态的name属性指向NULL指针，当客户端执行了<em>CLIENT setname</em>命令之后，服务器会给该客户端设置名字，并把名字保存在redisClient结构体的name属性中。</p>
+<h5 id="标志"><a href="#标志" class="headerlink" title="标志"></a>标志</h5><ul>
+<li>flags属性，<code>记录了客户端的角色，以及客户端所处的状态</code>。</li>
+<li>flags可以表示单个标志，也可以表示多个标志比如flags&#x3D; flag1 | flag2 | …。</li>
+</ul>
+<p>该属性有下列枚举值：参考<a target="_blank" rel="noopener" href="https://baijiahao.baidu.com/s?id=1644126347209525874&wfr=spider&for=pc">redis客户端状态实现原理</a><br>其中： 例如：<code>PUBSUB命令</code>和<code>SCRIPT LOAD命令</code>就是通过<br>使用REDIS_FORCE_AOF标志，强制服务器将当前命令写入AOF文件。</p>
+<h5 id="输入缓冲区"><a href="#输入缓冲区" class="headerlink" title="输入缓冲区"></a>输入缓冲区</h5><p>客户端状态的输入缓冲区用于保存客户端发送的命令请求。<br>缓冲区大小根据输入内容动态扩大或缩小，<code>默认1G</code>。超过限制，否则服务器会采取保护措施关闭客户端。</p>
+<h5 id="命令与命令参数"><a href="#命令与命令参数" class="headerlink" title="命令与命令参数"></a>命令与命令参数</h5><p>在服务器将客户端发送的命令请求保存到输入缓冲区之后， 服务器将对命令请求的内容进行分析， 并将得出的命令参数以及命令参数的个数分别保存到客户端状态的 argv 属性和 argc 属性。</p>
+<img src="/2020/10/01/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/Redis/Redis-%E5%AE%A2%E6%88%B7%E7%AB%AF/2BFEC80B-39F6-43C2-85B8-DBBB7E3FE2CC.png" alt="img">
+
+
+<h5 id="命令的实现函数"><a href="#命令的实现函数" class="headerlink" title="命令的实现函数"></a>命令的实现函数</h5><p>当服务器从协议内容中分析并得出 argv 属性和 argc 属性的值之后， 服务器将根据项 argv[0] 的值， 在命令表中查找命令所对应的命令实现函数。</p>
+<img src="/2020/10/01/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/Redis/Redis-%E5%AE%A2%E6%88%B7%E7%AB%AF/3AA5F0D3-C419-4E3A-B2D6-2AA8BD364386.png" alt="img">
+
+
+<h5 id="输出缓冲区"><a href="#输出缓冲区" class="headerlink" title="输出缓冲区"></a>输出缓冲区</h5><h6 id="分类"><a href="#分类" class="headerlink" title="分类"></a>分类</h6><p>缓冲区有两种：</p>
+<ul>
+<li>固定长度（<code>默认16K</code>）的缓存区:用来存储长度较小的回复.</li>
+<li><code>动态长度的缓存区</code>：用来回复长度比较大的命令，但是为了避免缓冲区过来占用太多资源。</li>
+</ul>
+<h6 id="限制方式"><a href="#限制方式" class="headerlink" title="限制方式"></a>限制方式</h6><p>服务器使用两种模式来限制缓冲区大小：</p>
+<ol>
+<li>硬性限制：当缓冲区大小超出硬性限制大小之后，服务器马上关闭客户端。</li>
+<li>软性限制：当缓冲区大小超出软性限制大小之后，但没有超出硬性限制，服务器通过obuf_soft_limit_reached_time属性记录客户端到达软性限制的起始时间，之后服务器会持续监视客户端，<code>如果输出缓冲区一直超出软性限制，并且持续时间超过服务器设定的时长，那么服务器将关闭客户端；相反地如果输出缓冲区在指定时间内不再超出软性限制，那么客户端不会被关闭，并且obuf_soft_limit_reached_time属性值也会被清零。</code></li>
+</ol>
+<h6 id="设置软性限制和硬性限制"><a href="#设置软性限制和硬性限制" class="headerlink" title="设置软性限制和硬性限制"></a>设置软性限制和硬性限制</h6><p>client-output-buffer-limit选项可以为普通客户端、从服务器客户端、执行发布与订阅功能的客户端设置不同的软性限制和硬性限制，该选项格式为client-output-buffer-limit <class> <hard limit> <soft limit> <soft seconds>，以下是三个设置示例：</soft></soft></hard></class></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">//对普通客户端不限制输出缓冲区大小；</span><br><span class="line">client-output-buffer-limit normal 0 0 0 </span><br><span class="line">//从服务器客户端硬性显示为256M，软性限制为64M，软性限制时长60s；  </span><br><span class="line">client-output-buffer-limit slave 256mb 64mb 60 </span><br><span class="line">//发布订阅客户端硬性限制32M，软性限制8M，软性限制时长60s;</span><br><span class="line">client-output-buffer-limit pubsub 32mb 8mb 60</span><br></pre></td></tr></table></figure>
+
+<h5 id="身份验证"><a href="#身份验证" class="headerlink" title="身份验证"></a>身份验证</h5><p>客户端状态的 authenticated 属性用于记录客户端是否通过了身份验证.<br>0：客户端未通过身份验证<br>1：客户端已通过身份验证<br>当客户端 authenticated 属性的值为 0 时， 除了 AUTH 命令之外， 客户端发送的所有其他命令都会被服务器拒绝执行。<br>注意：authenticated属性只有在服务器启用了身份验证功能时使用。</p>
+<h5 id="时间"><a href="#时间" class="headerlink" title="时间"></a>时间</h5><p>typedef struct redisClient{<br>　　time_t  ctime;&#x2F;&#x2F;创建客户端的时间<br>　　time_t  lastinteraction;&#x2F;&#x2F;客户端与服务器最后一次进行互动的时间,<br>　　time_t  obuf_soft_limit_reached_time;&#x2F;&#x2F;输出缓冲区第一次到达软性限制的时间<br>}</p>
+<h4 id="命令请求的执行过程"><a href="#命令请求的执行过程" class="headerlink" title="命令请求的执行过程"></a>命令请求的执行过程</h4><ol>
+<li>客户端将命令请求发送给服务器；</li>
+<li>服务器读取命令请求，并分析命令参数。</li>
+<li>命令执行器根据参数查找命令的实现函数，然后执行函数并得出命令回复；</li>
+<li>服务器将命令回复返回给客户端；</li>
+</ol>
+<h4 id="初始化服务器过程"><a href="#初始化服务器过程" class="headerlink" title="初始化服务器过程"></a>初始化服务器过程</h4><ol>
+<li>初始化服务器状态；</li>
+<li>载入服务器配置；</li>
+<li>初始化服务器数据结构；</li>
+<li>还原数据库状态</li>
+<li>执行事件循环</li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://zhao520a1a.github.io">Golden</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://zhao520a1a.github.io/2020/10/01/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/Redis/Redis-%E5%AE%A2%E6%88%B7%E7%AB%AF/">https://zhao520a1a.github.io/2020/10/01/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/Redis/Redis-%E5%AE%A2%E6%88%B7%E7%AB%AF/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://zhao520a1a.github.io" target="_blank">发光の金子吖</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/redis/">redis</a></div><div class="post_share"><div class="social-share" data-image="https://i.ytimg.com/vi/h2OlLxe5x8M/maxresdefault.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2020/10/01/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/SpringBoot%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE%E5%8A%9F%E8%83%BD%E7%9A%84%EF%BC%9F/" title="SpringBoot是如何实现自动配置功能的？"><img class="cover" src="https://iconsapi.com/5ee265bce4b0b788a93328a9.svg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">SpringBoot是如何实现自动配置功能的？</div></div></a></div><div class="next-post pull-right"><a href="/2020/09/01/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/Redis/Redis-%E4%BA%8B%E4%BB%B6%E9%A9%B1%E5%8A%A8/" title="Redis-事件驱动"><img class="cover" src="https://i.morioh.com/2022/08/11/dcd7729a.webp" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Redis-事件驱动</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2022/01/02/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/%E8%AE%BE%E8%AE%A1%E4%B8%80%E4%B8%AA%E7%A7%92%E6%9D%80%E7%B3%BB%E7%BB%9F/" title="设计一个秒杀系统"><img class="cover" src="https://github.com/zhao520a1a/zhao520a1a.github.io/blob/hexo/source/cover/spikeScene.png?raw=true" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-01-02</div><div class="title">设计一个秒杀系统</div></div></a></div><div><a href="/2022/11/12/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/%E8%AE%BE%E8%AE%A1%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/" title="设计分布式锁"><img class="cover" src="https://github.com/zhao520a1a/zhao520a1a.github.io/blob/hexo/source/cover/Redis-lock.png?raw=true" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-11-12</div><div class="title">设计分布式锁</div></div></a></div><div><a href="/2020/05/01/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/Redis/Redis-%E5%8E%8B%E7%BC%A9%E8%A1%A8(ziplist)/" title="Redis-压缩表(ziplist)"><img class="cover" src="https://github.com/zhao520a1a/zhao520a1a.github.io/blob/hexo/source/cover/Redis-ziplist.jpg?raw=true" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-05-01</div><div class="title">Redis-压缩表(ziplist)</div></div></a></div><div><a href="/2020/05/01/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/Redis/Redis-%E5%8F%8C%E5%90%91%E9%93%BE%E8%A1%A8(ADlist)/" title="Redis-双向链表(ADlist)"><img class="cover" src="https://github.com/zhao520a1a/zhao520a1a.github.io/blob/hexo/source/cover/Redis-adlist.jpg?raw=true" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-05-01</div><div class="title">Redis-双向链表(ADlist)</div></div></a></div><div><a href="/2020/06/11/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/Redis/Redis-%E5%BF%AB%E9%80%9F%E5%88%97%E8%A1%A8(quicklist)/" title="Redis-快速列表(quicklist)"><img class="cover" src="https://github.com/zhao520a1a/zhao520a1a.github.io/blob/hexo/source/cover/Redis-quicklist.jpg?raw=true" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-06-11</div><div class="title">Redis-快速列表(quicklist)</div></div></a></div><div><a href="/2020/05/01/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/Redis/Redis-%E5%AD%97%E5%85%B8(dict)/" title="Redis-字典(dict)"><img class="cover" src="https://github.com/zhao520a1a/zhao520a1a.github.io/blob/hexo/source/cover/Redis-dict.jpg?raw=true" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-05-01</div><div class="title">Redis-字典(dict)</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Golden</div><div class="author-info__description">一个乐观的悲观主义者</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">31</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">9</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://space.bilibili.com/334383730"><i class="fab fa-bilibili"></i><span>关注一下</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/zhao520a1a" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="https://space.bilibili.com/334383730" target="_blank" title="B 站"><i class="fab fa-bilibili"></i></a><a class="social-icon" href="https://zhao520a1a.github.io/about/index/qrCode.png" target="_blank" title="微信公众号"><i class="fab fa-weixin"></i></a><a class="social-icon" href="https://www.processon.com/u/5ab9cb2de4b018c271cab8d4/profile" target="_blank" title="ProcessOn"><i class="far fa-lightbulb"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">喜欢即可关注，关注即可进步，OVER!</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%88%86%E7%B1%BB"><span class="toc-number">1.</span> <span class="toc-text">客户端分类</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%A2%E6%88%B7%E7%AB%AF%E9%80%9A%E7%94%A8%E5%B1%9E%E6%80%A7"><span class="toc-number">2.</span> <span class="toc-text">客户端通用属性</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%A5%97%E6%8E%A5%E5%AD%97%E6%8F%8F%E8%BF%B0%E7%AC%A6fd"><span class="toc-number">2.1.</span> <span class="toc-text">套接字描述符fd</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%90%8D%E5%AD%97"><span class="toc-number">2.2.</span> <span class="toc-text">名字</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%A0%87%E5%BF%97"><span class="toc-number">2.3.</span> <span class="toc-text">标志</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%BE%93%E5%85%A5%E7%BC%93%E5%86%B2%E5%8C%BA"><span class="toc-number">2.4.</span> <span class="toc-text">输入缓冲区</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E4%B8%8E%E5%91%BD%E4%BB%A4%E5%8F%82%E6%95%B0"><span class="toc-number">2.5.</span> <span class="toc-text">命令与命令参数</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%87%BD%E6%95%B0"><span class="toc-number">2.6.</span> <span class="toc-text">命令的实现函数</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%BE%93%E5%87%BA%E7%BC%93%E5%86%B2%E5%8C%BA"><span class="toc-number">2.7.</span> <span class="toc-text">输出缓冲区</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%88%86%E7%B1%BB"><span class="toc-number">2.7.1.</span> <span class="toc-text">分类</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E9%99%90%E5%88%B6%E6%96%B9%E5%BC%8F"><span class="toc-number">2.7.2.</span> <span class="toc-text">限制方式</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AE%E8%BD%AF%E6%80%A7%E9%99%90%E5%88%B6%E5%92%8C%E7%A1%AC%E6%80%A7%E9%99%90%E5%88%B6"><span class="toc-number">2.7.3.</span> <span class="toc-text">设置软性限制和硬性限制</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%BA%AB%E4%BB%BD%E9%AA%8C%E8%AF%81"><span class="toc-number">2.8.</span> <span class="toc-text">身份验证</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%97%B6%E9%97%B4"><span class="toc-number">2.9.</span> <span class="toc-text">时间</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E8%AF%B7%E6%B1%82%E7%9A%84%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B"><span class="toc-number">3.</span> <span class="toc-text">命令请求的执行过程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%9D%E5%A7%8B%E5%8C%96%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%BF%87%E7%A8%8B"><span class="toc-number">4.</span> <span class="toc-text">初始化服务器过程</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2023/04/09/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/Go%20JSON%20%E5%BA%93%E8%B0%83%E7%A0%94/" title="Go JSON 库调研"><img src="https://github.com/zhao520a1a/zhao520a1a.github.io/blob/hexo/source/cover/Go-json-pkg.jpg?raw=true" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Go JSON 库调研"/></a><div class="content"><a class="title" href="/2023/04/09/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/Go%20JSON%20%E5%BA%93%E8%B0%83%E7%A0%94/" title="Go JSON 库调研">Go JSON 库调研</a><time datetime="2023-04-08T16:00:00.000Z" title="发表于 2023-04-09 00:00:00">2023-04-09</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/02/02/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/Copilot/" title="copilot 使用指南"><img src="https://github.com/zhao520a1a/zhao520a1a.github.io/blob/hexo/source/cover/Copilot.png?raw=true" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="copilot 使用指南"/></a><div class="content"><a class="title" href="/2023/02/02/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/Copilot/" title="copilot 使用指南">copilot 使用指南</a><time datetime="2023-02-01T16:00:00.000Z" title="发表于 2023-02-02 00:00:00">2023-02-02</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/11/12/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/%E8%AE%BE%E8%AE%A1%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/" title="设计分布式锁"><img src="https://github.com/zhao520a1a/zhao520a1a.github.io/blob/hexo/source/cover/Redis-lock.png?raw=true" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="设计分布式锁"/></a><div class="content"><a class="title" href="/2022/11/12/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/%E8%AE%BE%E8%AE%A1%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/" title="设计分布式锁">设计分布式锁</a><time datetime="2022-11-11T16:00:00.000Z" title="发表于 2022-11-12 00:00:00">2022-11-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/08/20/%E8%B8%A9%E5%9D%91%E8%AE%B0%E5%BD%95/zsh%20%E7%B2%98%E8%B4%B4%E6%85%A2%E9%97%AE%E9%A2%98/" title="zsh 粘贴慢问题"><img src="https://github.com/zhao520a1a/zhao520a1a.github.io/blob/hexo/source/cover/zsh.png?raw=true" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="zsh 粘贴慢问题"/></a><div class="content"><a class="title" href="/2022/08/20/%E8%B8%A9%E5%9D%91%E8%AE%B0%E5%BD%95/zsh%20%E7%B2%98%E8%B4%B4%E6%85%A2%E9%97%AE%E9%A2%98/" title="zsh 粘贴慢问题">zsh 粘贴慢问题</a><time datetime="2022-08-19T16:00:00.000Z" title="发表于 2022-08-20 00:00:00">2022-08-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/06/21/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/GO%E4%BB%A3%E7%A0%81%E9%A3%8E%E6%A0%BC%E6%80%BB%E7%BB%93%EF%BC%88%E7%A7%81%E8%97%8F%EF%BC%89/" title="代码风格规范"><img src="https://github.com/zhao520a1a/zhao520a1a.github.io/blob/hexo/source/cover/Go.png?raw=true" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="代码风格规范"/></a><div class="content"><a class="title" href="/2022/06/21/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/GO%E4%BB%A3%E7%A0%81%E9%A3%8E%E6%A0%BC%E6%80%BB%E7%BB%93%EF%BC%88%E7%A7%81%E8%97%8F%EF%BC%89/" title="代码风格规范">代码风格规范</a><time datetime="2022-06-20T16:00:00.000Z" title="发表于 2022-06-21 00:00:00">2022-06-21</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2021 - 2023 By Golden</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
