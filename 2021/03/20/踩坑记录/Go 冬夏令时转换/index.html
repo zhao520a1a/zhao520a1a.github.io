@@ -1,0 +1,199 @@
+<!DOCTYPE html><html lang="zh-Hans" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>Go读取Excel数据 | 发光の金子吖</title><meta name="author" content="Golden"><meta name="copyright" content="Golden"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="引言需求：给定一个时间戳 + 时区(Asia&#x2F;shanghai) + 输出格式，返回该时区下特定格式的时间字符串 注意：一定需要考虑到不同国家冬夏令时情况 抽象一下：难点在于不同时区不同夏令时(夏时制)间转换 基本概念夏时令夏季人为将时间调快一小时，英文为Daylight Saving Time，简称DST 冬令时冬季人为把时针拨回一小时 注意：大多数时候，也会将冬夏令时，统称为夏令时">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Go读取Excel数据">
+<meta property="og:url" content="https://zhao520a1a.github.io/2021/03/20/%E8%B8%A9%E5%9D%91%E8%AE%B0%E5%BD%95/Go%20%E5%86%AC%E5%A4%8F%E4%BB%A4%E6%97%B6%E8%BD%AC%E6%8D%A2/index.html">
+<meta property="og:site_name" content="发光の金子吖">
+<meta property="og:description" content="引言需求：给定一个时间戳 + 时区(Asia&#x2F;shanghai) + 输出格式，返回该时区下特定格式的时间字符串 注意：一定需要考虑到不同国家冬夏令时情况 抽象一下：难点在于不同时区不同夏令时(夏时制)间转换 基本概念夏时令夏季人为将时间调快一小时，英文为Daylight Saving Time，简称DST 冬令时冬季人为把时针拨回一小时 注意：大多数时候，也会将冬夏令时，统称为夏令时">
+<meta property="og:locale">
+<meta property="og:image" content="https://raw.githubusercontent.com/qax-os/excelize/7c221cf29531fcd38871d3295f4b511029cb4282/excelize.svg">
+<meta property="article:published_time" content="2021-03-19T16:00:00.000Z">
+<meta property="article:modified_time" content="2023-05-02T14:56:09.419Z">
+<meta property="article:author" content="Golden">
+<meta property="article:tag" content="go">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/qax-os/excelize/7c221cf29531fcd38871d3295f4b511029cb4282/excelize.svg"><link rel="shortcut icon" href="/img/logo.png"><link rel="canonical" href="https://zhao520a1a.github.io/2021/03/20/%E8%B8%A9%E5%9D%91%E8%AE%B0%E5%BD%95/Go%20%E5%86%AC%E5%A4%8F%E4%BB%A4%E6%97%B6%E8%BD%AC%E6%8D%A2/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Go读取Excel数据',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-05-02 22:56:09'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.0.0-rc1"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/avatar.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">39</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">10</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://raw.githubusercontent.com/qax-os/excelize/7c221cf29531fcd38871d3295f4b511029cb4282/excelize.svg')"><nav id="nav"><span id="blog-info"><a href="/" title="发光の金子吖"><img class="site-icon" src="/img/logo.png"/><span class="site-name">发光の金子吖</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Go读取Excel数据</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-03-19T16:00:00.000Z" title="发表于 2021-03-20 00:00:00">2021-03-20</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-05-02T14:56:09.419Z" title="更新于 2023-05-02 22:56:09">2023-05-02</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E8%B8%A9%E5%9D%91%E8%AE%B0%E5%BD%95/">踩坑记录</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Go读取Excel数据"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>需求：给定一个时间戳 + 时区(Asia&#x2F;shanghai) + 输出格式，返回该时区下特定格式的时间字符串</p>
+<p>注意：一定需要考虑到不同国家冬夏令时情况</p>
+<p>抽象一下：难点在于不同时区不同夏令时(夏时制)间转换</p>
+<h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><h3 id="夏时令"><a href="#夏时令" class="headerlink" title="夏时令"></a>夏时令</h3><p>夏季人为将时间调快一小时，英文为Daylight Saving Time，简称DST</p>
+<h3 id="冬令时"><a href="#冬令时" class="headerlink" title="冬令时"></a>冬令时</h3><p>冬季人为把时针拨回一小时</p>
+<p>注意：大多数时候，也会将冬夏令时，统称为夏令时</p>
+<p>影响：夏天的时候，中国的北京时间（东八区）与美国太平洋时区（西八区）的时差是15小时，而到了冬天却变成16小时。</p>
+<p>各个国家和地区的时区规则，请参见<a target="_blank" rel="noopener" href="https://stackoom.com/link/aHR0cHM6Ly9lbi53aWtpcGVkaWEub3JnL3dpa2kvTGlzdF9vZl90el9kYXRhYmFzZV90aW1lX3pvbmVz">此处的列表</a> 。</p>
+<p>实时查询各个国家和地区时间，请参见<a target="_blank" rel="noopener" href="http://zh.thetimenow.com/utc/coordinated_universal_time">该网站</a></p>
+<h2 id="官方支持"><a href="#官方支持" class="headerlink" title="官方支持"></a>官方支持</h2><p>官方包中提供了<a target="_blank" rel="noopener" href="https://stackoom.com/link/aHR0cHM6Ly9nb2xhbmcub3JnL3BrZy90aW1lLyNMb2FkTG9jYXRpb24=">time.LoadLocation</a>可以完成以上的需求；</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> TIME_LAYOUT = <span class="string">&quot;2006-01-02 15:04:05&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">parseWithLocation</span><span class="params">(name <span class="type">string</span>, timeStr <span class="type">string</span>)</span></span> (time.Time, <span class="type">error</span>) &#123;</span><br><span class="line">	locationName := name</span><br><span class="line">	<span class="keyword">if</span> l, err := time.LoadLocation(locationName); err != <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="built_in">println</span>(err.Error())</span><br><span class="line">		<span class="keyword">return</span> time.Time&#123;&#125;, err</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		<span class="comment">//zone, offset := time.Now().In(location).Zone()</span></span><br><span class="line">		lt, err := time.ParseInLocation(TIME_LAYOUT, timeStr, l)</span><br><span class="line">		<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">			<span class="built_in">println</span>(err.Error())</span><br><span class="line">		&#125;</span><br><span class="line">		fmt.Println(locationName, lt)</span><br><span class="line">		<span class="keyword">return</span> lt, <span class="literal">nil</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<blockquote>
+<p> 具体是如何完成呢？</p>
+</blockquote>
+<p>首先开源库 <a target="_blank" rel="noopener" href="https://www.iana.org/time-zones">IANA TZDB</a>提供<code>时区ID</code>到<code>具体夏令时偏移量</code>的转换数据，</p>
+<p>然后Go源码中包含了它所提供的数据包，因此可以判断冬夏令时的信息。</p>
+<blockquote>
+<p>Go语言提供的time.LoadLocation可能又有什么坑呢？</p>
+</blockquote>
+<p>正如标准库文档中所说的:</p>
+<blockquote>
+<p>The time zone database needed by LoadLocation may not be present on all systems, especially non-Unix systems. LoadLocation looks in the directory or uncompressed zip file named by the ZONEINFO environment variable, if any, then looks in known installation locations on Unix systems, and finally looks in $GOROOT&#x2F;lib&#x2F;time&#x2F;zoneinfo.zip.</p>
+</blockquote>
+<p>LoadLocation所需的时区数据库可能并不存在于所有系统上,尤其是非unix系统. 如果有的话,LoadLocation查找由ZONEINFO环境变量命名的目录或未压缩的 <code>ZONEINFO</code> 环境变量命名的zip文件, 然后查找Unix系统上已知的安装位置,最后查找 <code>$GOROOT/lib/time/ZONEINFO.zip</code>.</p>
+<p>上源码，可以清楚的看到在unix系统中，zoneSources的查找路径：</p>
+<p><img src="evernotecid://CD3082B6-03A3-4D41-80AB-E48CAD259C0B/appyinxiangcom/17782910/ENResource/p1647" alt="be6f4b58613bf7a5828c4af73c95046f.png"></p>
+<p>因此不同国家政治策略的变动，时区对应关系会经常更新，IANA TZDB会发布新的<a href="ftp://ftp.iana.org/tz/">版本包</a>，但是<code>Go并不会主动更新成最新的版本</code>，这导致可能会有问题。</p>
+<p>肿么办？</p>
+<p>可以升级到最新Go版本(里面会引入TZDB最新发布包)或者自己手动更新Go引用的TZDB的包。</p>
+<p>脚本更新时可以参考官方给的<a target="_blank" rel="noopener" href="https://github.com/golang/go/tree/dev.boringcrypto.go1.15/lib/time">更新脚本</a>。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/f809b06144f7">golang的时区和神奇的time.Parse</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.shuzhiduo.com/A/Vx5M24n3dN/">在Go中处理时区</a></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://zhao520a1a.github.io">Golden</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://zhao520a1a.github.io/2021/03/20/%E8%B8%A9%E5%9D%91%E8%AE%B0%E5%BD%95/Go%20%E5%86%AC%E5%A4%8F%E4%BB%A4%E6%97%B6%E8%BD%AC%E6%8D%A2/">https://zhao520a1a.github.io/2021/03/20/%E8%B8%A9%E5%9D%91%E8%AE%B0%E5%BD%95/Go%20%E5%86%AC%E5%A4%8F%E4%BB%A4%E6%97%B6%E8%BD%AC%E6%8D%A2/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://zhao520a1a.github.io" target="_blank">发光の金子吖</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/go/">go</a></div><div class="post_share"><div class="social-share" data-image="https://raw.githubusercontent.com/qax-os/excelize/7c221cf29531fcd38871d3295f4b511029cb4282/excelize.svg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2021/07/02/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/%E8%AE%BE%E8%AE%A1%E4%B8%80%E4%B8%AA%E7%A7%92%E6%9D%80%E7%B3%BB%E7%BB%9F/" title="设计一个秒杀系统"><img class="cover" src="https://github.com/zhao520a1a/zhao520a1a.github.io/blob/hexo/source/cover/spikeScene.png?raw=true" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">设计一个秒杀系统</div></div></a></div><div class="next-post pull-right"><a href="/2021/02/12/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/%E8%AE%BE%E8%AE%A1%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/" title="设计分布式锁"><img class="cover" src="https://github.com/zhao520a1a/zhao520a1a.github.io/blob/hexo/source/cover/Redis-lock.png?raw=true" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">设计分布式锁</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2023/04/09/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/Go%20JSON%20%E5%BA%93%E8%B0%83%E7%A0%94/" title="Go JSON 库调研"><img class="cover" src="https://github.com/zhao520a1a/zhao520a1a.github.io/blob/hexo/source/cover/Go-json-pkg.jpg?raw=true" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-04-09</div><div class="title">Go JSON 库调研</div></div></a></div><div><a href="/2022/03/01/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/Go%20%E8%B0%83%E5%BA%A6%E7%AF%87/" title="Go 调度篇"><img class="cover" src="https://github.com/zhao520a1a/zhao520a1a.github.io/blob/hexo/source/cover/Go-scheduler.jpg?raw=true" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-03-01</div><div class="title">Go 调度篇</div></div></a></div><div><a href="/2021/08/21/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/GO%E4%BB%A3%E7%A0%81%E9%A3%8E%E6%A0%BC%E6%80%BB%E7%BB%93%EF%BC%88%E7%A7%81%E8%97%8F%EF%BC%89/" title="代码风格规范"><img class="cover" src="https://github.com/zhao520a1a/zhao520a1a.github.io/blob/hexo/source/cover/Go.png?raw=true" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-08-21</div><div class="title">代码风格规范</div></div></a></div><div><a href="/2021/10/09/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/Go%20%E5%8F%AF%E7%BB%B4%E6%8A%A4%E6%80%A7%E5%BB%BA%E8%AE%AE/" title="Go 可维护性建议"><img class="cover" src="https://github.com/zhao520a1a/zhao520a1a.github.io/blob/hexo/source/cover/Go-design.png?raw=true" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-10-09</div><div class="title">Go 可维护性建议</div></div></a></div><div><a href="/2022/05/01/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/Go%20GC%E7%AF%87/" title="Go GC篇"><img class="cover" src="https://pica.zhimg.com/v2-bef3e615ddc817511f2bddb939920468_720w.jpg?source=172ae18b" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-05-01</div><div class="title">Go GC篇</div></div></a></div><div><a href="/2022/04/01/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/Go%20%E5%86%85%E5%AD%98%E7%AF%87/" title="Go 内存篇"><img class="cover" src="https://pic1.zhimg.com/v2-d859714127383f90ed0ecba4b47b75ab_1440w.jpg?source=172ae18b" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-04-01</div><div class="title">Go 内存篇</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Golden</div><div class="author-info__description">一个乐观的悲观主义者</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">39</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">10</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://space.bilibili.com/334383730"><i class="fab fa-bilibili"></i><span>关注一下</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/zhao520a1a" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="https://space.bilibili.com/334383730" target="_blank" title="B 站"><i class="fab fa-bilibili"></i></a><a class="social-icon" href="https://zhao520a1a.github.io/about/index/qrCode.png" target="_blank" title="微信公众号"><i class="fab fa-weixin"></i></a><a class="social-icon" href="https://www.processon.com/u/5ab9cb2de4b018c271cab8d4/profile" target="_blank" title="ProcessOn"><i class="far fa-lightbulb"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">喜欢即可关注，关注即可进步，OVER!</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%95%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">引言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="toc-number">2.</span> <span class="toc-text">基本概念</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%8F%E6%97%B6%E4%BB%A4"><span class="toc-number">2.1.</span> <span class="toc-text">夏时令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%AC%E4%BB%A4%E6%97%B6"><span class="toc-number">2.2.</span> <span class="toc-text">冬令时</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%98%E6%96%B9%E6%94%AF%E6%8C%81"><span class="toc-number">3.</span> <span class="toc-text">官方支持</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">4.</span> <span class="toc-text">参考</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/05/02/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/%E6%8F%90%E6%95%88%E5%B8%B8%E8%AF%86/" title="提效常识">提效常识</a><time datetime="2023-05-01T16:00:00.000Z" title="发表于 2023-05-02 00:00:00">2023-05-02</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/04/09/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/Go%20JSON%20%E5%BA%93%E8%B0%83%E7%A0%94/" title="Go JSON 库调研"><img src="https://github.com/zhao520a1a/zhao520a1a.github.io/blob/hexo/source/cover/Go-json-pkg.jpg?raw=true" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Go JSON 库调研"/></a><div class="content"><a class="title" href="/2023/04/09/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/Go%20JSON%20%E5%BA%93%E8%B0%83%E7%A0%94/" title="Go JSON 库调研">Go JSON 库调研</a><time datetime="2023-04-08T16:00:00.000Z" title="发表于 2023-04-09 00:00:00">2023-04-09</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/02/02/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/Copilot/" title="copilot 使用指南"><img src="https://github.com/zhao520a1a/zhao520a1a.github.io/blob/hexo/source/cover/Copilot.png?raw=true" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="copilot 使用指南"/></a><div class="content"><a class="title" href="/2023/02/02/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/Copilot/" title="copilot 使用指南">copilot 使用指南</a><time datetime="2023-02-01T16:00:00.000Z" title="发表于 2023-02-02 00:00:00">2023-02-02</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/05/01/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/Go%20GC%E7%AF%87/" title="Go GC篇"><img src="https://pica.zhimg.com/v2-bef3e615ddc817511f2bddb939920468_720w.jpg?source=172ae18b" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Go GC篇"/></a><div class="content"><a class="title" href="/2022/05/01/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/Go%20GC%E7%AF%87/" title="Go GC篇">Go GC篇</a><time datetime="2022-04-30T16:00:00.000Z" title="发表于 2022-05-01 00:00:00">2022-05-01</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/04/01/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/Go%20%E5%86%85%E5%AD%98%E7%AF%87/" title="Go 内存篇"><img src="https://pic1.zhimg.com/v2-d859714127383f90ed0ecba4b47b75ab_1440w.jpg?source=172ae18b" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Go 内存篇"/></a><div class="content"><a class="title" href="/2022/04/01/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/Go%20%E5%86%85%E5%AD%98%E7%AF%87/" title="Go 内存篇">Go 内存篇</a><time datetime="2022-03-31T16:00:00.000Z" title="发表于 2022-04-01 00:00:00">2022-04-01</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2021 - 2023 By Golden</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
