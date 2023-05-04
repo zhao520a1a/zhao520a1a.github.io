@@ -1,0 +1,239 @@
+<!DOCTYPE html><html lang="zh-Hans" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>如何画架构图？ | 发光の金子吖</title><meta name="author" content="Golden"><meta name="copyright" content="Golden"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="整体思路什么是架构？架构是结构和愿景，是概念的体现，是对系统中的实体以及实体之间的关系所进行的抽象描述，是一系列的决策。 架构设计 是 面向于解决具体的业务问题 什么是架构图？系统架构图是为了抽象地表示软件系统的整体轮廓和各个组件之间的相互关系和约束边界，以及软件系统的物理部署和软件系统的演进方向的整体视图。 架构图的作用一图胜千言。将架构图作为一个很好的载体把架构信息传递出去。  解决沟通障碍">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何画架构图？">
+<meta property="og:url" content="https://zhao520a1a.github.io/2023/01/13/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/%E5%A6%82%E4%BD%95%E7%94%BB%E6%9E%B6%E6%9E%84%E5%9B%BE%EF%BC%9F/index.html">
+<meta property="og:site_name" content="发光の金子吖">
+<meta property="og:description" content="整体思路什么是架构？架构是结构和愿景，是概念的体现，是对系统中的实体以及实体之间的关系所进行的抽象描述，是一系列的决策。 架构设计 是 面向于解决具体的业务问题 什么是架构图？系统架构图是为了抽象地表示软件系统的整体轮廓和各个组件之间的相互关系和约束边界，以及软件系统的物理部署和软件系统的演进方向的整体视图。 架构图的作用一图胜千言。将架构图作为一个很好的载体把架构信息传递出去。  解决沟通障碍">
+<meta property="og:locale">
+<meta property="og:image" content="https://i.postimg.cc/L8T6Sz3G/image.png">
+<meta property="article:published_time" content="2023-01-12T16:00:00.000Z">
+<meta property="article:modified_time" content="2023-05-03T07:26:08.183Z">
+<meta property="article:author" content="Golden">
+<meta property="article:tag" content="design">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.postimg.cc/L8T6Sz3G/image.png"><link rel="shortcut icon" href="/img/logo.png"><link rel="canonical" href="https://zhao520a1a.github.io/2023/01/13/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/%E5%A6%82%E4%BD%95%E7%94%BB%E6%9E%B6%E6%9E%84%E5%9B%BE%EF%BC%9F/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '如何画架构图？',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-05-03 15:26:08'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.0.0-rc1"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/avatar.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">46</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">11</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://i.postimg.cc/L8T6Sz3G/image.png')"><nav id="nav"><span id="blog-info"><a href="/" title="发光の金子吖"><img class="site-icon" src="/img/logo.png"/><span class="site-name">发光の金子吖</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">如何画架构图？</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-01-12T16:00:00.000Z" title="发表于 2023-01-13 00:00:00">2023-01-13</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-05-03T07:26:08.183Z" title="更新于 2023-05-03 15:26:08">2023-05-03</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/">系统设计</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="如何画架构图？"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="整体思路"><a href="#整体思路" class="headerlink" title="整体思路"></a><a target="_blank" rel="noopener" href="https://www.processon.com/mindmap/634802fff346fb07debb063a">整体思路</a></h2><h2 id="什么是架构？"><a href="#什么是架构？" class="headerlink" title="什么是架构？"></a>什么是架构？</h2><p>架构是结构和愿景，是概念的体现，是对系统中的实体以及实体之间的关系所进行的抽象描述，是一系列的决策。 架构设计 是 面向于解决具体的业务问题</p>
+<h3 id="什么是架构图？"><a href="#什么是架构图？" class="headerlink" title="什么是架构图？"></a>什么是架构图？</h3><p>系统架构图是为了抽象地表示软件系统的整体轮廓和各个组件之间的相互关系和约束边界，以及软件系统的物理部署和软件系统的演进方向的整体视图。</p>
+<h3 id="架构图的作用"><a href="#架构图的作用" class="headerlink" title="架构图的作用"></a>架构图的作用</h3><p>一图胜千言。将架构图作为一个很好的载体把架构信息传递出去。</p>
+<ol>
+<li>解决沟通障碍</li>
+<li>达成共识</li>
+<li>减少歧义</li>
+</ol>
+<h3 id="架构图分类"><a href="#架构图分类" class="headerlink" title="架构图分类"></a>架构图分类</h3><p>分类有杂，有一种比较流行的是4+1视图。</p>
+<table>
+<thead>
+<tr>
+<th>视图名称</th>
+<th>通常表示</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>场景视图</td>
+<td>用例图</td>
+<td>描述系统的参与者与功能用例间的关系，反映系统的最终需求和交互设计</td>
+</tr>
+<tr>
+<td>逻辑视图</td>
+<td>UML的组件图和类图</td>
+<td>描述系统软件功能拆解后的组件关系（组件约束和边界）反映系统整体组成与系统如何构建的过程</td>
+</tr>
+<tr>
+<td>物理视图</td>
+<td></td>
+<td>描述系统软件到物理硬件的映射关系，反映出系统的组件是如何部署到一组可计算机器节点上，用于指导软件系统的部署实施过程。</td>
+</tr>
+<tr>
+<td>处理流程视图</td>
+<td>时序图和流程图</td>
+<td>描述系统软件组件之间的通信时序，数据的输入输出，反映系统的功能流程与数据流程</td>
+</tr>
+<tr>
+<td>开发视图</td>
+<td></td>
+<td>描述系统的模块划分和组成，以及细化到内部包的组成设计，服务于开发人员，反映系统开发实施过程。</td>
+</tr>
+</tbody></table>
+<h3 id="如何画架构图"><a href="#如何画架构图" class="headerlink" title="如何画架构图"></a>如何画架构图</h3><p>在画出一个好的架构图之前， 首先应该要明确其受众，再想清楚要给他们传递什么信息<br><code>简而言之，画之前想好：画图给谁看，看什么，怎么样不解释就看懂。</code></p>
+<h3 id="好的架构图的标准"><a href="#好的架构图的标准" class="headerlink" title="好的架构图的标准"></a>好的架构图的标准</h3><ul>
+<li>画出的图好不好的一个直接标准就是：受众有没有准确接收到想传递的信息。</li>
+<li>从受众角度来说，一个好的架构图是不需要解释的，它应该是自描述的，并且要具备一致性和足够的准确性，能够与代码相呼应。</li>
+</ul>
+<h2 id="推荐的画图方法-C4模型"><a href="#推荐的画图方法-C4模型" class="headerlink" title="推荐的画图方法:C4模型"></a>推荐的画图方法:C4模型</h2><blockquote>
+<p>C4官网：<a target="_blank" rel="noopener" href="https://c4model.com/">https://c4model.com/</a><br>书籍：《程序员必读之软件架构》</p>
+</blockquote>
+<h3 id="语境图-System-Context-Diagram"><a href="#语境图-System-Context-Diagram" class="headerlink" title="语境图(System Context Diagram)"></a>语境图(System Context Diagram)</h3><h4 id="用途"><a href="#用途" class="headerlink" title="用途"></a>用途</h4><p>它的用户是谁，谁会用它，它要如何融入已有的IT环境。这个图的受众可以是开发团队的内部人员、外部的技术或非技术人员。即：<br>构建的系统是什么<br>谁会用它<br>如何融入已有的IT环境</p>
+<h4 id="怎么画"><a href="#怎么画" class="headerlink" title="怎么画"></a>怎么画</h4><p>中间是自己的系统，周围是用户和其它与之相互作用的系统。这个图的关键就是梳理清楚待建设系统的用户和高层次的依赖，梳理清楚了画下来只需要几分钟时间。</p>
+<h3 id="容器图-Container-Diagram"><a href="#容器图-Container-Diagram" class="headerlink" title="容器图(Container Diagram)"></a>容器图(Container Diagram)</h3><p>容器图是把语境图里待建设的系统做了一个展开。<br><img src="/2023/01/13/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/%E5%A6%82%E4%BD%95%E7%94%BB%E6%9E%B6%E6%9E%84%E5%9B%BE%EF%BC%9F/24F3C3A8-E613-451D-84C1-E19800D3C0A7.jpg" alt="img" style="zoom:80%;"></p>
+<h4 id="用途-1"><a href="#用途-1" class="headerlink" title="用途"></a>用途</h4><p>这个图的受众可以是团队内部或外部的开发人员，也可以是运维人员。用途可以罗列为：</p>
+<ul>
+<li>展现了软件系统的整体形态</li>
+<li>体现了高层次的技术决策</li>
+<li>系统中的职责是如何分布的，容器间的是如何交互的</li>
+<li>告诉开发者在哪里写代码</li>
+</ul>
+<h4 id="怎么画-1"><a href="#怎么画-1" class="headerlink" title="怎么画"></a>怎么画</h4><p>用一个框图来表示，内部可能包括名称、技术选择、职责，以及这些框图之间的交互，如果涉及外部系统，最好明确边界。</p>
+<h3 id="组件图-Component-Diagram"><a href="#组件图-Component-Diagram" class="headerlink" title="组件图(Component Diagram)"></a>组件图(Component Diagram)</h3><blockquote>
+<p>组件图是把某个容器进行展开，描述其内部的模块。</p>
+</blockquote>
+<img src="/2023/01/13/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/%E5%A6%82%E4%BD%95%E7%94%BB%E6%9E%B6%E6%9E%84%E5%9B%BE%EF%BC%9F/7BBEADE0-F4BB-4227-952F-D28ABD5E16D8-3098198.jpg" alt="img" style="zoom:80%;">
+
+<h4 id="用途-2"><a href="#用途-2" class="headerlink" title="用途"></a>用途</h4><p>这个图主要是给内部开发人员看的，怎么去做代码的组织和构建。其用途有：</p>
+<ul>
+<li>描述了系统由哪些组件&#x2F;服务组成</li>
+<li>厘清了组件之间的关系和依赖</li>
+<li>为软件开发如何分解交付提供了框架</li>
+</ul>
+<h3 id="类图-Code-x2F-Class-Diagram"><a href="#类图-Code-x2F-Class-Diagram" class="headerlink" title="类图(Code&#x2F;Class Diagram)"></a>类图(Code&#x2F;Class Diagram)</h3><p>这个图很显然是给技术人员看的，比较常见，就不详细介绍了。<br><img src="/2023/01/13/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/%E5%A6%82%E4%BD%95%E7%94%BB%E6%9E%B6%E6%9E%84%E5%9B%BE%EF%BC%9F/078ED0F5-A51D-43D6-BBDD-8BAD535782CD-3098211-3098214.jpg" alt="img" style="zoom:67%;"></p>
+<p>未完，待续。。。。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://zhao520a1a.github.io">Golden</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://zhao520a1a.github.io/2023/01/13/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/%E5%A6%82%E4%BD%95%E7%94%BB%E6%9E%B6%E6%9E%84%E5%9B%BE%EF%BC%9F/">https://zhao520a1a.github.io/2023/01/13/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/%E5%A6%82%E4%BD%95%E7%94%BB%E6%9E%B6%E6%9E%84%E5%9B%BE%EF%BC%9F/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://zhao520a1a.github.io" target="_blank">发光の金子吖</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/design/">design</a></div><div class="post_share"><div class="social-share" data-image="https://i.postimg.cc/L8T6Sz3G/image.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2023/02/02/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/Copilot/" title="copilot 使用指南"><img class="cover" src="https://github.com/zhao520a1a/zhao520a1a.github.io/blob/hexo/source/cover/Copilot.png?raw=true" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">copilot 使用指南</div></div></a></div><div class="next-post pull-right"><a href="/2022/06/01/%E7%94%9F%E6%B4%BB%E5%B0%8F%E8%AE%B0/%E7%B2%BE%E5%8D%8E%E8%AF%AD%E5%BD%95/" title="精华语录"><img class="cover" src="https://cdn.thenewstack.io/media/2017/04/2cb7769e-tidb.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">精华语录</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Golden</div><div class="author-info__description">一个乐观的悲观主义者</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">46</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">11</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://space.bilibili.com/334383730"><i class="fab fa-bilibili"></i><span>关注一下</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/zhao520a1a" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="https://space.bilibili.com/334383730" target="_blank" title="B 站"><i class="fab fa-bilibili"></i></a><a class="social-icon" href="https://zhao520a1a.github.io/about/index/qrCode.png" target="_blank" title="微信公众号"><i class="fab fa-weixin"></i></a><a class="social-icon" href="https://www.processon.com/u/5ab9cb2de4b018c271cab8d4/profile" target="_blank" title="ProcessOn"><i class="far fa-lightbulb"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">喜欢即可关注，关注即可进步，OVER!</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B4%E4%BD%93%E6%80%9D%E8%B7%AF"><span class="toc-number">1.</span> <span class="toc-text">整体思路</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E6%9E%B6%E6%9E%84%EF%BC%9F"><span class="toc-number">2.</span> <span class="toc-text">什么是架构？</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E6%9E%B6%E6%9E%84%E5%9B%BE%EF%BC%9F"><span class="toc-number">2.1.</span> <span class="toc-text">什么是架构图？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9E%B6%E6%9E%84%E5%9B%BE%E7%9A%84%E4%BD%9C%E7%94%A8"><span class="toc-number">2.2.</span> <span class="toc-text">架构图的作用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9E%B6%E6%9E%84%E5%9B%BE%E5%88%86%E7%B1%BB"><span class="toc-number">2.3.</span> <span class="toc-text">架构图分类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E7%94%BB%E6%9E%B6%E6%9E%84%E5%9B%BE"><span class="toc-number">2.4.</span> <span class="toc-text">如何画架构图</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A5%BD%E7%9A%84%E6%9E%B6%E6%9E%84%E5%9B%BE%E7%9A%84%E6%A0%87%E5%87%86"><span class="toc-number">2.5.</span> <span class="toc-text">好的架构图的标准</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8E%A8%E8%8D%90%E7%9A%84%E7%94%BB%E5%9B%BE%E6%96%B9%E6%B3%95-C4%E6%A8%A1%E5%9E%8B"><span class="toc-number">3.</span> <span class="toc-text">推荐的画图方法:C4模型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%AD%E5%A2%83%E5%9B%BE-System-Context-Diagram"><span class="toc-number">3.1.</span> <span class="toc-text">语境图(System Context Diagram)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%94%A8%E9%80%94"><span class="toc-number">3.1.1.</span> <span class="toc-text">用途</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%80%8E%E4%B9%88%E7%94%BB"><span class="toc-number">3.1.2.</span> <span class="toc-text">怎么画</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%B9%E5%99%A8%E5%9B%BE-Container-Diagram"><span class="toc-number">3.2.</span> <span class="toc-text">容器图(Container Diagram)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%94%A8%E9%80%94-1"><span class="toc-number">3.2.1.</span> <span class="toc-text">用途</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%80%8E%E4%B9%88%E7%94%BB-1"><span class="toc-number">3.2.2.</span> <span class="toc-text">怎么画</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%84%E4%BB%B6%E5%9B%BE-Component-Diagram"><span class="toc-number">3.3.</span> <span class="toc-text">组件图(Component Diagram)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%94%A8%E9%80%94-2"><span class="toc-number">3.3.1.</span> <span class="toc-text">用途</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%B1%BB%E5%9B%BE-Code-x2F-Class-Diagram"><span class="toc-number">3.4.</span> <span class="toc-text">类图(Code&#x2F;Class Diagram)</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/05/02/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/%E6%8F%90%E6%95%88%E5%B8%B8%E8%AF%86/" title="提效常识">提效常识</a><time datetime="2023-05-01T16:00:00.000Z" title="发表于 2023-05-02 00:00:00">2023-05-02</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/04/09/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/Go/Go%20JSON%20%E5%BA%93%E8%B0%83%E7%A0%94/" title="Go JSON 库调研"><img src="https://github.com/zhao520a1a/zhao520a1a.github.io/blob/hexo/source/cover/Go-json-pkg.jpg?raw=true" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Go JSON 库调研"/></a><div class="content"><a class="title" href="/2023/04/09/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/Go/Go%20JSON%20%E5%BA%93%E8%B0%83%E7%A0%94/" title="Go JSON 库调研">Go JSON 库调研</a><time datetime="2023-04-08T16:00:00.000Z" title="发表于 2023-04-09 00:00:00">2023-04-09</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/02/02/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/Copilot/" title="copilot 使用指南"><img src="https://github.com/zhao520a1a/zhao520a1a.github.io/blob/hexo/source/cover/Copilot.png?raw=true" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="copilot 使用指南"/></a><div class="content"><a class="title" href="/2023/02/02/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/Copilot/" title="copilot 使用指南">copilot 使用指南</a><time datetime="2023-02-01T16:00:00.000Z" title="发表于 2023-02-02 00:00:00">2023-02-02</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/01/13/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/%E5%A6%82%E4%BD%95%E7%94%BB%E6%9E%B6%E6%9E%84%E5%9B%BE%EF%BC%9F/" title="如何画架构图？"><img src="https://i.postimg.cc/L8T6Sz3G/image.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="如何画架构图？"/></a><div class="content"><a class="title" href="/2023/01/13/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/%E5%A6%82%E4%BD%95%E7%94%BB%E6%9E%B6%E6%9E%84%E5%9B%BE%EF%BC%9F/" title="如何画架构图？">如何画架构图？</a><time datetime="2023-01-12T16:00:00.000Z" title="发表于 2023-01-13 00:00:00">2023-01-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/06/01/%E7%94%9F%E6%B4%BB%E5%B0%8F%E8%AE%B0/%E7%B2%BE%E5%8D%8E%E8%AF%AD%E5%BD%95/" title="精华语录"><img src="https://cdn.thenewstack.io/media/2017/04/2cb7769e-tidb.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="精华语录"/></a><div class="content"><a class="title" href="/2022/06/01/%E7%94%9F%E6%B4%BB%E5%B0%8F%E8%AE%B0/%E7%B2%BE%E5%8D%8E%E8%AF%AD%E5%BD%95/" title="精华语录">精华语录</a><time datetime="2022-05-31T16:00:00.000Z" title="发表于 2022-06-01 00:00:00">2022-06-01</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2021 - 2023 By Golden</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
