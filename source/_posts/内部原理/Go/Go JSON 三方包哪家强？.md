@@ -116,7 +116,7 @@ Go json 标准库 [encoding/json](https://pkg.go.dev/encoding/json)已经是提�
 | GoJson     | ✔️                        | ✔️                     | ❌          | ✔️         |
 | Sonic      | ✔️                        | ✔️                     | ✔️          | ✔️         |
 
-### 特点分析
+## 特点分析
 
 | 类别                           | 备注                                                         |      |
 | ------------------------------ | ------------------------------------------------------------ | ---- |
@@ -128,7 +128,7 @@ Go json 标准库 [encoding/json](https://pkg.go.dev/encoding/json)已经是提�
 
 ## 性能评测
 
-具体的测试代码，可参考[benchmark_test](https://github.com/zhao520a1a/go-base/blob/master/json/benchmark_test/bench.sh) ，欢迎友好交流。
+下面是评测性能时所用的各个包的版本情况，具体的测试代码，可参考[benchmark_test](https://github.com/zhao520a1a/go-base/blob/master/json/benchmark_test/bench.sh) ，欢迎友好交流。
 
 | **库名** | **version** |
 | -------- | ----------- |
