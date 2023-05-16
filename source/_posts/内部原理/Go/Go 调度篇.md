@@ -4,7 +4,7 @@ tags: [go]
 categories: [内部原理]
 date: 2022-03-01
 description: Go 调度都发生了啥?
-cover: https://www.sulvblog.cn/posts/tech/golang_gmp/golang_gmp.png
+cover: https://www.sulvblog.cn/posts/tech/golang_gmp/1.png
 ---
 
 ### 导读
