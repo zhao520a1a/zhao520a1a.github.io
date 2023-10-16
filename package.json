@@ -24,5 +24,8 @@
     "hexo-renderer-pug": "^3.0.0",
     "hexo-renderer-stylus": "^2.0.0",
     "hexo-server": "^1.0.0"
+  },
+  "devDependencies": {
+    "prettier": "3.0.3"
   }
 }
