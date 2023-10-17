@@ -7,7 +7,7 @@
 <meta property="og:locale">
 <meta property="og:image" content="https://pic1.zhimg.com/v2-d859714127383f90ed0ecba4b47b75ab_1440w.jpg?source=172ae18b">
 <meta property="article:published_time" content="2022-03-31T16:00:00.000Z">
-<meta property="article:modified_time" content="2023-05-10T00:00:06.379Z">
+<meta property="article:modified_time" content="2023-10-17T14:12:38.627Z">
 <meta property="article:author" content="Golden">
 <meta property="article:tag" content="go">
 <meta name="twitter:card" content="summary">
@@ -57,7 +57,7 @@
   isHome: false,
   isHighlightShrink: false,
   isToc: true,
-  postUpdate: '2023-05-10 08:00:06'
+  postUpdate: '2023-10-17 22:12:38'
 }</script><noscript><style type="text/css">
   #nav {
     opacity: 1
@@ -161,7 +161,7 @@
       }
     }
     detectApple()
-    })(window)</script><meta name="generator" content="Hexo 7.0.0-rc1"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/avatar.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">47</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">13</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://pic1.zhimg.com/v2-d859714127383f90ed0ecba4b47b75ab_1440w.jpg?source=172ae18b')"><nav id="nav"><span id="blog-info"><a href="/" title="发光の金子吖"><img class="site-icon" src="/img/logo.png"/><span class="site-name">发光の金子吖</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Go 内存篇</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-03-31T16:00:00.000Z" title="发表于 2022-04-01 00:00:00">2022-04-01</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-05-10T00:00:06.379Z" title="更新于 2023-05-10 08:00:06">2023-05-10</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/">内部原理</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Go 内存篇"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="疑惑"><a href="#疑惑" class="headerlink" title="疑惑"></a>疑惑</h2><ul>
+    })(window)</script><meta name="generator" content="Hexo 7.0.0-rc1"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/avatar.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">47</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">13</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://pic1.zhimg.com/v2-d859714127383f90ed0ecba4b47b75ab_1440w.jpg?source=172ae18b')"><nav id="nav"><span id="blog-info"><a href="/" title="发光の金子吖"><img class="site-icon" src="/img/logo.png"/><span class="site-name">发光の金子吖</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Go 内存篇</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-03-31T16:00:00.000Z" title="发表于 2022-04-01 00:00:00">2022-04-01</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-10-17T14:12:38.627Z" title="更新于 2023-10-17 22:12:38">2023-10-17</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/">内部原理</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Go 内存篇"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="疑惑"><a href="#疑惑" class="headerlink" title="疑惑"></a>疑惑</h2><ul>
 <li>Go 的内存分配器是如何设计的？</li>
 <li>Go 的内存分配机制是怎样的?</li>
 <li>Go 的对象在内存中是怎样存储的?</li>
@@ -211,7 +211,6 @@
 <li>申请内存时会创建一个跨度类为 0 的 spanClass 并调用 runtime.mheap.alloc() 分配一个mspan；</li>
 </ul>
 <h2 id="堆区虚拟内存布局的演化"><a href="#堆区虚拟内存布局的演化" class="headerlink" title="堆区虚拟内存布局的演化"></a>堆区虚拟内存布局的演化</h2><h3 id="线性内存（go-version-lt-1-11）"><a href="#线性内存（go-version-lt-1-11）" class="headerlink" title="线性内存（go version &lt; 1.11）"></a>线性内存（go version &lt; 1.11）</h3><img src="/2022/04/01/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/Go/Go%20%E5%86%85%E5%AD%98%E7%AF%87/60f1837d637689739c3a28dd.png" alt="image" style="zoom:80%;">
-
 
 <h4 id="设计思想"><a href="#设计思想" class="headerlink" title="设计思想"></a>设计思想</h4><ul>
 <li>建立在堆区的内存是连续的这一假设上。</li>
@@ -295,14 +294,11 @@ mcentral 属于 mheap，mhepap 会从操作系统中申请内存，会维护全�
 <h5 id="由三个字段组成"><a href="#由三个字段组成" class="headerlink" title="由三个字段组成"></a>由三个字段组成</h5><p>mcache 中包含三个用于分配微对象的字段</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">type mcache struct &#123;</span><br><span class="line">	tiny             uintptr</span><br><span class="line">	tinyoffset       uintptr</span><br><span class="line">	local_tinyallocs uintptr</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-
 <h5 id="具体分配逻辑"><a href="#具体分配逻辑" class="headerlink" title="具体分配逻辑"></a>具体分配逻辑</h5><img src="/2022/04/01/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/Go/Go%20%E5%86%85%E5%AD%98%E7%AF%87/60fbdfd6637689719d24bcb6.png" alt="image" style="zoom:67%;">
 如图所示，tiny 分配器已经在 16 字节的内存块中分配了 12 字节的对象，如果下一个待分配的对象小于 4 字节，它就会直接使用上述内存块的剩余部分，减少内存碎片，不过该内存块只有在 3 个对象都被标记为垃圾时才会被回收；
 
-
 <h4 id="stackcache-分配器-栈分配器"><a href="#stackcache-分配器-栈分配器" class="headerlink" title="stackcache 分配器(栈分配器)"></a>stackcache 分配器(栈分配器)</h4><img src="/2022/04/01/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/Go/Go%20%E5%86%85%E5%AD%98%E7%AF%87/60fbe584f346fb1b4f5f3267.png" alt="image" style="zoom:67%;">
 mcache 中 stackcache 用于分配 groutine 的栈内存，和普通对象内存一样栈分配也有多级和多个层次；
-
 
 <p>分配步骤：</p>
 <ul>
@@ -320,22 +316,18 @@ mcache 中 stackcache 用于分配 groutine 的栈内存，和普通对象内存
 <li>empty mspanList：有空闲对象的未满 mspan 列表；</li>
 <li>nonempty mspanList：没有空闲对象的满的 mspan 列表；<br>当该结构体在初始化时，两个链表都不包含任何内存；</li>
 </ul>
-<h4 id="mcache-从-mcentral-获取-mspan-过程"><a href="#mcache-从-mcentral-获取-mspan-过程" class="headerlink" title="mcache 从 mcentral 获取 mspan 过程"></a>mcache 从 mcentral 获取 mspan 过程</h4><p>1.从有 empty mspanList 中查找可以使用的 mspan；<br>2.从 nonempty mspanList 中查找可以使用的 mspan；<br>3.调用 runtime.mcentral.grow 从堆中申请新的 mpsan；&lt;br&gt;无论通过哪种方法获取到了 mspan，最后都会对 mspan 中 allocCache 等字段进行更新，让运行时在分配内存时能够快速找到空闲的对象；&lt;br&gt;</p>
+<h4 id="mcache-从-mcentral-获取-mspan-过程"><a href="#mcache-从-mcentral-获取-mspan-过程" class="headerlink" title="mcache 从 mcentral 获取 mspan 过程"></a>mcache 从 mcentral 获取 mspan 过程</h4><p>1.从有 empty mspanList 中查找可以使用的 mspan；2.从 nonempty mspanList 中查找可以使用的 mspan；3.调用 runtime.mcentral.grow 从堆中申请新的 mpsan；&lt;br&gt;无论通过哪种方法获取到了 mspan，最后都会对 mspan 中 allocCache 等字段进行更新，让运行时在分配内存时能够快速找到空闲的对象；&lt;br&gt;</p>
 <h3 id="mheap-页堆"><a href="#mheap-页堆" class="headerlink" title="mheap(页堆)"></a>mheap(页堆)</h3><p>一个全局的结构体，统一管理堆上初始化的所有对象</p>
 <h4 id="持有的-134-个mcentral"><a href="#持有的-134-个mcentral" class="headerlink" title="持有的 134 个mcentral"></a>持有的 134 个mcentral</h4><img src="/2022/04/01/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/Go/Go%20%E5%86%85%E5%AD%98%E7%AF%87/60fa7d477d9c083494e3c382.png" alt="image" style="zoom:67%;">
 
-
 <h4 id="内部采用二维矩阵-runtime-heapArena-管理所有内存空间，内存可以是不连续的"><a href="#内部采用二维矩阵-runtime-heapArena-管理所有内存空间，内存可以是不连续的" class="headerlink" title="内部采用二维矩阵 runtime.heapArena 管理所有内存空间，内存可以是不连续的"></a>内部采用二维矩阵 runtime.heapArena 管理所有内存空间，内存可以是不连续的</h4><img src="/2022/04/01/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/Go/Go%20%E5%86%85%E5%AD%98%E7%AF%87/60fa7d527d9c083494e3c3b2.png" alt="image" style="zoom:67%;">
-
 
 <h4 id="不同平台和架构具体参数"><a href="#不同平台和架构具体参数" class="headerlink" title="不同平台和架构具体参数"></a>不同平台和架构具体参数</h4><img src="/2022/04/01/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/Go/Go%20%E5%86%85%E5%AD%98%E7%AF%87/60fbbedc7d9c083494e4d19d.png" alt="image" style="zoom:67%;">
 表格中展示了不同平台上 Go 语言程序管理的堆区大小以及heapArea占用的内存空间；
 
-
 <p>其中 Linux 的 x86-64架构上，其中二维数组的一维长度为 1，而二维长度是 4,194,304(4M) ，数组中每一个元素会占用 8 字节的内存空间，因此数组内存大小为 32MB；由于每个 heapArena 会管理 64MB 的内存，整个 heapArenas 长度是 4M，因此单个 Go 语言程序的内存上限也就是 256TB (256TB &#x3D; 4M * 64MB)；</p>
 <h3 id="全景图"><a href="#全景图" class="headerlink" title="全景图"></a>全景图</h3><img src="/2022/04/01/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/Go/Go%20%E5%86%85%E5%AD%98%E7%AF%87/6221c4211e0853071a327b49.png" alt="image" style="zoom:150%;">
 小结：采用多层次Cache来减少分配的冲突, 加快分配。从无锁到全局1/(67*2)粒度的锁, 再到全局锁, 再到系统调用. 减少分配的锁争抢, 减少栈浪费。
-
 
 <h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p><a target="_blank" rel="noopener" href="https://draveness.me/golang/docs/part3-runtime/ch07-memory/golang-memory-allocator/">Draveness-内存分配器</a></p>
 <p><a target="_blank" rel="noopener" href="https://gitee.com/zhaojinxin_golden/article-images/blob/master/go/golden-%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D.pptx">golden-内存分配PPT</a></p>

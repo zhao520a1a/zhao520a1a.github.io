@@ -7,7 +7,7 @@
 <meta property="og:locale">
 <meta property="og:image" content="https://github.com/zhao520a1a/zhao520a1a.github.io/blob/hexo/source/cover/sshLogin.png?raw=true">
 <meta property="article:published_time" content="2021-01-01T16:00:00.000Z">
-<meta property="article:modified_time" content="2023-05-10T00:00:04.865Z">
+<meta property="article:modified_time" content="2023-10-17T14:12:40.182Z">
 <meta property="article:author" content="Golden">
 <meta property="article:tag" content="zsh">
 <meta name="twitter:card" content="summary">
@@ -57,7 +57,7 @@
   isHome: false,
   isHighlightShrink: false,
   isToc: true,
-  postUpdate: '2023-05-10 08:00:04'
+  postUpdate: '2023-10-17 22:12:40'
 }</script><noscript><style type="text/css">
   #nav {
     opacity: 1
@@ -161,12 +161,10 @@
       }
     }
     detectApple()
-    })(window)</script><meta name="generator" content="Hexo 7.0.0-rc1"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/avatar.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">47</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">13</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://github.com/zhao520a1a/zhao520a1a.github.io/blob/hexo/source/cover/sshLogin.png?raw=true')"><nav id="nav"><span id="blog-info"><a href="/" title="发光の金子吖"><img class="site-icon" src="/img/logo.png"/><span class="site-name">发光の金子吖</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">shell实现SSH自动登陆</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-01-01T16:00:00.000Z" title="发表于 2021-01-02 00:00:00">2021-01-02</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-05-10T00:00:04.865Z" title="更新于 2023-05-10 08:00:04">2023-05-10</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/">效率工具</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="shell实现SSH自动登陆"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><blockquote>
+    })(window)</script><meta name="generator" content="Hexo 7.0.0-rc1"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/avatar.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">47</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">13</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://github.com/zhao520a1a/zhao520a1a.github.io/blob/hexo/source/cover/sshLogin.png?raw=true')"><nav id="nav"><span id="blog-info"><a href="/" title="发光の金子吖"><img class="site-icon" src="/img/logo.png"/><span class="site-name">发光の金子吖</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">shell实现SSH自动登陆</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-01-01T16:00:00.000Z" title="发表于 2021-01-02 00:00:00">2021-01-02</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-10-17T14:12:40.182Z" title="更新于 2023-10-17 22:12:40">2023-10-17</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/">效率工具</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="shell实现SSH自动登陆"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><blockquote>
 <p>作为一个工具人，时刻保持着<code>偷懒</code>意识，在类unix系统中，不要浪费了<code>shell</code>这种神奇的工具，让计算机为我们服务~</p>
 </blockquote>
 <img src="https://cdn.colorhub.me/xzDOaNr7Fxor-PyQZV6C1f2rIGocJ4nh--BrR6e-e20/auto/0/500/ce/0/bG9jYWw6Ly8vZjUv/NDkvZjhjZDJiZmVk/MTBiOTFlMjA1ZDli/NTU5NDQwOGQ4ZGRk/MWIzZjU0OS5qcGVn.jpg" alt="img">
-
-
 
 <h3 id="基础知识，复习一下"><a href="#基础知识，复习一下" class="headerlink" title="基础知识，复习一下"></a>基础知识，复习一下</h3><h4 id="脚本的运行方式"><a href="#脚本的运行方式" class="headerlink" title="脚本的运行方式"></a>脚本的运行方式</h4><h5 id="通过文件名执行-x2F-file-name-sh"><a href="#通过文件名执行-x2F-file-name-sh" class="headerlink" title="通过文件名执行 .&#x2F;file_name.sh"></a>通过文件名执行 .&#x2F;file_name.sh</h5><p>注：需要执行权限，可通过 <code>sudo chmod +x ./file_name.sh</code> 添加</p>
 <h5 id="指定脚本解释器来执行文件-sh-file-name-sh"><a href="#指定脚本解释器来执行文件-sh-file-name-sh" class="headerlink" title="指定脚本解释器来执行文件 sh file_name.sh"></a>指定脚本解释器来执行文件 sh file_name.sh</h5><p><code>sh file_name.sh</code> 就是指定了脚本解释器 <code>/bin/sh</code>来解释执行脚本；常见的脚本解释器还有：<code>/bin/bash</code>等，我们可以使用<code>ls -l /bin/*sh</code>命令来查看当前可用的脚本解释器；</p>
@@ -185,7 +183,7 @@
 <ul>
 <li>expect命令：</li>
 </ul>
-<p> 它的一般用法为 <code>expect &quot;string&quot;</code>,即期望获取到string字符串,可在在string字符串里使用 * 等通配符; <code>string</code>与命令行返回的信息匹配后，expect会立刻向下执行脚本；</p>
+<p>它的一般用法为 <code>expect &quot;string&quot;</code>,即期望获取到string字符串,可在在string字符串里使用 * 等通配符; <code>string</code>与命令行返回的信息匹配后，expect会立刻向下执行脚本；</p>
 <ul>
 <li>set timeout命令：</li>
 </ul>
@@ -198,7 +196,7 @@
 <li>interact命令：允许用户与当前shell进行交互；</li>
 </ul>
 <h4 id="自动登录脚本"><a href="#自动登录脚本" class="headerlink" title="自动登录脚本"></a>自动登录脚本</h4><p>创建脚本 <code>touch aliyun_login_shell.sh</code>，内容如下：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/usr/bin/expect</span></span><br><span class="line"><span class="built_in">set</span> user [服务器账号] </span><br><span class="line"><span class="built_in">set</span> host [服务器ip]</span><br><span class="line"><span class="built_in">set</span> port [端口号]</span><br><span class="line"><span class="built_in">set</span> password [密码]</span><br><span class="line"><span class="built_in">set</span> <span class="built_in">timeout</span> 30</span><br><span class="line">spawn -p <span class="variable">$port</span> <span class="variable">$user</span>@<span class="variable">$host</span>  <span class="comment">#fork一个子进程执行ssh登陆命令；</span></span><br><span class="line">expect <span class="string">&quot;password:&quot;</span></span><br><span class="line">send <span class="string">&quot;<span class="variable">$password</span>\r&quot;</span></span><br><span class="line">interact</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/usr/bin/expect</span></span><br><span class="line"><span class="built_in">set</span> user [服务器账号]</span><br><span class="line"><span class="built_in">set</span> host [服务器ip]</span><br><span class="line"><span class="built_in">set</span> port [端口号]</span><br><span class="line"><span class="built_in">set</span> password [密码]</span><br><span class="line"><span class="built_in">set</span> <span class="built_in">timeout</span> 30</span><br><span class="line">spawn -p <span class="variable">$port</span> <span class="variable">$user</span>@<span class="variable">$host</span>  <span class="comment">#fork一个子进程执行ssh登陆命令；</span></span><br><span class="line">expect <span class="string">&quot;password:&quot;</span></span><br><span class="line">send <span class="string">&quot;<span class="variable">$password</span>\r&quot;</span></span><br><span class="line">interact</span><br></pre></td></tr></table></figure>
 
 <h4 id="脚本执行登录"><a href="#脚本执行登录" class="headerlink" title="脚本执行登录"></a>脚本执行登录</h4><p>执行 <code>sudo chmod +x ./aliyun_login_shell.sh</code>命令给shell脚本添加执行权限；</p>
 <p>运行 <code>./aliyun_login_shell.sh</code>命令，一键登陆成功！</p>
@@ -217,7 +215,7 @@
 </ul>
 <p>这里我们想到了linux的alias命令：</p>
 <ul>
-<li><p>使用alias命令设置命令别名，例如：  <code>alias alg=./aliyun_login_shell</code>, 这样使用<code>alg</code>就相当于执行了<code>./aliyun_login_shell</code></p>
+<li><p>使用alias命令设置命令别名，例如： <code>alias alg=./aliyun_login_shell</code>, 这样使用<code>alg</code>就相当于执行了<code>./aliyun_login_shell</code></p>
 </li>
 <li><p>编辑bash_profile文件，此文件会在终端窗口创建的时候首先执行一次，所以可以帮我们再设置一次别名；</p>
 </li>
@@ -225,12 +223,9 @@
 <p>执行命令<code>vim ~./bash_profile</code>,在文件内部添加：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">alias alias_name=&quot;/root_dir/../file_name.sh</span><br></pre></td></tr></table></figure>
 
-<p>再使用 <code>. ~./bash_profile</code>或<code>source ~./bash_profile</code>  </p>
+<p>再使用 <code>. ~./bash_profile</code>或<code>source ~./bash_profile</code></p>
 <p>从此，我们无论在哪个目录，只要输入<code>alias_name</code>命令，回车，真正的一键登陆！</p>
 <h4 id="iTerm2-工具自动登录"><a href="#iTerm2-工具自动登录" class="headerlink" title="iTerm2 工具自动登录"></a>iTerm2 工具自动登录</h4><img src="https://zhao520a1a.github.io/2020/07/26/shell%E5%AE%9E%E7%8E%B0SSH%E8%87%AA%E5%8A%A8%E7%99%BB%E9%99%86/image-20200726174911885.png" alt="img">
-
-
-
 
 <p>参考：</p>
 <p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/qiumingcheng/p/11544569.html">https://www.cnblogs.com/qiumingcheng/p/11544569.html</a></p>

@@ -1,13 +1,13 @@
-<!DOCTYPE html><html lang="zh-Hans" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>Prometheus 使用指南 | 发光の金子吖</title><meta name="author" content="Golden"><meta name="copyright" content="Golden"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="引言相关概念TSDB：时序数据库 是数据库大家庭中的一员，专门存储随时间变化的数据； 时序 (Time Series) 指的是某个变量随时间变化的所有历史；每个时序由一个名字(Metric)和一组标签 (labels) 标识定义。 样本 (Sample) 指的是历史中该变量的瞬时值；每个样本由时序标识、时间戳(一个毫秒级的 unix 时间戳)、数值 (float64 值) 3 部分构成">
+<!DOCTYPE html><html lang="zh-Hans" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>Prometheus 使用指南 | 发光の金子吖</title><meta name="author" content="Golden"><meta name="copyright" content="Golden"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="引言相关概念TSDB：时序数据库 是数据库大家庭中的一员，专门存储随时间变化的数据； 时序 (Time Series) 指的是某个变量随时间变化的所有历史；每个时序由一个名字(Metric)和一组标签 (labels) 标识定义。 样本 (Sample) 指的是历史中该变量的瞬时值；每个样本由时序标识、时间戳(一个毫秒级的 unix 时间戳)、数值 (float64 值) 3 部分构成    时序">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Prometheus 使用指南">
 <meta property="og:url" content="https://zhao520a1a.github.io/2020/11/01/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/Prometheus%20%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/index.html">
 <meta property="og:site_name" content="发光の金子吖">
-<meta property="og:description" content="引言相关概念TSDB：时序数据库 是数据库大家庭中的一员，专门存储随时间变化的数据； 时序 (Time Series) 指的是某个变量随时间变化的所有历史；每个时序由一个名字(Metric)和一组标签 (labels) 标识定义。 样本 (Sample) 指的是历史中该变量的瞬时值；每个样本由时序标识、时间戳(一个毫秒级的 unix 时间戳)、数值 (float64 值) 3 部分构成">
+<meta property="og:description" content="引言相关概念TSDB：时序数据库 是数据库大家庭中的一员，专门存储随时间变化的数据； 时序 (Time Series) 指的是某个变量随时间变化的所有历史；每个时序由一个名字(Metric)和一组标签 (labels) 标识定义。 样本 (Sample) 指的是历史中该变量的瞬时值；每个样本由时序标识、时间戳(一个毫秒级的 unix 时间戳)、数值 (float64 值) 3 部分构成    时序">
 <meta property="og:locale">
 <meta property="og:image" content="https://sysdig.com/wp-content/uploads/Blog-Kubernetes-Monitoring-with-Prometheus-1-Featured-image.png">
 <meta property="article:published_time" content="2020-10-31T16:00:00.000Z">
-<meta property="article:modified_time" content="2023-05-10T00:00:05.304Z">
+<meta property="article:modified_time" content="2023-10-17T14:14:59.113Z">
 <meta property="article:author" content="Golden">
 <meta property="article:tag" content="prometheus">
 <meta name="twitter:card" content="summary">
@@ -57,7 +57,7 @@
   isHome: false,
   isHighlightShrink: false,
   isToc: true,
-  postUpdate: '2023-05-10 08:00:05'
+  postUpdate: '2023-10-17 22:14:59'
 }</script><noscript><style type="text/css">
   #nav {
     opacity: 1
@@ -161,12 +161,10 @@
       }
     }
     detectApple()
-    })(window)</script><meta name="generator" content="Hexo 7.0.0-rc1"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/avatar.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">47</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">13</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://sysdig.com/wp-content/uploads/Blog-Kubernetes-Monitoring-with-Prometheus-1-Featured-image.png')"><nav id="nav"><span id="blog-info"><a href="/" title="发光の金子吖"><img class="site-icon" src="/img/logo.png"/><span class="site-name">发光の金子吖</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Prometheus 使用指南</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2020-10-31T16:00:00.000Z" title="发表于 2020-11-01 00:00:00">2020-11-01</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-05-10T00:00:05.304Z" title="更新于 2023-05-10 08:00:05">2023-05-10</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/">效率工具</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Prometheus 使用指南"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><h3 id="相关概念"><a href="#相关概念" class="headerlink" title="相关概念"></a>相关概念</h3><p><strong>TSDB</strong>：时序数据库 是数据库大家庭中的一员，专门存储随时间变化的数据；</p>
+    })(window)</script><meta name="generator" content="Hexo 7.0.0-rc1"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/avatar.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">47</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">13</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://sysdig.com/wp-content/uploads/Blog-Kubernetes-Monitoring-with-Prometheus-1-Featured-image.png')"><nav id="nav"><span id="blog-info"><a href="/" title="发光の金子吖"><img class="site-icon" src="/img/logo.png"/><span class="site-name">发光の金子吖</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Prometheus 使用指南</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2020-10-31T16:00:00.000Z" title="发表于 2020-11-01 00:00:00">2020-11-01</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-10-17T14:14:59.113Z" title="更新于 2023-10-17 22:14:59">2023-10-17</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/">效率工具</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Prometheus 使用指南"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><h3 id="相关概念"><a href="#相关概念" class="headerlink" title="相关概念"></a>相关概念</h3><p><strong>TSDB</strong>：时序数据库 是数据库大家庭中的一员，专门存储随时间变化的数据；</p>
 <p><strong>时序 (Time Series)</strong> 指的是某个变量随时间变化的所有历史；每个时序由一个名字(Metric)和一组<strong>标签</strong> (labels) 标识定义。</p>
 <p><strong>样本 (Sample)</strong> 指的是历史中该变量的瞬时值；每个样本由<strong>时序标识</strong>、<strong>时间戳</strong>(一个毫秒级的 unix 时间戳)、<strong>数值</strong> (float64 值) 3 部分构成</p>
 <img src="/2020/11/01/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/Prometheus%20%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/auto-orient,1.jpeg" alt="img">
-
-
 
 <blockquote>
 <p>时序是如何被定义的？</p>
@@ -176,7 +174,7 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 该时序的名字为 api_http_requests_total，标签为 path、status、method 和 instance</span></span><br><span class="line">api_http_requests_total&#123;path=<span class="string">&quot;/users&quot;</span>,status=200,method=<span class="string">&quot;GET&quot;</span>,instance=<span class="string">&quot;10.111.201.26&quot;</span>&#125;</span><br></pre></td></tr></table></figure>
 
 <p>只有时序名字和标签键值完全相同的时序才是同一个时序。</p>
-<h5 id="Metric命名"><a href="#Metric命名" class="headerlink" title="Metric命名"></a>Metric命名</h5><p> 要表示metric的功能，如<code>http_request_total</code>。时序的名字由 ASCII 字符，数字，下划线，以及冒号组成，它必须满足正则表达式 [a-zA-Z_:][a-zA-Z0-9_:]*, 其名字应该具有语义化，一般表示一个可以度量的指标，例如 http_requests_total, 可以表示 http 请求的总数。</p>
+<h5 id="Metric命名"><a href="#Metric命名" class="headerlink" title="Metric命名"></a>Metric命名</h5><p>要表示metric的功能，如<code>http_request_total</code>。时序的名字由 ASCII 字符，数字，下划线，以及冒号组成，它必须满足正则表达式 [a-zA-Z_:][a-zA-Z0-9_:]*, 其名字应该具有语义化，一般表示一个可以度量的指标，例如 http_requests_total, 可以表示 http 请求的总数。</p>
 <h5 id="Metric类型"><a href="#Metric类型" class="headerlink" title="Metric类型"></a>Metric类型</h5><ul>
 <li><code>Counter</code>: 一种累加的<code>metric</code>，如请求的个数，结束的任务数，出现的错误数等</li>
 <li><code>Gauge</code>: 常规的metric,如温度，可任意加减。其为瞬时的，与时间没有关系的，可以任意变化的数据。</li>
@@ -198,36 +196,38 @@
 <h4 id="三大套件"><a href="#三大套件" class="headerlink" title="三大套件"></a>三大套件</h4><p>Server 主要负责数据采集和存储，提供PromQL查询语言的支持。<br>Alertmanager 警告管理器，用来进行报警。<br>PushGateway 支持临时性Job主动推送指标的中间网关。</p>
 <h3 id="架构图"><a href="#架构图" class="headerlink" title="架构图"></a>架构图</h3><img src="/2020/11/01/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/Prometheus%20%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/CF48A9A4-208F-4302-9FD1-1F7F7213DA65.png" alt="img">
 
-
 <h3 id="安装使用"><a href="#安装使用" class="headerlink" title="安装使用"></a>安装使用</h3><blockquote>
-<p>安装教程: <a target="_blank" rel="noopener" href="https://www.cnblogs.com/chenqionghe/p/10494868.html">从零搭建Prometheus监控报警系统</a><br><a target="_blank" rel="noopener" href="http://47.93.119.45:9090/targets">Prometheus</a><br><a target="_blank" rel="noopener" href="http://47.93.119.45:9091/#">Pushgateway</a><br><a target="_blank" rel="noopener" href="http://47.93.119.45:3000/#">Grafana</a><br><a target="_blank" rel="noopener" href="http://47.93.119.45:9093/#/alerts">AlertManager</a></p>
+<p>安装教程: <a target="_blank" rel="noopener" href="https://www.cnblogs.com/chenqionghe/p/10494868.html">从零搭建Prometheus监控报警系统</a> &gt; <a target="_blank" rel="noopener" href="http://47.93.119.45:9090/targets">Prometheus</a> &gt; <a target="_blank" rel="noopener" href="http://47.93.119.45:9091/#">Pushgateway</a> &gt; <a target="_blank" rel="noopener" href="http://47.93.119.45:3000/#">Grafana</a> &gt; <a target="_blank" rel="noopener" href="http://47.93.119.45:9093/#/alerts">AlertManager</a></p>
 </blockquote>
 <ul>
-<li>热加载配置文件<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -X POST http://localhost:9090/-/reload</span><br></pre></td></tr></table></figure></li>
+<li>热加载配置文件</li>
 </ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -X POST http://localhost:9090/-/reload</span><br></pre></td></tr></table></figure>
+
 <h4 id="建立相应文件夹"><a href="#建立相应文件夹" class="headerlink" title="建立相应文件夹"></a>建立相应文件夹</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> -p /home/promethues</span><br><span class="line"><span class="built_in">mkdir</span> -p /home/promethues/server</span><br><span class="line"><span class="built_in">mkdir</span> -p /home/promethues/client</span><br><span class="line"><span class="built_in">touch</span> /home/promethues/server/rules.yml</span><br><span class="line"><span class="built_in">chmod</span> 777 /home/promethues/server/rules.yml</span><br></pre></td></tr></table></figure>
 
-
 <h4 id="安装Prometheus-Server"><a href="#安装Prometheus-Server" class="headerlink" title="安装Prometheus-Server"></a>安装Prometheus-Server</h4><ul>
-<li><p>配置</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">global:</span><br><span class="line">  scrape_interval:     15s <span class="comment"># 默认抓取间隔, 15秒向目标抓取一次数据。</span></span><br><span class="line">  external_labels:</span><br><span class="line">    monitor: <span class="string">&#x27;codelab-monitor&#x27;</span></span><br><span class="line"><span class="comment"># 这里表示抓取对象的配置</span></span><br><span class="line">scrape_configs:</span><br><span class="line">    <span class="comment">#这个配置是表示在这个配置内的时间序例，每一条都会自动添加上这个&#123;job_name:&quot;prometheus&quot;&#125;的标签  - job_name: &#x27;prometheus&#x27;</span></span><br><span class="line">    scrape_interval: 5s <span class="comment"># 重写了全局抓取间隔时间，由15秒重写成5秒</span></span><br><span class="line">    static_configs:</span><br><span class="line">      - targets: [<span class="string">&#x27;localhost:9090&#x27;</span>]</span><br></pre></td></tr></table></figure></li>
-<li><p>docker启动</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">docker <span class="built_in">rm</span> -f prometheus</span><br><span class="line">docker run --name=prometheus -d \</span><br><span class="line">-p 9090:9090 \</span><br><span class="line">-v /home/chenqionghe/promethues/server/prometheus.yml:/etc/prometheus/prometheus.yml \</span><br><span class="line">-v /home/chenqionghe/promethues/server/rules.yml:/etc/prometheus/rules.yml \</span><br><span class="line">prom/prometheus:v2.7.2 \</span><br><span class="line">--config.file=/etc/prometheus/prometheus.yml \</span><br><span class="line">--web.enable-lifecycle</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>访问</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://localhost:9090</span><br></pre></td></tr></table></figure>
-<img src="/2020/11/01/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/Prometheus%20%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/7EB0113A-5D55-4D1A-92B8-3E64B2923A04.png" alt="img"></li>
+<li>配置</li>
 </ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">global:</span><br><span class="line">  scrape_interval:     15s <span class="comment"># 默认抓取间隔, 15秒向目标抓取一次数据。</span></span><br><span class="line">  external_labels:</span><br><span class="line">    monitor: <span class="string">&#x27;codelab-monitor&#x27;</span></span><br><span class="line"><span class="comment"># 这里表示抓取对象的配置</span></span><br><span class="line">scrape_configs:</span><br><span class="line">    <span class="comment">#这个配置是表示在这个配置内的时间序例，每一条都会自动添加上这个&#123;job_name:&quot;prometheus&quot;&#125;的标签  - job_name: &#x27;prometheus&#x27;</span></span><br><span class="line">    scrape_interval: 5s <span class="comment"># 重写了全局抓取间隔时间，由15秒重写成5秒</span></span><br><span class="line">    static_configs:</span><br><span class="line">      - targets: [<span class="string">&#x27;localhost:9090&#x27;</span>]</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>docker启动</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">docker <span class="built_in">rm</span> -f prometheus</span><br><span class="line">docker run --name=prometheus -d \</span><br><span class="line">-p 9090:9090 \</span><br><span class="line">-v /home/chenqionghe/promethues/server/prometheus.yml:/etc/prometheus/prometheus.yml \</span><br><span class="line">-v /home/chenqionghe/promethues/server/rules.yml:/etc/prometheus/rules.yml \</span><br><span class="line">prom/prometheus:v2.7.2 \</span><br><span class="line">--config.file=/etc/prometheus/prometheus.yml \</span><br><span class="line">--web.enable-lifecycle</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>访问</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://localhost:9090</span><br></pre></td></tr></table></figure>
+
+<img src="/2020/11/01/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/Prometheus%20%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/7EB0113A-5D55-4D1A-92B8-3E64B2923A04.png" alt="img">
+
 <h4 id="推送指标"><a href="#推送指标" class="headerlink" title="推送指标"></a>推送指标</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> &lt;&lt;<span class="string">EOF | curl --data-binary @- http://47.93.119.45:9091/metrics/job/cqh/instance/test</span></span><br><span class="line"><span class="string"># 锻炼场所价格</span></span><br><span class="line"><span class="string">muscle_metric&#123;label=&quot;gym&quot;&#125; 8800</span></span><br><span class="line"><span class="string"># 三大项数据 kg</span></span><br><span class="line"><span class="string">bench_press 100</span></span><br><span class="line"><span class="string">dead_lift 110</span></span><br><span class="line"><span class="string">deep_squal 180</span></span><br><span class="line"><span class="string">EOF</span></span><br></pre></td></tr></table></figure>
-
-
 
 <h4 id="安装Pushgateway"><a href="#安装Pushgateway" class="headerlink" title="安装Pushgateway"></a>安装Pushgateway</h4><img src="/2020/11/01/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/Prometheus%20%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/C1BA5F68-0915-45C0-A15A-D447F1E31B72.png" alt="img">
 
-
-
 <h4 id="安装Grafana"><a href="#安装Grafana" class="headerlink" title="安装Grafana"></a>安装Grafana</h4><img src="/2020/11/01/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/Prometheus%20%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/64D6059D-F4CC-4A51-83F2-66C02016B5F6.png" alt="img">
-
 
 <h4 id="安装Altermanager"><a href="#安装Altermanager" class="headerlink" title="安装Altermanager"></a>安装Altermanager</h4><blockquote>
 <ul>
@@ -238,10 +238,10 @@
 > 注：默认登录账户和密码都是admin
 
 <h2 id="PromQL"><a href="#PromQL" class="headerlink" title="PromQL"></a>PromQL</h2><blockquote>
-<p>查询时序：<br>count({<strong>name</strong> &#x3D;~ “indexer_metrics_app_.*”})</p>
+<p>查询时序：<br>count({<strong>name</strong> &#x3D;~ “indexer<em>metrics_app</em>.*“})</p>
 </blockquote>
 <blockquote>
-<p> <a target="_blank" rel="noopener" href="https://www.cnblogs.com/ZhongzhouChen/p/11696792.html">prometheus promql查询表达式</a><br> <a target="_blank" rel="noopener" href="https://yunlzheng.gitbook.io/prometheus-book/parti-prometheus-ji-chu/promql/prometheus-metrics-types">prometheus-book</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/ZhongzhouChen/p/11696792.html">prometheus promql查询表达式</a> &gt; <a target="_blank" rel="noopener" href="https://yunlzheng.gitbook.io/prometheus-book/parti-prometheus-ji-chu/promql/prometheus-metrics-types">prometheus-book</a></p>
 </blockquote>
 <p>PromQL (Prometheus Query Language) ，这是Prometheus开发的数据查询DSL语言，日常的可视化以及告警规则都要用到它。</p>
 <h3 id="基础语法"><a href="#基础语法" class="headerlink" title="基础语法"></a>基础语法</h3><h4 id="文字类型"><a href="#文字类型" class="headerlink" title="文字类型"></a>文字类型</h4><p><strong>字符串值</strong></p>
@@ -256,8 +256,6 @@
 
 <h4 id="注释"><a href="#注释" class="headerlink" title="注释"></a>注释</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 这是一段注释</span></span><br></pre></td></tr></table></figure>
 
-
-
 <blockquote>
 <p>如何查询时序？</p>
 </blockquote>
@@ -265,7 +263,7 @@
 <p>注：由于时序名字本质上就是一个隐藏标签，因此也可以通过内部<code>_name_</code>标签进行匹配。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">http_requests_total</span><br><span class="line">等价于： &#123;_name_=“ http_requests_total”&#125;</span><br></pre></td></tr></table></figure>
 
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http_requests_total&#123;job=<span class="string">&quot;prometheus&quot;</span>,group=<span class="string">&quot;canary&quot;</span>&#125; </span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http_requests_total&#123;job=<span class="string">&quot;prometheus&quot;</span>,group=<span class="string">&quot;canary&quot;</span>&#125;</span><br></pre></td></tr></table></figure>
 
 <p><strong>标签匹配运算符</strong></p>
 <ul>
@@ -282,23 +280,17 @@
 
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 以下表达式选择名称以job开头的所有时序</span></span><br><span class="line">&#123;_name_=~<span class="string">&quot;job:.*&quot;</span>&#125;</span><br></pre></td></tr></table></figure>
 
-
-
 <blockquote>
 <p>如何判定标签选择器列表是否合法？</p>
 </blockquote>
-<p>查询语句规则：必须指定一个名称或至少一个与空字符串不匹配的标签匹配器。 </p>
+<p>查询语句规则：必须指定一个名称或至少一个与空字符串不匹配的标签匹配器。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;job=~<span class="string">&quot;.*&quot;</span>&#125; 						 <span class="comment"># Bad! 同空字符串匹配</span></span><br><span class="line">&#123;job=~<span class="string">&quot;.+&quot;</span>&#125;              <span class="comment"># Good!</span></span><br><span class="line">&#123;job=~<span class="string">&quot;.*&quot;</span>,method=<span class="string">&quot;get&quot;</span>&#125; <span class="comment"># Good!</span></span><br></pre></td></tr></table></figure>
-
-
 
 <h4 id="Offset-修饰符"><a href="#Offset-修饰符" class="headerlink" title="Offset 修饰符"></a>Offset 修饰符</h4><p>offset修饰符允许更改查询中各个瞬时矢量和范围矢量的时间偏移。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 返回相对于当前查询评估时间过去5分钟的http_requests_total值：</span></span><br><span class="line">http_requests_total offset 5m</span><br><span class="line"><span class="comment"># 返回http_requests_total一周前的5分钟费率：</span></span><br><span class="line">rate(http_requests_total[5m] offset 1w)</span><br></pre></td></tr></table></figure>
 
 <p>offset修饰符必须始终需要立即跟随选择器。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sum</span>(http_requests_total&#123;method=<span class="string">&quot;GET&quot;</span>&#125; offset 5m) // GOOD.</span><br><span class="line"><span class="built_in">sum</span>(http_requests_total&#123;method=<span class="string">&quot;GET&quot;</span>&#125;) offset 5m // INVALID.</span><br></pre></td></tr></table></figure>
-
-
 
 <h4 id="查询表达式类型"><a href="#查询表达式类型" class="headerlink" title="查询表达式类型"></a>查询表达式类型</h4><ul>
 <li>瞬时向量表达式 (Instant vector): 包含一组时序，每个时序只有一个点，例如：<code>http_requests_total</code> 即：选择出给定的时间戳（即时）上的一组时间序列和单个样本值</li>
@@ -316,7 +308,7 @@
 <p>在vector操作数和scalar操作数之间，会将运算符应用于vector中每个数据样本的值，结果是另一个vector数据。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 将 http_requests_total 所有数据 double 一倍， 每个样本都乘以2</span></span><br><span class="line">http_requests_total * 2</span><br></pre></td></tr></table></figure>
 
-<p>在两个vector操作数之间，将运算符应用于左侧vector中的每个条目和右侧vector中匹配元素。结果是另一个vector数据，并且分组标签成为输出标签集。  </p>
+<p>在两个vector操作数之间，将运算符应用于左侧vector中的每个条目和右侧vector中匹配元素。结果是另一个vector数据，并且分组标签成为输出标签集。</p>
 <p>注： 在右侧vector中找不到匹配条目的条目不属于结果。</p>
 <p><strong>比较运算符</strong>:</p>
 <p>支持的比较运算符有 <code>==，!=，&gt;，&lt;，&gt;=，&lt;=</code>, 用于过滤数据</p>
@@ -325,7 +317,7 @@
 <p><strong>逻辑运算符</strong>:</p>
 <p>支持的逻辑运算符有 <code>and，or，unless</code>, 只能在两个瞬时向量表达式之间使用。</p>
 <ul>
-<li><p><strong>vector1 and vector2</strong> 产生一个以vector1为基础交集。结果向量名称和值从vector1继承。 </p>
+<li><p><strong>vector1 and vector2</strong> 产生一个以vector1为基础交集。结果向量名称和值从vector1继承。</p>
 </li>
 <li><p><strong>vector1 or vector2</strong> 产生一个并集向量，其中包含vector1的所有原始元素（标签集+值），以及在vector1中没有匹配的标签集的vector2的元素。</p>
 </li>
@@ -340,28 +332,28 @@
 <p><strong>聚合运算符</strong>:</p>
 <p>可用于聚合单个瞬时向量的元素，从而产生具有聚合值的较少元素的新向量：</p>
 <p>支持的聚合运算符有 <code>sum，min，max，avg，stddev，stdvar，count，count_values，bottomk，topk，quantile </code></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">max(http_requests_total)   <span class="comment"># 表示 http_requests_total 结果中最大的数据</span></span><br><span class="line"><span class="built_in">sum</span>(http_requests_total)  </span><br><span class="line">count_values(<span class="string">&quot;version&quot;</span>, build_version)</span><br><span class="line">topk(5, http_requests_total)</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">max(http_requests_total)   <span class="comment"># 表示 http_requests_total 结果中最大的数据</span></span><br><span class="line"><span class="built_in">sum</span>(http_requests_total)</span><br><span class="line">count_values(<span class="string">&quot;version&quot;</span>, build_version)</span><br><span class="line">topk(5, http_requests_total)</span><br></pre></td></tr></table></figure>
 
 <p>格式：</p>
 <p><code>&lt;aggr-op&gt; [without|by (&lt;label list&gt;)] ([parameter,] &lt;vector expression&gt;)</code></p>
-<p>or </p>
+<p>or</p>
 <p><code>&lt;aggr-op&gt;([parameter,] &lt;vector expression&gt;) [without|by (&lt;label list&gt;)]</code></p>
 <p>说明：</p>
 <ul>
 <li><p>label list : 标签列表，以逗号分隔，（label1，label2）和（label1，label2，）均为有效语法。</p>
 </li>
-<li><p>without | by   : without是从结果向量中删除列出的标签，by是从结果中只保留列出的标签</p>
+<li><p>without | by : without是从结果向量中删除列出的标签，by是从结果中只保留列出的标签</p>
 </li>
 <li><p>parameter: 只能在count_values, quantile, topk, bottomk使用</p>
 </li>
 </ul>
 <p>特别说明：</p>
 <ul>
-<li><p>count_values  : 相同值元素的数量，每个唯一样本值输出一个时间序列。  每个时间序列的值是样本值出现的次数。</p>
+<li><p>count_values : 相同值元素的数量，每个唯一样本值输出一个时间序列。 每个时间序列的值是样本值出现的次数。</p>
 </li>
-<li><p>quantile   : 分位数计算， eg: 中位数quantile(0.5，…)，95分位，quantile(0.95, …)</p>
+<li><p>quantile : 分位数计算， eg: 中位数quantile(0.5，…)，95分位，quantile(0.95, …)</p>
 </li>
-<li><p>topk ，bottomk :  样本值最大、最小的k个元素，将输入样本的一个子集（包括原始标签）返回到结果向量中，此时by和not仅用于存储输入向量，</p>
+<li><p>topk ，bottomk : 样本值最大、最小的k个元素，将输入样本的一个子集（包括原始标签）返回到结果向量中，此时by和not仅用于存储输入向量，</p>
 </li>
 </ul>
 <p><strong>运算符优先级</strong></p>
@@ -374,16 +366,14 @@
 <li><code>and</code>, <code>unless</code></li>
 <li><code>or</code></li>
 </ol>
-<p>优先级相同的运算符是左关联的。 </p>
+<p>优先级相同的运算符是左关联的。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">2 * 3 ％ 2   等价于 （2 * 3）％2。</span><br><span class="line">2 ^ 3 ^ 2   等效于  2 ^（3 ^ 2）  <span class="comment"># 这是由于^是右联想</span></span><br></pre></td></tr></table></figure>
-
-
 
 <h4 id="数据匹配"><a href="#数据匹配" class="headerlink" title="数据匹配"></a>数据匹配</h4><p>数据之间运算，尝试在左侧数据中，为每个样本找到匹配的元素。</p>
 <p>匹配类型</p>
 <p><strong>一对一</strong></p>
 <p>格式： <code>vector1 &lt;operator&gt; vector2</code></p>
-<p>如果两个条目具有完全相同的一组标签和相应的值，则它们匹配。 </p>
+<p>如果两个条目具有完全相同的一组标签和相应的值，则它们匹配。</p>
 <p>ignoring关键字允许在匹配时忽略某些标签</p>
 <p>on关键字允许将考虑的标签集减少到提供的列表中</p>
 <p><code>&lt;vector expr&gt; &lt;bin-op&gt; ignoring(&lt;label list&gt;) &lt;vector expr&gt;</code></p>
@@ -399,15 +389,13 @@
 <p>举例：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">method_code:http_errors:rate5m&#123;method=<span class="string">&quot;get&quot;</span>, code=<span class="string">&quot;500&quot;</span>&#125;  24</span><br><span class="line">method_code:http_errors:rate5m&#123;method=<span class="string">&quot;get&quot;</span>, code=<span class="string">&quot;404&quot;</span>&#125;  30</span><br><span class="line">method_code:http_errors:rate5m&#123;method=<span class="string">&quot;put&quot;</span>, code=<span class="string">&quot;501&quot;</span>&#125;  3</span><br><span class="line">method_code:http_errors:rate5m&#123;method=<span class="string">&quot;post&quot;</span>, code=<span class="string">&quot;500&quot;</span>&#125; 6</span><br><span class="line">method_code:http_errors:rate5m&#123;method=<span class="string">&quot;post&quot;</span>, code=<span class="string">&quot;404&quot;</span>&#125; 21</span><br><span class="line"></span><br><span class="line">method:http_requests:rate5m&#123;method=<span class="string">&quot;get&quot;</span>&#125;  600</span><br><span class="line">method:http_requests:rate5m&#123;method=<span class="string">&quot;del&quot;</span>&#125;  34</span><br><span class="line">method:http_requests:rate5m&#123;method=<span class="string">&quot;post&quot;</span>&#125; 120</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">method_code:http_errors:rate5m&#123;method=<span class="string">&quot;get&quot;</span>,code=<span class="string">&quot;500&quot;</span>&#125; / ignoring(code) method:http_requests:rate5m  0.04 = 24 / 600</span><br><span class="line">method_code:http_errors:rate5m&#123;method=<span class="string">&quot;post&quot;</span>,code=<span class="string">&quot;500&quot;</span>&#125; / ignoring(code) method:http_requests:rate5m   0.05 =  6 / 120</span><br></pre></td></tr></table></figure>
 
-
-
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 左侧为“多的”的那侧，右侧的元素与左侧具有相同方法标签的多个元素匹配；</span></span><br><span class="line">method_code:http_errors:rate5m &#123;method=<span class="string">&quot;get&quot;</span>, code=<span class="string">&quot;500&quot;</span>&#125;  / ignoring(code) group_left method:http_requests:rate5m  0.04  =  24 / 600</span><br><span class="line"></span><br><span class="line">method_code:http_errors:rate5m &#123;method=<span class="string">&quot;get&quot;</span>, code=<span class="string">&quot;404&quot;</span>&#125;  / ignoring(code) group_left method:http_requests:rate5m   0.05  =  30 / 600</span><br><span class="line"></span><br><span class="line">method_code:http_errors:rate5m &#123;method=<span class="string">&quot;post&quot;</span>, code=<span class="string">&quot;500&quot;</span>&#125;  / ignoring(code) group_left method:http_requests:rate5m    0.05  =   6 / 120</span><br><span class="line"></span><br><span class="line">method_code:http_errors:rate5m &#123;method=<span class="string">&quot;post&quot;</span>, code=<span class="string">&quot;404&quot;</span>&#125; / ignoring(code) group_left method:http_requests:rate5m   0.175  =  21 / 120</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 <p>注：多对一和一对多匹配使用的不太多，谨慎考虑使用。</p>
 <h3 id="基本查询"><a href="#基本查询" class="headerlink" title="基本查询"></a>基本查询</h3><ol>
 <li>查询当前所有数据</li>
 </ol>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">logback_events_total </span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">logback_events_total</span><br></pre></td></tr></table></figure>
 
 <ol start="2">
 <li>模糊查询： level&#x3D;”inxx”</li>
@@ -437,9 +425,7 @@
 </ul>
 <p>在瞬时向量表达式或者区间向量表达式中，都是以当前时间为基准。</p>
 <p>如果想查询5分钏前的瞬时样本数据，则需要<strong>使用位移操作</strong>，关键字：**<code>offset</code>**, 其要紧跟在选择器<code>&#123;&#125;</code>后面。如：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sum</span>(http_requests_total&#123;method=<span class="string">&quot;GET&quot;</span>&#125; offset 5m)</span><br><span class="line"></span><br><span class="line">rate(http_requests_total[5m] offset 1w) </span><br></pre></td></tr></table></figure>
-
-
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sum</span>(http_requests_total&#123;method=<span class="string">&quot;GET&quot;</span>&#125; offset 5m)</span><br><span class="line"></span><br><span class="line">rate(http_requests_total[5m] offset 1w)</span><br></pre></td></tr></table></figure>
 
 <p>###内置函数</p>
 <blockquote>
@@ -495,20 +481,18 @@
 <td>设置结果下限最小值</td>
 </tr>
 </tbody></table>
-<h3 id="告警规则"><a href="#告警规则" class="headerlink" title="告警规则"></a>告警规则</h3><p> 比如单台Nginx active指标超过1w就要发出告警， </p>
+<h3 id="告警规则"><a href="#告警规则" class="headerlink" title="告警规则"></a>告警规则</h3><p>比如单台Nginx active指标超过1w就要发出告警，</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nginx_http_connections&#123;instance=<span class="string">&quot;172.18.11.192:9145&quot;</span>,state=<span class="string">&quot;active&quot;</span>&#125; &gt; 10000</span><br></pre></td></tr></table></figure>
 
 <p>完整的告警规则如下：</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#group:定义一组相关规则</span></span><br><span class="line"><span class="comment">#alert：告警规则名称</span></span><br><span class="line"><span class="comment">#expr：基于PromQL的触发条件</span></span><br><span class="line"><span class="comment">#for 等待评估时间</span></span><br><span class="line"><span class="comment">#label 自定义标签</span></span><br><span class="line"><span class="comment">#annotation： 指定一组附加信息Alertmanger特性</span></span><br><span class="line"><span class="attr">groups:</span></span><br><span class="line"> <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Nginx</span></span><br><span class="line">   <span class="attr">rules:</span></span><br><span class="line">   <span class="bullet">-</span> <span class="attr">alert:</span> <span class="string">HighErrorRate</span></span><br><span class="line">     <span class="attr">expr:</span> <span class="string">nginx_http_connections&#123;instance=&quot;172.18.11.192:9145&quot;,state=&quot;active&quot;&#125;</span> <span class="string">&gt;</span> <span class="number">10000</span></span><br><span class="line">     <span class="attr">for:</span> <span class="string">5m</span></span><br><span class="line">     <span class="attr">labels:</span></span><br><span class="line">       <span class="attr">severity:</span> <span class="string">page</span></span><br><span class="line">     <span class="attr">annotations:</span></span><br><span class="line">       <span class="attr">summary:</span> <span class="string">&quot;啊啊啊啊啊,(instance <span class="template-variable">&#123;&#123; $labels.instance &#125;&#125;</span>) 连接数超1w了&quot;</span></span><br><span class="line">       <span class="attr">description:</span> <span class="string">&quot;Nginx 连接数现在 VALUE = <span class="template-variable">&#123;&#123; $value &#125;&#125;</span>\n  LABELS: <span class="template-variable">&#123;&#123; $labels &#125;&#125;</span>&quot;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#group:定义一组相关规则</span></span><br><span class="line"><span class="comment">#alert：告警规则名称</span></span><br><span class="line"><span class="comment">#expr：基于PromQL的触发条件</span></span><br><span class="line"><span class="comment">#for 等待评估时间</span></span><br><span class="line"><span class="comment">#label 自定义标签</span></span><br><span class="line"><span class="comment">#annotation： 指定一组附加信息Alertmanger特性</span></span><br><span class="line"><span class="attr">groups:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Nginx</span></span><br><span class="line">    <span class="attr">rules:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">alert:</span> <span class="string">HighErrorRate</span></span><br><span class="line">        <span class="attr">expr:</span> <span class="string">nginx_http_connections&#123;instance=&quot;172.18.11.192:9145&quot;,state=&quot;active&quot;&#125;</span> <span class="string">&gt;</span> <span class="number">10000</span></span><br><span class="line">        <span class="attr">for:</span> <span class="string">5m</span></span><br><span class="line">        <span class="attr">labels:</span></span><br><span class="line">          <span class="attr">severity:</span> <span class="string">page</span></span><br><span class="line">        <span class="attr">annotations:</span></span><br><span class="line">          <span class="attr">summary:</span> <span class="string">&quot;啊啊啊啊啊,(instance <span class="template-variable">&#123;&#123; $labels.instance &#125;&#125;</span>) 连接数超1w了&quot;</span></span><br><span class="line">          <span class="attr">description:</span> <span class="string">&quot;Nginx 连接数现在 VALUE = <span class="template-variable">&#123;&#123; $value &#125;&#125;</span>\n  LABELS: <span class="template-variable">&#123;&#123; $labels &#125;&#125;</span>&quot;</span></span><br></pre></td></tr></table></figure>
 
 <blockquote>
 <p>查询所用的时间戳</p>
 </blockquote>
 <p>运行查询时，将选择<strong>采样数据的时间戳</strong>，而不依赖于实际的当前时间序列数据。 这主要是为了支持诸如聚合（求和，平均等）的情况，其中多个聚合时间序列未在时间上精确对齐。由于它们的独立性，Prometheus需要为每个相关时间序列在那些时间戳上分配一个值。因此，<strong>只需在此时间戳之前获取最新样本即可</strong>。</p>
 <blockquote>
-<p> 避免慢查询和重载</p>
+<p>避免慢查询和重载</p>
 </blockquote>
 <ul>
 <li><p>在对未知数据构建查询时，先在Prometheus表达式浏览器的表格视图中构建查询，直到结果集看起来合理为止，在切换到图形模式。避免对其进行图形化处理可能会超时或使服务器或浏览器超载。。</p>
@@ -522,7 +506,7 @@
 <p>检查prometheus.yml配置是否有效? - promtool prometheus附带了一个check config命令</p>
 </blockquote>
 <p><strong>检查配置</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./promtool check config prometheus.yml </span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./promtool check config prometheus.yml</span><br></pre></td></tr></table></figure>
 
 <p>正常返回状态</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Checking prometheus.yml</span><br><span class="line">  SUCCESS: 1 rule files found</span><br><span class="line"></span><br><span class="line">Checking alert_rules.yml</span><br><span class="line">  SUCCESS: 29 rules found</span><br></pre></td></tr></table></figure>

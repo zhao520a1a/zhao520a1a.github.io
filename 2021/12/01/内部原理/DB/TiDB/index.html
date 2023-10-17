@@ -7,7 +7,7 @@
 <meta property="og:locale">
 <meta property="og:image" content="https://cdn.thenewstack.io/media/2017/04/2cb7769e-tidb.png">
 <meta property="article:published_time" content="2021-11-30T16:00:00.000Z">
-<meta property="article:modified_time" content="2023-05-10T00:00:06.433Z">
+<meta property="article:modified_time" content="2023-10-17T14:12:38.291Z">
 <meta property="article:author" content="Golden">
 <meta property="article:tag" content="db">
 <meta name="twitter:card" content="summary">
@@ -57,7 +57,7 @@
   isHome: false,
   isHighlightShrink: false,
   isToc: true,
-  postUpdate: '2023-05-10 08:00:06'
+  postUpdate: '2023-10-17 22:12:38'
 }</script><noscript><style type="text/css">
   #nav {
     opacity: 1
@@ -161,7 +161,7 @@
       }
     }
     detectApple()
-    })(window)</script><meta name="generator" content="Hexo 7.0.0-rc1"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/avatar.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">47</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">13</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://cdn.thenewstack.io/media/2017/04/2cb7769e-tidb.png')"><nav id="nav"><span id="blog-info"><a href="/" title="发光の金子吖"><img class="site-icon" src="/img/logo.png"/><span class="site-name">发光の金子吖</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">TiDB</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-11-30T16:00:00.000Z" title="发表于 2021-12-01 00:00:00">2021-12-01</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-05-10T00:00:06.433Z" title="更新于 2023-05-10 08:00:06">2023-05-10</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/">内部原理</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="TiDB"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="我的思路"><a href="#我的思路" class="headerlink" title="我的思路"></a><a target="_blank" rel="noopener" href="https://www.processon.com/mindmap/615077c207912903eff79705">我的思路</a></h2><h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><blockquote>
+    })(window)</script><meta name="generator" content="Hexo 7.0.0-rc1"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/avatar.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">47</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">13</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://cdn.thenewstack.io/media/2017/04/2cb7769e-tidb.png')"><nav id="nav"><span id="blog-info"><a href="/" title="发光の金子吖"><img class="site-icon" src="/img/logo.png"/><span class="site-name">发光の金子吖</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">TiDB</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-11-30T16:00:00.000Z" title="发表于 2021-12-01 00:00:00">2021-12-01</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-10-17T14:12:38.291Z" title="更新于 2023-10-17 22:12:38">2023-10-17</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/">内部原理</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="TiDB"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="我的思路"><a href="#我的思路" class="headerlink" title="我的思路"></a><a target="_blank" rel="noopener" href="https://www.processon.com/mindmap/615077c207912903eff79705">我的思路</a></h2><h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><blockquote>
 <p>为什么不能在传统模型上去实现分布式的MySQL？</p>
 </blockquote>
 <p>实现 MySQL 分布式的方案</p>
@@ -235,7 +235,7 @@
 </blockquote>
 <p>Raft 是一个一致性算法&#x2F;一致性协议，它和 Paxos 等价，但是更加易于理解。它提供几个重要的功能：</p>
 <ul>
-<li>Leader 选举  Leader Election)</li>
+<li>Leader 选举 Leader Election)</li>
 <li>成员变更 (Membership Changes)</li>
 <li>日志复制(Log Compaction)</li>
 </ul>
@@ -255,7 +255,7 @@
 <li>恢复的过程一定要是自动化的。<br>默认的时候，我们都是推荐 3 个副本或者 5 个副本的配置。</li>
 </ol>
 <h3 id="数据分散方案"><a href="#数据分散方案" class="headerlink" title="数据分散方案"></a>数据分散方案</h3><blockquote>
-<p>将数据分散在多台机器上和 Raft 的数据复制不是一个概念<br>这里的 Region 还是和 SQL 中的表没什么关系！ </p>
+<p>将数据分散在多台机器上和 Raft 的数据复制不是一个概念<br>这里的 Region 还是和 SQL 中的表没什么关系！</p>
 </blockquote>
 <p>对于一个 KV 系统，将数据分散在多台机器上有两种比较典型的方案：</p>
 <ul>
@@ -272,7 +272,7 @@
 <p>TiKV 是以 Region 为单位做数据的复制，</p>
 <p>一个 Region 的数据会保存多个副本，我们将每一个副本叫做一个 Replica。Replica 之间是通过 Raft 来保持数据的一致，一个 Region 的多个 Replica 会保存在不同的节点上，构成一个 Raft Group。其中一个 Replica 会作为这个 Group 的 Leader，其他的 Replica 作为 Follower。所有的读和写都是通过 Leader 进行，再由 Leader 复制给 Follower。<br><img src="/2021/12/01/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/DB/TiDB/image-20230502125753427.png" alt="img"></p>
 <h3 id="版本控制-MVCC"><a href="#版本控制-MVCC" class="headerlink" title="版本控制(MVCC)"></a>版本控制(MVCC)</h3><blockquote>
-<p>场景：两个 Client 同时去修改一个 Key 的 Value，如果没有 MVCC，就需要对数据上锁，在分布式场景下，可能会带来性能以及死锁问题。 </p>
+<p>场景：两个 Client 同时去修改一个 Key 的 Value，如果没有 MVCC，就需要对数据上锁，在分布式场景下，可能会带来性能以及死锁问题。</p>
 </blockquote>
 <p>TiKV 的 MVCC 实现是通过在 Key 后面添加 Version 来实现，<br><img src="/2021/12/01/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/DB/TiDB/image-20230502125800106.png" alt="img"><br>数据分成两块，一个是 meta，一个是 data。<br>meta 里面描述，就是当前数据有多少个版本，整个key相对应哪个版本，我想找到那个版本。其中我能找到那个版本，就需要隔离级别决定的</p>
 <p>比如说我们的 meta key 是 A，keyA 有三个版本，是 A1、A2、A3，我们把 key 自己和 version 拼到一起，分别描述 A 的三个版本，也就是 version 1&#x2F;2&#x2F;3。</p>
@@ -321,8 +321,6 @@
 
 <p>非 Unique Index</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Key: tablePrefix&#123;tableID&#125;_indexPrefixSep&#123;indexID&#125;_indexedColumnsValue_rowID</span><br><span class="line">Value: null</span><br></pre></td></tr></table></figure>
-
-
 
 <h2 id="与MySQL对比"><a href="#与MySQL对比" class="headerlink" title="与MySQL对比"></a>与MySQL对比</h2><p>一主多从架构</p>
 <p>master单点故障，程序手动将从升主切换，一般需要10s-30s</p>

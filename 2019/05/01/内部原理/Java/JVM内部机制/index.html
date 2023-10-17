@@ -7,7 +7,7 @@
 <meta property="og:locale">
 <meta property="og:image" content="https://i.ytimg.com/vi/G1ubVOl9IBw/maxresdefault.jpg">
 <meta property="article:published_time" content="2019-04-30T16:00:00.000Z">
-<meta property="article:modified_time" content="2023-05-10T00:00:06.325Z">
+<meta property="article:modified_time" content="2023-10-17T14:12:38.828Z">
 <meta property="article:author" content="Golden">
 <meta property="article:tag" content="java">
 <meta name="twitter:card" content="summary">
@@ -57,7 +57,7 @@
   isHome: false,
   isHighlightShrink: false,
   isToc: true,
-  postUpdate: '2023-05-10 08:00:06'
+  postUpdate: '2023-10-17 22:12:38'
 }</script><noscript><style type="text/css">
   #nav {
     opacity: 1
@@ -161,7 +161,7 @@
       }
     }
     detectApple()
-    })(window)</script><meta name="generator" content="Hexo 7.0.0-rc1"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/avatar.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">47</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">13</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://i.ytimg.com/vi/G1ubVOl9IBw/maxresdefault.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="发光の金子吖"><img class="site-icon" src="/img/logo.png"/><span class="site-name">发光の金子吖</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">JVM内部机制</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2019-04-30T16:00:00.000Z" title="发表于 2019-05-01 00:00:00">2019-05-01</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-05-10T00:00:06.325Z" title="更新于 2023-05-10 08:00:06">2023-05-10</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/">内部原理</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="JVM内部机制"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><blockquote>
+    })(window)</script><meta name="generator" content="Hexo 7.0.0-rc1"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/avatar.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">47</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">13</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://i.ytimg.com/vi/G1ubVOl9IBw/maxresdefault.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="发光の金子吖"><img class="site-icon" src="/img/logo.png"/><span class="site-name">发光の金子吖</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">JVM内部机制</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2019-04-30T16:00:00.000Z" title="发表于 2019-05-01 00:00:00">2019-05-01</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-10-17T14:12:38.828Z" title="更新于 2023-10-17 22:12:38">2023-10-17</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/">内部原理</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="JVM内部机制"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><blockquote>
 <p>本文是以jdk1.8的hotspot虚拟机为范例，介绍JVM的内部机制的。</p>
 </blockquote>
 <p>JVM主要由三个主要的子系统构成</p>
@@ -191,11 +191,11 @@
 <p>哪些内存需要回收？<br>Java使用可达性分析算法，来判定。</p>
 <h2 id="内存结构"><a href="#内存结构" class="headerlink" title="内存结构"></a>内存结构</h2><p>堆：用于存放对象的实例。当对象无法在该空间申请到内存时，将抛出OOM(OutOfMemeryError)异常。</p>
 <p>方法区：所有的定义的方法信息都保存在该区域，类的元数据（类字段 + 类方法 + 类构造方法 + 接口定义 ）+ 静态变量 + 运行时常量池。虽然jvm规范将其描述为堆的一个逻辑部分，但是它却有个别名叫Not-Heap，目的应该是为了Java的堆区分开。</p>
-<p>方法区在jdk1.8前，hotspot虚拟机叫Permanent(永久代&#x2F;持久代)，jdk1.8后，叫Metaspace(元空间)。 </p>
+<p>方法区在jdk1.8前，hotspot虚拟机叫Permanent(永久代&#x2F;持久代)，jdk1.8后，叫Metaspace(元空间)。</p>
 <p>改造原因：类的元数据信息转移到Metaspace的原因是PermGen很难调整。PermGen中类的元数据信息在每次FullGC的时候可能会被收集，而且应该为PermGen分配多大的空间很难确定。</p>
 <p>jdk1.8 对 JVM 架构的改造：</p>
 <ol>
-<li><p>将类元数据从虚拟机转移到本地内存，另外，将<strong>常量池</strong>和<strong>静态变量</strong>放到 Java 堆里。 </p>
+<li><p>将类元数据从虚拟机转移到本地内存，另外，将<strong>常量池</strong>和<strong>静态变量</strong>放到 Java 堆里。</p>
 </li>
 <li><p>HotSopt VM 将会为类元数据<strong>明确分配和释放本地内存</strong>。Metaspace具有动态扩容机制，它的大小会自动随着使用而动态变化。</p>
 </li>
@@ -212,26 +212,30 @@
 <p>Young Generation : Old Generation比例 - 1 ：2</p>
 <p>eden:from:to比例 - 8:1:1</p>
 <blockquote>
-<p> 什么情况下，对象会年轻代 -&gt; 老年代？</p>
+<p>什么情况下，对象会年轻代 -&gt; 老年代？</p>
 </blockquote>
-<p>在年轻代中经历了N次垃圾回收(默认是15次，因为用4bit来存储；可以调整)后仍然存活的对象，就会被放到年老代中。<br> 当survivor1区不足以存放 eden和survivor0的存活对象时，就将存活对象直接存放到老年代。</p>
+<p>在年轻代中经历了N次垃圾回收(默认是15次，因为用4bit来存储；可以调整)后仍然存活的对象，就会被放到年老代中。<br>当survivor1区不足以存放 eden和survivor0的存活对象时，就将存活对象直接存放到老年代。</p>
 <h4 id="GC类别"><a href="#GC类别" class="headerlink" title="GC类别"></a>GC类别</h4><p><strong>Scavenge GC&#x2F;Minor GC&#x2F;YoungGC</strong> ： 当新对象生成并且在Eden申请空间失败时，清理Eden区和Survivor区；先对Eden区域进行GC ，清除非存活对象，并且把尚且存活的对象移动到Survivor区。 然后整理Survivor的两个区。发生频率比较高(不一定等Eden区满了才触发)。<br><strong>CMS OldGC</strong>: CMS垃圾收集器才会产生，清理老年代。<br><strong>Major GC&#x2F;Full GC</strong>：清理整个堆空间（包括年轻代和老年代）和元空间<br>**G1 Mixed GC **：G1垃圾收集器的混合GC算法</p>
 <h4 id="GC调优指标"><a href="#GC调优指标" class="headerlink" title="GC调优指标"></a>GC调优指标</h4><p>jvm调优，主要调整的指标：</p>
 <ul>
 <li>停顿时间：垃圾回收期做垃圾回收中断应用执行的时间。 -XX:MaxGCPauseMills</li>
-<li>吞吐量：垃圾收集时间和总时间的占比,  吞吐量&#x3D;1-  1&#x2F;(1+n)。-XX:GCTimeRatio&#x3D;n</li>
+<li>吞吐量：垃圾收集时间和总时间的占比, 吞吐量&#x3D;1- 1&#x2F;(1+n)。-XX:GCTimeRatio&#x3D;n</li>
 </ul>
 <p>需要针对项目业务类型，来调整。</p>
 <h4 id="GC调优步骤"><a href="#GC调优步骤" class="headerlink" title="GC调优步骤"></a>GC调优步骤</h4><ol>
-<li><p>添加启动参数，打印GC日志</p>
+<li>添加启动参数，打印GC日志</li>
+</ol>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">//将GC日志保存在当前目录gc.log文件中</span><br><span class="line">-XX:+PrintGCDetails -XX:PrintGCTimesStanmps -XX:+PrintGCDateStamps -Xloggc:./gc.log</span><br></pre></td></tr></table></figure>
+
 <p>注：Tomcat可以直接加在JAVA_OPTS变量里</p>
-</li>
+<ol start="2">
 <li><p>分析日志得到关键性指标，这里可以借助如jvisualvm等工具。 推荐-在线GC分析网站:<a target="_blank" rel="noopener" href="https://www.gceasy.io/">https://www.gceasy.io/</a></p>
 </li>
 <li><p>分析GC原因，调优jvm参数。 eg:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 设置元空间初始化和最大空间大小</span></span><br><span class="line">-XX:MetaspaceSize=128M -XX:maxMetaspaceSize=128</span><br><span class="line"></span><br><span class="line"><span class="comment"># 增加年轻待动态扩容增量(默认是20%)，可以减少YoungGC</span></span><br><span class="line">-XX：YoungGenerationSizeIncrement=30</span><br></pre></td></tr></table></figure></li>
+</li>
 </ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 设置元空间初始化和最大空间大小</span></span><br><span class="line">-XX:MetaspaceSize=128M -XX:maxMetaspaceSize=128</span><br><span class="line"></span><br><span class="line"><span class="comment"># 增加年轻待动态扩容增量(默认是20%)，可以减少YoungGC</span></span><br><span class="line">-XX：YoungGenerationSizeIncrement=30</span><br></pre></td></tr></table></figure>
+
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
 <li><a target="_blank" rel="noopener" href="https://www.processon.com/diagraming/5ec61829f346fb69070a57d3">https://www.processon.com/diagraming/5ec61829f346fb69070a57d3</a></li>
 <li><a target="_blank" rel="noopener" href="https://www.processon.com/diagraming/619b45940e3e7409b9ce7d1a">https://www.processon.com/diagraming/619b45940e3e7409b9ce7d1a</a></li>

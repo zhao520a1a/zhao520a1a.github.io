@@ -7,7 +7,7 @@
 <meta property="og:locale">
 <meta property="og:image" content="https://zhao520a1a.github.io/2023/10/04/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/AI/%E7%99%BD%E8%AF%9D%E7%A7%91%E6%99%AE%20|%20AI%E7%BB%98%E7%94%BB%E6%98%AF%E5%A6%82%E4%BD%95%E7%94%9F%E6%88%90%E5%9B%BE%E5%83%8F%E7%9A%84%EF%BC%9F/cat_euler_15.gif">
 <meta property="article:published_time" content="2023-10-03T16:00:00.000Z">
-<meta property="article:modified_time" content="2023-10-16T15:06:47.430Z">
+<meta property="article:modified_time" content="2023-10-17T14:12:38.149Z">
 <meta property="article:author" content="Golden">
 <meta property="article:tag" content="ai">
 <meta name="twitter:card" content="summary">
@@ -57,7 +57,7 @@
   isHome: false,
   isHighlightShrink: false,
   isToc: true,
-  postUpdate: '2023-10-16 23:06:47'
+  postUpdate: '2023-10-17 22:12:38'
 }</script><noscript><style type="text/css">
   #nav {
     opacity: 1
@@ -161,7 +161,7 @@
       }
     }
     detectApple()
-    })(window)</script><meta name="generator" content="Hexo 7.0.0-rc1"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/avatar.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">47</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">13</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://zhao520a1a.github.io/2023/10/04/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/AI/%E7%99%BD%E8%AF%9D%E7%A7%91%E6%99%AE%20|%20AI%E7%BB%98%E7%94%BB%E6%98%AF%E5%A6%82%E4%BD%95%E7%94%9F%E6%88%90%E5%9B%BE%E5%83%8F%E7%9A%84%EF%BC%9F/cat_euler_15.gif')"><nav id="nav"><span id="blog-info"><a href="/" title="发光の金子吖"><img class="site-icon" src="/img/logo.png"/><span class="site-name">发光の金子吖</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">白话科普 | AI绘画是如何生成图像的？</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-10-03T16:00:00.000Z" title="发表于 2023-10-04 00:00:00">2023-10-04</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-10-16T15:06:47.430Z" title="更新于 2023-10-16 23:06:47">2023-10-16</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/">内部原理</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="白话科普 | AI绘画是如何生成图像的？"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h1><p>所有AI应用的基本范式，都可以说：<code>“先喂给它很多数据，然后让它找到其中的特征和规律，最后让它生成新的数据”</code>，而AI绘画也不例外，通过扔进去大量真实的图片让AI不断去了解、认识和学习，然后根据训练效果，自己生成图片。 - 废话文学</p>
+    })(window)</script><meta name="generator" content="Hexo 7.0.0-rc1"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/avatar.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">47</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">13</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://zhao520a1a.github.io/2023/10/04/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/AI/%E7%99%BD%E8%AF%9D%E7%A7%91%E6%99%AE%20|%20AI%E7%BB%98%E7%94%BB%E6%98%AF%E5%A6%82%E4%BD%95%E7%94%9F%E6%88%90%E5%9B%BE%E5%83%8F%E7%9A%84%EF%BC%9F/cat_euler_15.gif')"><nav id="nav"><span id="blog-info"><a href="/" title="发光の金子吖"><img class="site-icon" src="/img/logo.png"/><span class="site-name">发光の金子吖</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">白话科普 | AI绘画是如何生成图像的？</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-10-03T16:00:00.000Z" title="发表于 2023-10-04 00:00:00">2023-10-04</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-10-17T14:12:38.149Z" title="更新于 2023-10-17 22:12:38">2023-10-17</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/">内部原理</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="白话科普 | AI绘画是如何生成图像的？"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h1><p>所有AI应用的基本范式，都可以说：<code>“先喂给它很多数据，然后让它找到其中的特征和规律，最后让它生成新的数据”</code>，而AI绘画也不例外，通过扔进去大量真实的图片让AI不断去了解、认识和学习，然后根据训练效果，自己生成图片。 - 废话文学</p>
 <p>下面主要通过白话的方式阐述AI绘画原理，适用于泛AIGC爱好者阅读和学习了解，算法原理略去了很多细节。目的是让大家大概明白了AI绘画是如何工作的，共勉。﻿本文主要将以 Stable Diffusion 的为例讲解 AI 绘画的基本原理。</p>
 <table>
 <thead>
@@ -191,12 +191,11 @@
 <td>VAE 变分自编码器是一个生成模型，一种无监督的学习数据分布方法，</td>
 </tr>
 </tbody></table>
-<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>当前AI绘画的效果（普通人输入一句话，几秒钟画出来的作品）：﻿</p>
+<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>当前AI绘画的效果（普通人输入一句话，几秒钟画出来的作品）：</p>
 <img src="/2023/10/04/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/AI/%E7%99%BD%E8%AF%9D%E7%A7%91%E6%99%AE%20|%20AI%E7%BB%98%E7%94%BB%E6%98%AF%E5%A6%82%E4%BD%95%E7%94%9F%E6%88%90%E5%9B%BE%E5%83%8F%E7%9A%84%EF%BC%9F/1.jpg" alt="1" style="zoom:67%;">
 
-<p>现在的 AI 绘画工具集，也是五花八门… </p>
+<p>现在的 AI 绘画工具集，也是五花八门…</p>
 <img src="/2023/10/04/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/AI/%E7%99%BD%E8%AF%9D%E7%A7%91%E6%99%AE%20|%20AI%E7%BB%98%E7%94%BB%E6%98%AF%E5%A6%82%E4%BD%95%E7%94%9F%E6%88%90%E5%9B%BE%E5%83%8F%E7%9A%84%EF%BC%9F/AI%20%E5%B7%A5%E5%85%B7%E9%9B%86.jpg" alt="AI 工具集" style="zoom:67%;">
-
 
 <p>AI 工具集导航网站：</p>
 <ul>
@@ -220,11 +219,11 @@
 </li>
 </ul>
 <p>移除像素 Vs 添加噪声？</p>
-<p>  因为直接移除像素会导致信息丧失，添加噪声则可以让模型更加学习到图片的特征。</p>
+<p>因为直接移除像素会导致信息丧失，添加噪声则可以让模型更加学习到图片的特征。</p>
 <blockquote>
 <p>通过上面的表述，可以拆解成了几个核心问题，只要搞清楚这五个问题，相信你AI绘画的底层逻辑也就清晰了。</p>
 </blockquote>
-<h1 id="问题1：AI是怎么知道文字描述的是什么？"><a href="#问题1：AI是怎么知道文字描述的是什么？" class="headerlink" title="问题1：AI是怎么知道文字描述的是什么？"></a>问题1：AI是怎么知道文字描述的是什么？</h1><p>首先大家要明白，机器其实并不会理解人类的语言，我们需要通过喂给它各种各样的图片数据，计算机会通过分析这些图片的特征，学习它们的风格和结构 。本质上要解决的问题是：如何将输入的一段话，就转换成了这次生成图像所需要的全部特征向量。 </p>
+<h1 id="问题1：AI是怎么知道文字描述的是什么？"><a href="#问题1：AI是怎么知道文字描述的是什么？" class="headerlink" title="问题1：AI是怎么知道文字描述的是什么？"></a>问题1：AI是怎么知道文字描述的是什么？</h1><p>首先大家要明白，机器其实并不会理解人类的语言，我们需要通过喂给它各种各样的图片数据，计算机会通过分析这些图片的特征，学习它们的风格和结构 。本质上要解决的问题是：如何将输入的一段话，就转换成了这次生成图像所需要的全部特征向量。</p>
 <p>这里面就不得不提，在21 Openai年推出的<a target="_blank" rel="noopener" href="https://github.com/openai/CLIP">OpenCLIP</a>，OpenCLIP 的出现彻底打通了文字和图像之间的鸿沟。它的作用就是把文字和图像联系起来。</p>
 <h2 id="CLIP"><a href="#CLIP" class="headerlink" title="CLIP"></a>CLIP</h2><h3 id="如何构建一个庞大的图文数据库？"><a href="#如何构建一个庞大的图文数据库？" class="headerlink" title="如何构建一个庞大的图文数据库？"></a>如何构建一个庞大的图文数据库？</h3><p>模型训练需要非常多的图片，数据从哪里来?</p>
 <ol>
@@ -235,11 +234,9 @@
 <li><p>存储图文信息对：根据这些信息构建出一个超多维的数据库，每一个维度都会和其他维度交叉起来，此时相似的维度会相对靠拢在一起。 最终构建了一个超多维的数据库，包含上亿的“文本+图片”的信息对。</p>
 </li>
 </ol>
-<h3 id="如何建立文本和图像的关联？"><a href="#如何建立文本和图像的关联？" class="headerlink" title="如何建立文本和图像的关联？"></a>如何建立文本和图像的关联？</h3><p>有了数据库，如何提供文本图像匹配能力，需要是不断地通过大量数据来训练CLIP去关联、认识图片和文字，并且根据和答案的比对，不断地矫正，最后达到精确匹配关键词和特征向量。 </p>
-<p>训练时用一组组文字和图像做对比， 通过文本编码器和图像编码器，分别的得到文本特征和图像特征。拿图像和文本编码后的特征去<strong>计算出一个相似性矩阵</strong>。这样训练后，当我们录入一段文本描述，CLIP模型就会根据描述去数据库里从多个维度进行相似度的匹配。当找到最相似的维度描述后，把这些图像特征全部融合到一起，构建出本次要产出的图像的<strong>总特征向量集。</strong> </p>
+<h3 id="如何建立文本和图像的关联？"><a href="#如何建立文本和图像的关联？" class="headerlink" title="如何建立文本和图像的关联？"></a>如何建立文本和图像的关联？</h3><p>有了数据库，如何提供文本图像匹配能力，需要是不断地通过大量数据来训练CLIP去关联、认识图片和文字，并且根据和答案的比对，不断地矫正，最后达到精确匹配关键词和特征向量。</p>
+<p>训练时用一组组文字和图像做对比， 通过文本编码器和图像编码器，分别的得到文本特征和图像特征。拿图像和文本编码后的特征去<strong>计算出一个相似性矩阵</strong>。这样训练后，当我们录入一段文本描述，CLIP模型就会根据描述去数据库里从多个维度进行相似度的匹配。当找到最相似的维度描述后，把这些图像特征全部融合到一起，构建出本次要产出的图像的<strong>总特征向量集。</strong></p>
 <img src="/2023/10/04/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/AI/%E7%99%BD%E8%AF%9D%E7%A7%91%E6%99%AE%20|%20AI%E7%BB%98%E7%94%BB%E6%98%AF%E5%A6%82%E4%BD%95%E7%94%9F%E6%88%90%E5%9B%BE%E5%83%8F%E7%9A%84%EF%BC%9F/CLIP.png" alt="CLIP" style="zoom:67%;">
-
-
 
 <p>简要流程：</p>
 <img src="/2023/10/04/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/AI/%E7%99%BD%E8%AF%9D%E7%A7%91%E6%99%AE%20|%20AI%E7%BB%98%E7%94%BB%E6%98%AF%E5%A6%82%E4%BD%95%E7%94%9F%E6%88%90%E5%9B%BE%E5%83%8F%E7%9A%84%EF%BC%9F/clip.jpg" alt="clip" style="zoom:67%;">
@@ -247,7 +244,7 @@
 <p>特别注意：我们可以直接用训练好的 clip 模型的文本编码器，这样当我们输入的一段话，就转换成了这次生成相关的文本特征向量，也就是所谓的“AI已经理解了你想画什么样的画了”。</p>
 <h1 id="问题2：原始的噪声图是怎么来的？"><a href="#问题2：原始的噪声图是怎么来的？" class="headerlink" title="问题2：原始的噪声图是怎么来的？"></a>问题2：原始的噪声图是怎么来的？</h1><p>噪声图是Diffusion Model(扩散模型)生成的，那 Diffusion Model(扩散模型）又是什么？</p>
 <h2 id="Diffusion-Model"><a href="#Diffusion-Model" class="headerlink" title="Diffusion Model"></a>Diffusion Model</h2><blockquote>
-<p> 目前主流AI绘画工具图片生成的核心都是扩散模型。特别说明，Diffusion Model  的应用不只局限于图片，其他音频、视频等场景也有。</p>
+<p>目前主流AI绘画工具图片生成的核心都是扩散模型。特别说明，Diffusion Model 的应用不只局限于图片，其他音频、视频等场景也有。</p>
 </blockquote>
 <p>扩散模型是在2015年相关论文里提出的， 主要包含2个过程，分别是前向扩散和逆向扩散，具体如下图所示：</p>
 <img src="/2023/10/04/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/AI/%E7%99%BD%E8%AF%9D%E7%A7%91%E6%99%AE%20|%20AI%E7%BB%98%E7%94%BB%E6%98%AF%E5%A6%82%E4%BD%95%E7%94%9F%E6%88%90%E5%9B%BE%E5%83%8F%E7%9A%84%EF%BC%9F/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B-%E5%8A%A0%E5%99%AA-6230131.jpg" alt="扩散模型-加噪" style="zoom:67%;">
@@ -268,13 +265,11 @@
 </li>
 <li><p>与正确答案对比：将预测的噪声矩阵和实际噪声矩阵（Label）进行误差的计算。</p>
 </li>
-<li><p>不断纠正：通过反向传播更新U-Net的参数。<br> 本质是一个强化学习的过程。</p>
+<li><p>不断纠正：通过反向传播更新U-Net的参数。<br>本质是一个强化学习的过程。</p>
 </li>
 </ol>
 <p>U-Net 的大体结构如下：</p>
 <img src="/2023/10/04/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/AI/%E7%99%BD%E8%AF%9D%E7%A7%91%E6%99%AE%20|%20AI%E7%BB%98%E7%94%BB%E6%98%AF%E5%A6%82%E4%BD%95%E7%94%9F%E6%88%90%E5%9B%BE%E5%83%8F%E7%9A%84%EF%BC%9F/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzM3MTAyMDkz,size_16,color_FFFFFF,t_70.png" alt="img" style="zoom:67%;">
-
-
 
 <h3 id="Scheduler"><a href="#Scheduler" class="headerlink" title="Scheduler"></a>Scheduler</h3><p>例如选择一张猫的照片作为训练图像，最终生成一个随机噪声图像。通过在一定数量的步骤中加入这个嘈杂的图像来破坏训练图像。然后让它告诉我们添加了多少噪声。这是通过调整其权重并向其展示正确答案来完成的。</p>
 <p>当我们试图在每个采样步骤中获得预期的噪声，这被称为噪声计划(Noise schedule)。我们可以选择在每一步减去相同数量的噪声，也可以在开始时减去更多的噪声。</p>
@@ -286,14 +281,10 @@
 <h2 id="如何使用噪声预测器？"><a href="#如何使用噪声预测器？" class="headerlink" title="如何使用噪声预测器？"></a>如何使用噪声预测器？</h2><p>首先生成一个完全随机的图像，并请噪声预测器告诉我们噪声；然后我们从原始图像中减去这个估计的噪声。重复这个过程几次。你将得到一张猫或狗的图像。</p>
 <img src="/2023/10/04/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/AI/%E7%99%BD%E8%AF%9D%E7%A7%91%E6%99%AE%20|%20AI%E7%BB%98%E7%94%BB%E6%98%AF%E5%A6%82%E4%BD%95%E7%94%9F%E6%88%90%E5%9B%BE%E5%83%8F%E7%9A%84%EF%BC%9F/a%20(6)-20231003162740453.png" alt="6" style="zoom:67%;">
 
- 
-
 <p>这里看下看下不断预测噪声的整个过程：</p>
 <img src="/2023/10/04/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/AI/%E7%99%BD%E8%AF%9D%E7%A7%91%E6%99%AE%20|%20AI%E7%BB%98%E7%94%BB%E6%98%AF%E5%A6%82%E4%BD%95%E7%94%9F%E6%88%90%E5%9B%BE%E5%83%8F%E7%9A%84%EF%BC%9F/cat_euler_15.gif" alt="stable diffusion euler" style="zoom: 50%;">
 
-
-
-<h1 id="问题4：如何根据描述去除无用噪声？"><a href="#问题4：如何根据描述去除无用噪声？" class="headerlink" title="问题4：如何根据描述去除无用噪声？"></a>问题4：如何根据描述去除无用噪声？</h1><p> AI是怎么能够按照我描述的来去除无用的噪声，其实这就是一个模型训练的过程。目的引导噪声预测器，使预测的噪声在从图像中减去后能给我们想要的结果。</p>
+<h1 id="问题4：如何根据描述去除无用噪声？"><a href="#问题4：如何根据描述去除无用噪声？" class="headerlink" title="问题4：如何根据描述去除无用噪声？"></a>问题4：如何根据描述去除无用噪声？</h1><p>AI是怎么能够按照我描述的来去除无用的噪声，其实这就是一个模型训练的过程。目的引导噪声预测器，使预测的噪声在从图像中减去后能给我们想要的结果。</p>
 <ol>
 <li><p>为了加入文本特征， U-Net 里添加了注意力机制。</p>
 </li>
@@ -303,8 +294,8 @@
 </ol>
 <p>看看在每一步中添加了什么信息。</p>
 <p><img src="/%E7%99%BD%E8%AF%9D%E7%A7%91%E6%99%AE%20%7C%20AI%E7%BB%98%E7%94%BB%E6%98%AF%E5%A6%82%E4%BD%95%E7%94%9F%E6%88%90%E5%9B%BE%E5%83%8F%E7%9A%84%EF%BC%9F/diffusion-steps-all-loop.gif" alt="diffusion-steps-all-loop"></p>
-<p><a target="_blank" rel="noopener" href="https://jalammar.github.io/images/stable-diffusion/diffusion-steps-all-loop.webm">https://jalammar.github.io/images/stable-diffusion/diffusion-steps-all-loop.webm</a> </p>
-<h1 id="问题5：如何提升运算效率？"><a href="#问题5：如何提升运算效率？" class="headerlink" title="问题5：如何提升运算效率？"></a>问题5：如何提升运算效率？</h1><p>由于上面的扩散过程是在图像空间中进行的。而图像空间非常庞大，导致计算上非常非常慢。 </p>
+<p><a target="_blank" rel="noopener" href="https://jalammar.github.io/images/stable-diffusion/diffusion-steps-all-loop.webm">https://jalammar.github.io/images/stable-diffusion/diffusion-steps-all-loop.webm</a></p>
+<h1 id="问题5：如何提升运算效率？"><a href="#问题5：如何提升运算效率？" class="headerlink" title="问题5：如何提升运算效率？"></a>问题5：如何提升运算效率？</h1><p>由于上面的扩散过程是在图像空间中进行的。而图像空间非常庞大，导致计算上非常非常慢。</p>
 <p>想想看：一个512×512的图像有三个颜色通道（红、绿和蓝），是一个786,432维的空间！（你需要为一个图像指定这么多值。）我们可以使用了一些技巧，让扩散模型位于像素空间来加快模型的速度，但仍然不够。</p>
 <p>解法就是<strong>降维数据运算</strong>！</p>
 <h2 id="LDM-Latent-Diffusion-Mode"><a href="#LDM-Latent-Diffusion-Mode" class="headerlink" title="LDM(Latent Diffusion Mode)"></a>LDM(Latent Diffusion Mode)</h2><p>LDM 主要区别在于它通过压缩图片降低维度，压缩后所在的空间，叫潜在空间。这令计算量大幅度减少，降低了对硬件的要求。</p>
@@ -314,15 +305,13 @@
 <p>VAE 主要通过编码器生成特征，然后解码器重构出原来的特征，让重构出来的特征和输入的特征尽可能相似即可。</p>
 <img src="/2023/10/04/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/AI/%E7%99%BD%E8%AF%9D%E7%A7%91%E6%99%AE%20|%20AI%E7%BB%98%E7%94%BB%E6%98%AF%E5%A6%82%E4%BD%95%E7%94%9F%E6%88%90%E5%9B%BE%E5%83%8F%E7%9A%84%EF%BC%9F/image-85-1024x477.png" alt="img" style="zoom:67%;">
 
-
-
 <p>具体过程如下：我们先通过 VAE 编码器把图片压缩到潜在空间，然后在潜在空间中训练扩缩模型。</p>
 <img src="/2023/10/04/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/AI/%E7%99%BD%E8%AF%9D%E7%A7%91%E6%99%AE%20|%20AI%E7%BB%98%E7%94%BB%E6%98%AF%E5%A6%82%E4%BD%95%E7%94%9F%E6%88%90%E5%9B%BE%E5%83%8F%E7%9A%84%EF%BC%9F/image-20231003160939337.png" alt="image-20231003160939337" style="zoom:67%;">
 
 <p>但压缩还原是还是那边有些失真。</p>
 <img src="/2023/10/04/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/AI/%E7%99%BD%E8%AF%9D%E7%A7%91%E6%99%AE%20|%20AI%E7%BB%98%E7%94%BB%E6%98%AF%E5%A6%82%E4%BD%95%E7%94%9F%E6%88%90%E5%9B%BE%E5%83%8F%E7%9A%84%EF%BC%9F/image-20231003172015812.png" alt="image-20231003172015812" style="zoom:50%;">
 
-<p> 注意：</p>
+<p>注意：</p>
 <ul>
 <li><p>VAE生成不只简单重构原来的特征，生成的特征是根据分布的均值。</p>
 </li>
@@ -355,11 +344,8 @@
 
 <img src="/2023/10/04/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/AI/%E7%99%BD%E8%AF%9D%E7%A7%91%E6%99%AE%20|%20AI%E7%BB%98%E7%94%BB%E6%98%AF%E5%A6%82%E4%BD%95%E7%94%9F%E6%88%90%E5%9B%BE%E5%83%8F%E7%9A%84%EF%BC%9F/v2-9a4fed959f7750d50aea98a5eb7df3ca_720w.webp" alt="img" style="zoom:67%;">
 
-
-<h1 id="一点思考"><a href="#一点思考" class="headerlink" title="一点思考"></a>一点思考</h1><p> AI 只是一个能够提高生产力工具而已，目前还是存在很多问题，例如 AI 绘画风格有些相似，因为便于计算，一些细节还是很粗糙，例如：人物的手、图片的文字不清晰等等。</p>
+<h1 id="一点思考"><a href="#一点思考" class="headerlink" title="一点思考"></a>一点思考</h1><p>AI 只是一个能够提高生产力工具而已，目前还是存在很多问题，例如 AI 绘画风格有些相似，因为便于计算，一些细节还是很粗糙，例如：人物的手、图片的文字不清晰等等。</p>
 <img src="/2023/10/04/%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/AI/%E7%99%BD%E8%AF%9D%E7%A7%91%E6%99%AE%20|%20AI%E7%BB%98%E7%94%BB%E6%98%AF%E5%A6%82%E4%BD%95%E7%94%9F%E6%88%90%E5%9B%BE%E5%83%8F%E7%9A%84%EF%BC%9F/%E7%94%B7%E7%A8%8B%E5%BA%8F%E5%91%98.png" alt="男程序员" style="zoom:50%;">
-
-
 
 <p>其实目前的 AI 所具备能力其实很基础，但之所以认为为之惊叹甚至恐慌，某种程度上，只是人们对创造力的获取看的很难，然而事实并非如此。</p>
 <p>人所具有创造力只是一种很原始的基础能力而已，通常的创造力，都是基于原有知识的创新，即：旧东西新组合。而更为强大的创造力，如：相对论、量子计算机等，这种创造来源未知。而AI都是基于既有知识训练，不太能具备此种创造力。</p>
