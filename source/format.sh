@@ -6,4 +6,5 @@
 # 格式化所有内容
 #npx prettier . --write
 # 格式化 markdown 文件
-npx prettier . --write ./**/*.md
+#npx prettier . --write ./**/*.md
+npx prettier . --write --pattern "_posts/**/*.md"
