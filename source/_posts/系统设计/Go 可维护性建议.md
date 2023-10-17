@@ -1,42 +1,37 @@
 ---
 title: Go 可维护性建议
-tags: [go]   
+tags: [go]
 categories: [系统设计]
 date: 2021-10-09
 cover: https://github.com/zhao520a1a/zhao520a1a.github.io/blob/hexo/source/cover/Go-design.png?raw=true
 ---
 
 > 思维导图
-<img src="http://assets.processon.com/chart_image/5fb9210b7d9c0857dda9786f.png?_=1616316539063" style="zoom: 150%;" />
+> <img src="http://assets.processon.com/chart_image/5fb9210b7d9c0857dda9786f.png?_=1616316539063" style="zoom: 150%;" />
 
+### 1. 指导原则
 
-### 1. 指导原则 
+### 1.1. 清晰 - Clarity
 
-### 1.1.  清晰 - Clarity
-
-> Programs must be written for people to read, and only incidentally for machines to execute.* 
+> Programs must be written for people to read, and only incidentally for machines to execute.\*
 >
 > 程序必须是为人们阅读而编写的，只是偶尔为机器执行而已
 
-
-
-### 1.2.  简单 - Simplicity
+### 1.2. 简单 - Simplicity
 
 > 简单是可靠性的先决条件，控制复杂性是计算机编程的本质
 
-构建软件设计有两种方法: 
+构建软件设计有两种方法:
 
 一种方法是使它简单到明显没有缺陷
 
 另一种方法是使它复杂到没有明显缺陷，比第一种方法要困难得多
 
-
-
-###  1.3. 生产力 - Productivity
+### 1.3. 生产力 - Productivity
 
 > 设计是今天安排代码工作的艺术，而且永远是可变的
 
- 你花了多少时间来做有用的工作、等待工具、或者无可救药地迷失在外部代码库中。
+你花了多少时间来做有用的工作、等待工具、或者无可救药地迷失在外部代码库中。
 
 - 有个笑话说，Go 是在等待 c + + 程序编译时设计的。快速编译是围棋的一个关键特性，这有助于 Go 开发人员感觉自己与使用动态语言工作的同行一样高效，而不会遇到这些语言固有的可靠性问题。
 
@@ -44,15 +39,13 @@ cover: https://github.com/zhao520a1a/zhao520a1a.github.io/blob/hexo/source/cover
 
 注：性能和并发性是重要的属性，但是没有清晰性、简单性和生产力重要。
 
+### 2. 标识符
 
+### 2.1. 选择标识符是为了清晰，而不是简洁
 
-### 2. 标识符 
+> _好的命名就像一个好笑话，如果你必须解释它，那就不好笑了_
 
-### 2.1. 选择标识符是为了清晰，而不是简洁 
-
-> *好的命名就像一个好笑话，如果你必须解释它，那就不好笑了*
-
-> *Obvious code is important. What you* *can* *do in one line you* *should* *do in three.*
+> _Obvious code is important. What you_ _can_ _do in one line you_ _should_ _do in three._
 >
 > 显而易见的代码比炫技更重要
 
@@ -70,11 +63,11 @@ cover: https://github.com/zhao520a1a/zhao520a1a.github.io/blob/hexo/source/cover
 
 - 一个好的名字应该是可以预测的。您应该能够仅从一个符号的名称就推断出它的使用方式。
 
-### 2.2. 标识符长度 
+### 2.2. 标识符长度
 
->The greater the distance between a name’s declaration and its uses, the longer the name should be.*
+> The greater the distance between a name’s declaration and its uses, the longer the name should be.\*
 >
->一个名称的声明和它的使用之间的距离越大，名称就应该越长
+> 一个名称的声明和它的使用之间的距离越大，名称就应该越长
 
 由此我们可以得出一些指导方针:
 
@@ -86,7 +79,7 @@ cover: https://github.com/zhao520a1a/zhao520a1a.github.io/blob/hexo/source/cover
 - 对于方法、接口和包，更倾向于使用简单的单词。
 - 请记住，包的名称是调用者用来引用它的名称的一部分，因此要利用它。
 
-#### 2.2.1. 语境是关键 
+#### 2.2.1. 语境是关键
 
 重要的是要认识到大多数关于命名的建议都是上下文相关的。我喜欢说它是一个指导方针，而不是一个规则。
 
@@ -106,7 +99,7 @@ for i := 0; i < len(s); i++ {
 }
 ```
 
-### 2.3. 一个变量的名字应该描述它的内容 
+### 2.3. 一个变量的名字应该描述它的内容
 
 > 你不应该把你的变量命名为他们的类型，就像你不把你的宠物命名为“狗”和“猫”一样。出于同样的原因，不应该将类型的名称包含在变量名称的名称中。
 
@@ -119,7 +112,7 @@ var (
 )
 ```
 
- 显然 Map 后缀并不能提高代码的清晰度，去掉后缀后，我们只剩下更简洁和更具描述性的内容:
+显然 Map 后缀并不能提高代码的清晰度，去掉后缀后，我们只剩下更简洁和更具描述性的内容:
 
 ```go
 var (
@@ -131,9 +124,7 @@ var (
 
 建议应避免使用类似于变量类型的后缀，这个建议也适用于函数参数。
 
-歧义举例：usersMap[一个用Map类型存储user集合] userMap[表示一个用户地图的业务实体概念]，如果我们从名称中去掉表示类型类型的后缀，usersMap 就变成了users 变成一个描述性词汇 ，反观 userMap  就变成了user 就会产生误导性。
-
-
+歧义举例：usersMap[一个用Map类型存储user集合] userMap[表示一个用户地图的业务实体概念]，如果我们从名称中去掉表示类型类型的后缀，usersMap 就变成了users 变成一个描述性词汇 ，反观 userMap 就变成了user 就会产生误导性。
 
 ### [2.4 使用一致的命名风格](https://dave.cheney.net/practical-go/presentations/gophercon-singapore-2019.html#_use_a_consistent_naming_style)
 
@@ -145,11 +136,9 @@ var (
 - a 和 b 是比较同一类型的两个变量的参数的通用名称。
 - x 和 y 是为比较而创建的局部变量的通用名称，s 通常用作 string 类型的参数的简写。
 
+### 2.5 使用一致的声明风格
 
-
-### 2.5  使用一致的声明风格
-
-> Go 至少有六种声明变量，设计者认识到这可能是一个错误，但现在改变它为时已晚，他们认为，更大的问题是遮蔽。 
+> Go 至少有六种声明变量，设计者认识到这可能是一个错误，但现在改变它为时已晚，他们认为，更大的问题是遮蔽。
 
 变量不同的声明格式
 
@@ -173,17 +162,17 @@ c := int(6)
 
 - 在声明而不是初始化变量时，使用 var。
 
-``` go
+```go
 var players int    // 0  不推荐 var players = 0
 
-var things []Thing // an empty slice of Things  
+var things []Thing // an empty slice of Things
 
 var thing Thing    // empty Thing struct 不推荐 var things = nil
 ```
 
 解释：var 充当一个线索，表明这个变量已经被故意声明为指定类型的零值。这也符合在包级别使用 var 声明变量的要求，而不是使用短声明语法。
 
-- 在声明和初始化时，使用 : = 
+- 在声明和初始化时，使用 : =
 
 当同时声明和初始化变量时，建议使用短变量声明形式，这样不会让变量被隐式初始化为零值，令读者清楚地看到赋值过程。
 
@@ -203,7 +192,7 @@ max := 1000
 
 但下面的方式可能更易读
 
-``` go
+```go
 min, max := 0, 1000
 ```
 
@@ -213,16 +202,13 @@ min, max := 0, 1000
 
 软件工程的目标，即生成可维护的代码。因此，你可能会把你的大部分职业生涯花费在那些你不是唯一作者的项目上。要有团队精神，在这种情况下，我的建议是: 跟随当地的风格
 
-
-
 ### 小结
 
--  软件工程的目标，即生成可维护的代码；
--  选择标识符是为了清晰，而不是简短 ；
--  变量名长度和它的使用距离有关；
--  变量名字应该具有描述性、可预测性；
--  变量的命名与声明风格应统一 ；
-
+- 软件工程的目标，即生成可维护的代码；
+- 选择标识符是为了清晰，而不是简短 ；
+- 变量名长度和它的使用距离有关；
+- 变量名字应该具有描述性、可预测性；
+- 变量的命名与声明风格应统一 ；
 
 ### 参考：
 

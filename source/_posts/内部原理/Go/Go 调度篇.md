@@ -1,6 +1,6 @@
 ---
 title: Go 调度篇
-tags: [go]   
+tags: [go]
 categories: [内部原理]
 date: 2022-03-01
 description: Go 调度都发生了啥?

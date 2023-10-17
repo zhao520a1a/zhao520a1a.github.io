@@ -14,21 +14,17 @@ cover: https://raw.githubusercontent.com/qax-os/excelize/7c221cf29531fcd38871d32
 >
 > 下面将自己在踩坑过程记录一下，分享给有需要的小伙伴哈，拿走不谢。。
 
-
-
 #### 问题1：Go中有可以读取的excel文件中图片的工具包呢？
 
 通过在Github中搜索，找到了一个功能丰富且强大的Excel工具类👍；废话不多说，上地址：
 
 GitHub地址: https://github.com/360EntSecGroup-Skylar/excelize
 
-码云地址: https://gitee.com/xurime/excelize  （鉴于有些小伙伴，访问github慢，特此提供）
+码云地址: https://gitee.com/xurime/excelize （鉴于有些小伙伴，访问github慢，特此提供）
 
 简介：[Excelize](https://links.jianshu.com/go?to=https%3A%2F%2Fgithub.com%2F360EntSecGroup-Skylar%2Fexcelize) 是 Go 语言编写的一个用来操作 Office Excel 文档类库，基于 ECMA-376 Office OpenXML 标准。可以使用它来读取、写入 XLSX 文件。相比较其他的开源类库，Excelize 支持写入原本带有图片(表)的文档，还支持向 Excel 中插入图片，并且在保存后不会丢失图表样式。
 
-
-
-####  问题2：如何使用的，有帮助文档吗?
+#### 问题2：如何使用的，有帮助文档吗?
 
 帮助文档：https://xuri.me/excelize/zh-hans/stream.html#Flush
 
@@ -36,13 +32,13 @@ GitHub地址: https://github.com/360EntSecGroup-Skylar/excelize
 
 > 介于有些小伙伴可能比较懒， (⊙o⊙)…不对，是比较忙；我早都想到了， 为了方便大家查看，写个粗糙的demo的，Demo地址：https://github.com/zhao520a1a/go-practice-demo.git/src/guide/testExcel.go 中。当然更建议有空看官方文档，也费不了多少时间。
 
-###  使用方式
+### 使用方式
 
 #### 安装
 
-  ```
-  go get github.com/360EntSecGroup-Skylar/excelize
-  ```
+```
+go get github.com/360EntSecGroup-Skylar/excelize
+```
 
 - 如果您使用 [Go Modules](https://blog.golang.org/using-go-modules) 管理软件包，请使用下面的命令来安装最新版本。
 
@@ -125,12 +121,9 @@ func main() {
 }
 ```
 
-
 #### 关于图片缩放的一点建议（来源网友建议，本人为亲自实验）
 
 推荐使用一个开源库(github.com/nfnt/resize)，不要使用该库自带的缩放，会有一点问题
 并且先对单元格做大小控制，再插入图片，否则有可能会导致一些图片被拉伸
 
-
 > 喜欢即可关注，关注即可进步。Over!
-

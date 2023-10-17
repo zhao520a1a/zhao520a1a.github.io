@@ -6,7 +6,6 @@ date: 2019-06-12
 cover: https://www.somkiat.cc/wp-content/uploads/2016/08/maven-00.jpg
 ---
 
-
 > 《maven 实战》记得是从二手网店淘到的，已经买了有小半年，还只看了个目录； 打算用个端午的一天时间给它啃下来。。
 
 ## maven 规范
@@ -28,7 +27,8 @@ cover: https://www.somkiat.cc/wp-content/uploads/2016/08/maven-00.jpg
 
 - 先执行 clean:clean 任务，展出 target/目录。
 - 再执行 resources:resources 任务，处理项目资源。
-- 最后执行 compiler:compile 任务，将项目主代码编译至 target/classes 目录。注：上文提及的如 clean:clean ...指的是 Maven 的插件和目标，eg: compiler:compile 是 compiler 插件的 complie 目标。
+- 最后执行 compiler:compile 任务，将项目主代码编译至 target/classes 目录。注：上文提及的如 clean:clean ...指的是 Maven 的插件和目标，eg: compiler:compile 是
+  compiler 插件的 complie 目标。
 
 ### mvn clean test
 
@@ -36,7 +36,8 @@ cover: https://www.somkiat.cc/wp-content/uploads/2016/08/maven-00.jpg
 
 - 先执行 resources:testResources 任务
 - 再执行 compiler:testCompile 任务
-- 最后执行 surefire:test 任务，执行测试并输出测试报告。注：上文提及的如 clean:clean ...指的是 Maven 的插件和目标，eg: compiler:compile 是 compiler 插件的 complie 目标。
+- 最后执行 surefire:test 任务，执行测试并输出测试报告。注：上文提及的如 clean:clean ...指的是 Maven 的插件和目标，eg: compiler:compile 是 compiler 插件的 complie
+  目标。
 
 ### mvn clean package
 
@@ -48,7 +49,9 @@ cover: https://www.somkiat.cc/wp-content/uploads/2016/08/maven-00.jpg
 
 ### mvn archetype:generate
 
-使用 Archetype 生成项目骨架，背后的执行过程： Maven2 并不建议用改命令，这可能不是安全的，Maven2 会自动下载最新版本 Archetype 插件，可能不稳定。而 Maven3 会自动下载最新最稳定的版本，所以可以放心使用。Maven2 建议手动指定，命令格式为：mvn groupId:artifactId:version:goal[插件目标], eg：mvn org.apache.maven.plugins:maven-archetype-plugin:2.0-alpha-5:generate
+使用 Archetype 生成项目骨架，背后的执行过程： Maven2 并不建议用改命令，这可能不是安全的，Maven2 会自动下载最新版本 Archetype 插件，可能不稳定。而 Maven3
+会自动下载最新最稳定的版本，所以可以放心使用。Maven2 建议手动指定，命令格式为：mvn groupId:artifactId:version:goal[插件目标], eg：mvn org.apache.maven.plugins:
+maven-archetype-plugin:2.0-alpha-5:generate
 
 ## 常见问题
 
@@ -57,52 +60,55 @@ cover: https://www.somkiat.cc/wp-content/uploads/2016/08/maven-00.jpg
 ```xml
 例如：
 <project>
-...
-<bulid>
-    <plugins>
-        <plugin>
-            <groupIdorg.apache.maven.plugins
-            </groupId>
-            <artifactId>
-            maven-compiler-plugin
-            </artifactId>
-            <configuration>
-                <source1.8  </source>
-                <target1.8 </target>
-            </configuration>
-        </plugin>
-    </plugins>
-</build>
-...
-</project>
+    ...
+    <bulid>
+        <plugins>
+            <plugin>
+                <groupId>
+                  org.apache.maven.plugins
+                </groupId>
+                <artifactId>
+                    maven-compiler-plugin
+                </artifactId>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+    ...
+  </project>
 ```
 
 解： 由于历史原因，Maven 的核心插件之一 compiler 插件默认只支持 Java 1.3，因此需要配置该插件使其支持当前的 JDK 版本。
 
 ### 2.如何生成可执行的 jar 文件？
 
-注： 默认生成的 jar 包不能直接运行，因为没有将 main 方法的类信息添加到 manifest 中[在 jar 文件中 META-INF/MANIFEST.MF 文件中没有 Main-Class 的配置]。需要借助 maven-shade-plugin 插件。
+注： 默认生成的 jar 包不能直接运行，因为没有将 main 方法的类信息添加到 manifest 中[在 jar 文件中 META-INF/MANIFEST.MF 文件中没有 Main-Class 的配置]。需要借助
+maven-shade-plugin 插件。
 
 ```xml
+
 <plugin
 <groupId>org.apache.maven.plugins</groupId>
-      <artifactId>maven-shade-plugin</artifactId>
-      <version>3.1.1</version>
-      <executions>
-        <execution>
-          <phase>package</phase>
-          <goals>
-            <goal>shade</goal>
-          </goals>
-          <configuration>
-                <!-- 打成可执行的jar包 的主方法入口--
-                <transformer  implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer"
-                <mainClass>com.golden.MainTest</mainClass
-                </transformer>
-          </configuration>
-        </execution>
-      </executions>
-    </plugin>
+<artifactId>maven-shade-plugin</artifactId>
+<version>3.1.1</version>
+<executions>
+<execution>
+    <phase>package</phase>
+    <goals>
+        <goal>shade</goal>
+    </goals>
+    <configuration>
+        <!-- 打成可执行的jar包 的主方法入口--
+        <transformer  implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer"
+        <mainClass>com.golden.MainTest</mainClass
+        </transformer>
+  </configuration>
+</execution>
+</executions>
+</plugin>
 
 ```
 
@@ -110,13 +116,15 @@ cover: https://www.somkiat.cc/wp-content/uploads/2016/08/maven-00.jpg
 
 > 坐标是依赖管理的基础，是构建的唯一标识。
 
-组成元素： 使用**groupId、artifactId、version、packaging、classifier**标签即可定义一组坐标规定：groupId,artifactId,version 是必须定义的， packaging 的定义是可选的，classifier 是不能直接定义的，而是以后附加的插件帮助生成的。
+组成元素： 使用**groupId、artifactId、version、packaging、classifier**标签即可定义一组坐标规定：groupId,artifactId,version 是必须定义的， packaging
+的定义是可选的，classifier 是不能直接定义的，而是以后附加的插件帮助生成的。
 
 ```xml
-<groupId> org.sonatype.nexus </groupId>
-<artifactId> nexus-indexer </artifactId>
-<version> 2.0.0 </version>
-<packaging> jar </packaging>
+
+<groupId>org.sonatype.nexus</groupId>
+<artifactId>nexus-indexer</artifactId>
+<version>2.0.0</version>
+<packaging>jar</packaging>
 ```
 
 ### groupId: 定义了 Maven 项目隶属的<u>实际项目</u>。
@@ -143,18 +151,19 @@ groupId 命名误区：
 ## 依赖
 
 ```xml
-        <dependency>
-            <groupId>javax.validation</groupId>
-            <artifactId>validation-api</artifactId>
-            <version>1.1.0.Final</version>
-            <scope>provided</version>
-            <optional>true</optional>
-              <exclusions>
-                <exclusion>
-                    <groupId>XXXX</groupId>
-                    <artifactId>XXX</artifactId>
-                </exclusion>
-        </dependency>
+
+<dependency>
+    <groupId>javax.validation</groupId>
+    <artifactId>validation-api</artifactId>
+    <version>1.1.0.Final</version>
+    <scope>provided</version>
+    <optional>true</optional>
+    <exclusions>
+    <exclusion>
+        <groupId>XXXX</groupId>
+        <artifactId>XXX</artifactId>
+    </exclusion>
+</dependency>
 ```
 
 每个依赖包含的元素有：
@@ -167,7 +176,8 @@ groupId 命名误区：
 
 ### 依赖范围【scope】
 
-Maven 有三种 classpath，分别供编译时（编译项目主代码）、测试时（编译和执行测试代码）、运行时（项目实际运行时）使用。依赖范围： 用来控制依赖同三种 classpath 的关系，即：是否将依赖引入相应的 classpath 中。
+Maven 有三种 classpath，分别供编译时（编译项目主代码）、测试时（编译和执行测试代码）、运行时（项目实际运行时）使用。依赖范围： 用来控制依赖同三种 classpath 的关系，即：是否将依赖引入相应的 classpath
+中。
 
 | 依赖范围（scope） | 编译 classpath 生效 | 测试 classpath 生效 | 运行时 classpath 生效 | 栗子                           |
 | ----------------- | ------------------- | ------------------- | --------------------- | ------------------------------ |
@@ -180,7 +190,8 @@ Maven 有三种 classpath，分别供编译时（编译项目主代码）、测�
 - 依赖范围不仅可以控制依赖和 classpath 的关系，还对传递性依赖产生影响
 - 可选依赖不能被传递！！！
 
-扩展： 为什么要使用可选依赖属性（optional）呢？ eg: 项目 B 进入了 X、Y 的两个可选依赖，一般由业务形态决定的，业务上存在互斥性，用户不可能同时使用 X、Y 的功能。理想情况，其实是不应该使用可选依赖的，本着“单一职责”设计原则，最好分离开来设计。
+扩展： 为什么要使用可选依赖属性（optional）呢？ eg: 项目 B 进入了 X、Y 的两个可选依赖，一般由业务形态决定的，业务上存在互斥性，用户不可能同时使用 X、Y
+的功能。理想情况，其实是不应该使用可选依赖的，本着“单一职责”设计原则，最好分离开来设计。
 
 ### 传递性依赖
 
@@ -197,9 +208,11 @@ Maven 有三种 classpath，分别供编译时（编译项目主代码）、测�
 
 当产生重复依赖冲突时，采用以下原则解决：
 
-- 第一原则： 依赖路径最近者优先 eg: 路径 1： A -> B -> C -> X（version:1.0) 路径 2： A -> D -> X（version:2.0) 因此原则，传递性依赖 X（version:2.0)将会被项目引用。
+- 第一原则： 依赖路径最近者优先 eg: 路径 1： A -> B -> C -> X（version:1.0) 路径 2： A -> D -> X（version:2.0) 因此原则，传递性依赖 X（version:2.0)
+  将会被项目引用。
 
-- 第二原则： 路径长度相同，将由 pom.xml 总依赖声明的顺序决定。 eg: 路径 1： A -> B -> Y（version:1.0) 路径 2： A -> C -> Y（version:2.0) 若 C 的引入顺序在 B 的前面，则 传递性依赖 Y（version:2.0)将会被项目引用。
+- 第二原则： 路径长度相同，将由 pom.xml 总依赖声明的顺序决定。 eg: 路径 1： A -> B -> Y（version:1.0) 路径 2： A -> C -> Y（version:2.0) 若 C 的引入顺序在 B
+  的前面，则 传递性依赖 Y（version:2.0)将会被项目引用。
 
 ### 最佳实践
 
@@ -249,17 +262,20 @@ groupId/artifactId/version/artifact-version.packaging
 
 ### 中央仓库
 
-安装的 Maven 自带了中央仓库配置，Maven3 中配置位于$M2_HOME/lib/maven-model-builder-3.0.jar 里的/org/apache/maven/model/pom-4.0.0.xml 的文件中，所有的 Maven 项目都会继承这个超级 POM,配置如下：
+安装的 Maven 自带了中央仓库配置，Maven3 中配置位于$M2_HOME/lib/maven-model-builder-3.0.jar 里的/org/apache/maven/model/pom-4.0.0.xml
+的文件中，所有的 Maven 项目都会继承这个超级 POM,配置如下：
 
 ```xml
+
 <repositories>
     <repository>
-        <id>central </id>   <!-- 唯一标识 -->
-        <name> Maven Repository Switchboard </name> <!-- 仓库名称 -->
-        <url>http://repo1.maven.org/maven2<url><!-- 仓库地址 -->
+        <id>central</id>   <!-- 唯一标识 -->
+        <name>Maven Repository Switchboard</name> <!-- 仓库名称 -->
+        <url>http://repo1.maven.org/maven2
+        <url><!-- 仓库地址 -->
         <layout>default</layout> <!-- 设置布局 -->
         <snapshots>
-            <enabled> false </enabled>  <!-- 能否从仓库下载快照版本的构件 -->
+            <enabled>false</enabled>  <!-- 能否从仓库下载快照版本的构件 -->
         </snapshorts>
     </repository>
 </repositories>
@@ -276,25 +292,29 @@ groupId/artifactId/version/artifact-version.packaging
 举个例子：
 
 ```xml
+
 <project>
-...
-<repositories>
-    <repository>
-        <id>jboss </id>   <!-- 唯一标识 -->
-        <name> JBoss Repository </name> <!-- 仓库名称 -->
-        <url>http://repository.jobss.com/maven2<url><!-- 仓库地址 -->
-        <layout>default</layout> <!-- 设置布局 -->
-         <releases>
-            <enabled> true </enabled>  <!-- 能否从仓库下载发布版本的构件 -->
-        </releases>
-        <snapshots>
-            <enabled> false </enabled>  <!-- 能否从仓库下载快照版本的构件 -->
-            <updatePolicy> daily </updatePolicy><!- 设置从远处仓库检查更新频率，默认值：daily； 可选值：daily,never,always,interval:X -->
-            <checksumPolicy> ignore </checksumPolicy><!-- 设置Maven验证 *校验和文件*的策略，默认值：warn； 可选值：warn,fail,ignore (下载构件时，Maven会验证构件的*校验和文件*，若验证失败改如何处理呢？即使用该配置处理) -->
-        </snapshorts>
-    </repository>
-</repositories>
-...
+    ...
+    <repositories>
+        <repository>
+            <id>jboss</id>   <!-- 唯一标识 -->
+            <name>JBoss Repository</name> <!-- 仓库名称 -->
+            <url>http://repository.jobss.com/maven2
+            <url><!-- 仓库地址 -->
+            <layout>default</layout> <!-- 设置布局 -->
+            <releases>
+                <enabled>true</enabled>  <!-- 能否从仓库下载发布版本的构件 -->
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>  <!-- 能否从仓库下载快照版本的构件 -->
+                <updatePolicy>daily</updatePolicy>
+                <!- 设置从远处仓库检查更新频率，默认值：daily； 可选值：daily,never,always,interval:X -->
+                <checksumPolicy>ignore
+                </checksumPolicy><!-- 设置Maven验证 *校验和文件*的策略，默认值：warn； 可选值：warn,fail,ignore (下载构件时，Maven会验证构件的*校验和文件*，若验证失败改如何处理呢？即使用该配置处理) -->
+            </snapshorts>
+        </repository>
+    </repositories>
+    ...
 </project>
 ```
 
@@ -307,12 +327,13 @@ groupId/artifactId/version/artifact-version.packaging
 举个例子：
 
 ```xml
+
 <servers>
- <server>
-   <id>jboss</id>
-   <username>root</username>
-   <password>123456</password>
- </server>
+    <server>
+        <id>jboss</id>
+        <username>root</username>
+        <password>123456</password>
+    </server>
 </servers>
 ```
 
@@ -322,12 +343,12 @@ groupId/artifactId/version/artifact-version.packaging
 
 ```xml
  <!-- 阿里云镜像 -->
-  <mirror>
-      <id>nexus-aliyun</id>
-      <name>Nexus aliyun</name>
-      <url>http://maven.aliyun.com/nexus/content/groups/public</url>
-      <mirrorOf>*</mirrorOf>   <!-- 镜像仓库所代理仓库的范围，支持指定被镜像的仓库名和排除某些仓库 -->
-  </mirror>
+<mirror>
+    <id>nexus-aliyun</id>
+    <name>Nexus aliyun</name>
+    <url>http://maven.aliyun.com/nexus/content/groups/public</url>
+    <mirrorOf>*</mirrorOf>   <!-- 镜像仓库所代理仓库的范围，支持指定被镜像的仓库名和排除某些仓库 -->
+</mirror>
 ```
 
 啥是镜像仓库？ 如果仓库 X 可以提供仓库 Y 所存储的所有内容，就可以认为仓库 X 是 Y 的一个镜像。
@@ -340,23 +361,23 @@ groupId/artifactId/version/artifact-version.packaging
 在需要上传的工程中的pom.xml文件中加入下面的配置
 
 <distributionManagement>
-   <repository>  <!-- 发布版本仓库 -->
-           <id>release</id>
-           <name>Release Repository</name>
-           <url>http://ip/nexus/content/repositories/releases</url>
-   </repository>
-   <snapshotRepository>  <!--快照版本仓库 -->
-           <id>snapshot</id>
-           <name>Snapshot Repository</name>
-           <url>http://ip/nexus/content/repositories/snapshots</url>
-   </snapshotRepository>
+    <repository>  <!-- 发布版本仓库 -->
+        <id>release</id>
+        <name>Release Repository</name>
+        <url>http://ip/nexus/content/repositories/releases</url>
+    </repository>
+    <snapshotRepository>  <!--快照版本仓库 -->
+        <id>snapshot</id>
+        <name>Snapshot Repository</name>
+        <url>http://ip/nexus/content/repositories/snapshots</url>
+    </snapshotRepository>
 </distributionManagement>
-或者
-使用命令行方式
-mvn deploy:deploy-file -DgroupId=groupId -DartifactId=artifactId -Dversion=version -Dfile=本地jar包路径 -DrepositoryId=releases/snapshots -Durl=仓库地址
+        或者
+        使用命令行方式
+        mvn deploy:deploy-file -DgroupId=groupId -DartifactId=artifactId -Dversion=version -Dfile=本地jar包路径 -DrepositoryId=releases/snapshots -Durl=仓库地址
 
-举例：上传jmxri-1.2.1.jar，本地存放在D盘
-mvn deploy:deploy-file -DgroupId=com.sun.jmx –DartifactId=jmxri -Dversion=1.2.1 -Dfile=d:/jmxri-1.2.1.jar -DrepositoryId=releases -Durl=http://ip/nexus/content/repositories/releases
+        举例：上传jmxri-1.2.1.jar，本地存放在D盘
+        mvn deploy:deploy-file -DgroupId=com.sun.jmx –DartifactId=jmxri -Dversion=1.2.1 -Dfile=d:/jmxri-1.2.1.jar -DrepositoryId=releases -Durl=http://ip/nexus/content/repositories/releases
 ```
 
 > 规则： 快照版本部署到快照仓库中，其他部署到发布版本仓库中。
@@ -388,7 +409,8 @@ mvn deploy:deploy-file -DgroupId=com.sun.jmx –DartifactId=jmxri -Dversion=1.2.
 
 ### 中肯建议
 
-- 不推荐在依赖声明中使用 LATEST 和 RELEASE 版本，特别是 LATEST 版本，存在一定的隐患。注：Maven3 已不在支持在插件配置中使用 LATEST 和 RELEASE，但如果不设置插件版本，其效果同 RELEASE 一样，Maven 只会解析最近的发布版本构件。
+- 不推荐在依赖声明中使用 LATEST 和 RELEASE 版本，特别是 LATEST 版本，存在一定的隐患。注：Maven3 已不在支持在插件配置中使用 LATEST 和 RELEASE，但如果不设置插件版本，其效果同 RELEASE
+  一样，Maven 只会解析最近的发布版本构件。
 
 - 项目不应该依赖于任何组织外部的快照版本依赖。
 
@@ -433,7 +455,8 @@ Maven命令 ->> 生命周期阶段:  激活
   - process-sources  
     **_处理项目主资源文件_**：通常是将<u>src/main/resources</u>目录的内容进行变量替换等工作后，复制到项目输出的主 classpath（一般是 target/classes 下）
   - compile **_编译项目的主代码_**：通常是将<u>src/main/java</u>目录的内容进行变量替换等工作后，复制到项目的主 classpath（一般是 target/classes 下）
-  - process-test-source **_处理项目测试资源文件_**：通常是将<u>src/test/resources</u>目录的内容进行变量替换等工作后，复制到项目输出的测试 classpath(一般是 target/test-classes)
+  - process-test-source **_处理项目测试资源文件_**：通常是将<u>src/test/resources</u>目录的内容进行变量替换等工作后，复制到项目输出的测试 classpath(一般是
+    target/test-classes)
   - test-compile **_编译项目的测试代码_**：通常是将<u>src/test/java</u>目录的内容进行变量替换等工作后，复制到项目的主 classpath（一般是 target/test-classes 下）
   - test **_使用单元测试框架运行测试_**，但测试代码不会被打包或者部署。
   - package 接受编译好的代码，**_打包成可发布的格式_**，如 JAR。
@@ -478,22 +501,23 @@ Maven 为主要的生命周期阶段 绑定了 很多插件的目标； eg:
 自定义将某个插件的目标绑定到生命周期的某个阶段上，令在构建过程中执行更多更丰富的任务。自定义绑定：创建项目的源码 jar 包。需在 POM 添加如下配置信息：
 
 ```xml
+
 <plugin>
-	<groupId>org.apache.maven.plugins</groupId>
-	<artifactId>maven-source-plugin</artifactId>
-	<version>2.1.1</version>
-	<executions>
-		<execution>
-			<id>attach-sources</id>  <!-- 任务ID -->
-			<phase>verify</phase>  <!-- 要绑定的阶段 -->
-			<goals>
-				<goal>jar-no-fork</goal> <!-- 执行的插件目标 -->
-			</goals>
-		</execution>
-	</executions>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-source-plugin</artifactId>
+    <version>2.1.1</version>
+    <executions>
+        <execution>
+            <id>attach-sources</id>  <!-- 任务ID -->
+            <phase>verify</phase>  <!-- 要绑定的阶段 -->
+            <goals>
+                <goal>jar-no-fork</goal> <!-- 执行的插件目标 -->
+            </goals>
+        </execution>
+    </executions>
 </plugin>
-验证： mvn verify
-在日志中会发现该插件目标执行的信息，即证明配置已生效。
+        验证： mvn verify
+        在日志中会发现该插件目标执行的信息，即证明配置已生效。
 ```
 
 注： 如果你删除 phase 一行的配置，会发现执行依旧生效。 这种现象的原因是：很多插件在编写目标时已经定义了默认绑定阶段。
@@ -524,17 +548,18 @@ mvn install -Dmaven.test.skip = true
 在 POM 中全局配置 compiler 插件，告诉项目编译指定 JDK 版本源文件，生成指定 JDK 版本字节码文件。
 
 ```xml
-      <plugin>
-          <groupId> org.apache.maven.plugins
-          </groupId>
-          <artifactId>
-          maven-compiler-plugin
-          </artifactId>
-          <configuration>
-              <source> 1.8  </source>
-              <target> 1.8 </target>
-          </configuration>
-      </plugin>
+
+<plugin>
+    <groupId>org.apache.maven.plugins
+    </groupId>
+    <artifactId>
+        maven-compiler-plugin
+    </artifactId>
+    <configuration>
+        <source>1.8</source>
+        <target>1.8</target>
+    </configuration>
+</plugin>
 ```
 
 扩展： 在配置插件的时候，如果插件是 Maven 官方插件（即：groupId 为 **org.apache.maven.plugins** ）,可以省略 groupId 配置。Maven 解析插件时会自动补全。 【并不推荐】
@@ -542,26 +567,27 @@ mvn install -Dmaven.test.skip = true
 #### POM 中插件任务配置
 
 ```xml
+
 <plugin>
-	<groupId>org.apache.maven.plugins</groupId>
-	<artifactId>maven-source-plugin</artifactId>
-	<version>2.1.1</version>
-	<executions>
-		<execution>
-			<id>attach-sources</id>  <!-- 任务ID -->
-			<phase>verify</phase>  <!-- 要绑定的阶段 -->
-			<goals>
-				<goal>jar-no-fork</goal> <!-- 执行的插件目标 -->
-			</goals>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-source-plugin</artifactId>
+    <version>2.1.1</version>
+    <executions>
+        <execution>
+            <id>attach-sources</id>  <!-- 任务ID -->
+            <phase>verify</phase>  <!-- 要绑定的阶段 -->
+            <goals>
+                <goal>jar-no-fork</goal> <!-- 执行的插件目标 -->
+            </goals>
             <!-- 插件任务配置如下 -->
             <configuration>
-            <tasks>
-                <echo> I'm bound to validate phase. </echo>
-            </tasks>
-           </configuration>
+                <tasks>
+                    <echo>I'm bound to validate phase.</echo>
+                </tasks>
+            </configuration>
 
-		</execution>
-	</executions>
+        </execution>
+    </executions>
 </plugin>
 ```
 
@@ -575,7 +601,8 @@ mvn install -Dmaven.test.skip = true
 mvn clean  (调用的是clean生命周期的clean阶段，实际执行阶段为clean生命周期的pre-clean、clean阶段)
 ```
 
-- 调用插件目标语法 1： mvn [groupId]:[artifactId]:[version]:[插件目标] 为了方便在命令行直接运行插件，Maven 引入插件前缀的概念，替换了原本的坐标。语法 2： mvn [插件前缀]:[插件目标]
+- 调用插件目标语法 1： mvn [groupId]:[artifactId]:[version]:[插件目标] 为了方便在命令行直接运行插件，Maven 引入插件前缀的概念，替换了原本的坐标。语法 2：
+  mvn [插件前缀]:[插件目标]
 
 ```bash
 # dependency 就是 org.apache.maven.plugins:maven-dependency-plugin:2.1的插件前缀
@@ -594,7 +621,8 @@ mvn dependency:tree
 
 1. 插件构件同样基于坐标存储在 Maven 仓库中。
 2. Maven 会区别对待远程的依赖仓库和插件仓库,如当需要的插件不在本地仓库时，是不会去远程仓库查找的。
-3. Maven 默认配置的插件中央仓库完全可以满足日常需要，但是也可以在 POM 或者 setting.xml 使用 <pluginRepositories> 和 <pluginRepository>配置自己的远程仓库，其子元素的配置同依赖的远程仓库配置完全一样。
+3. Maven 默认配置的插件中央仓库完全可以满足日常需要，但是也可以在 POM 或者 setting.xml 使用 <pluginRepositories> 和 <pluginRepository>
+   配置自己的远程仓库，其子元素的配置同依赖的远程仓库配置完全一样。
 
 #### 解析插件 version
 
@@ -603,11 +631,14 @@ mvn dependency:tree
 若用户在是使用某个插件时没有设定版本，怎么办呢？
 
 1. 若插件属于核心插件范畴，使用 Maven 超级 POM 中的版本。
-2. 若插件属于核心插件范畴，Maven 会检查所有仓库中可用的版本，然后做出选择。使用 Maven2 插件版本会被解析至 latest,使用 Maven3 插件版本会被解析至 release. 基于如上规则,在使用插件时，强烈建议显示指定版本。
+2. 若插件属于核心插件范畴，Maven 会检查所有仓库中可用的版本，然后做出选择。使用 Maven2 插件版本会被解析至 latest,使用 Maven3 插件版本会被解析至 release.
+   基于如上规则,在使用插件时，强烈建议显示指定版本。
 
 #### 解析插件前缀
 
-插件前缀是与坐标中的 groupId:artifactId 是一一对应的，其匹配关系存储在仓库元数据，这里的仓库元数据指的是仓库中的[groupId]/maven-metadate.xml 文件，这里的 groupId 默认使用 org.apache.maven.plugins 和 org.codehaus.mojo 两个 groupId ,当然也可以通过 setting.xml 配置其他的 groupId。命令行 mvn dependency:tree 的解析过程如下：
+插件前缀是与坐标中的 groupId:artifactId 是一一对应的，其匹配关系存储在仓库元数据，这里的仓库元数据指的是仓库中的[groupId]/maven-metadate.xml 文件，这里的 groupId 默认使用
+org.apache.maven.plugins 和 org.codehaus.mojo 两个 groupId ,当然也可以通过 setting.xml 配置其他的 groupId。命令行 mvn dependency:tree
+的解析过程如下：
 
 1. 基于默认的一个 groupId 归并所有插件仓库的元数据,如 org/apache/maven/plugins/maven-metadata.xml。
 2. 检查元数据，若能获得对应的插件的 artifactId 值，结合之前所说解析插件 version 的方法获得到插件 version，就可以得到完整的插件坐标了。若没能或者，则检查其他 groupId 下元数据。直到得到结果。
@@ -636,7 +667,8 @@ mvm help:describe -Dplugin = compiler
 
 常用插件介绍： [https://www.cnblogs.com/crazy-fox/archive/2012/02/09/2343722.html](https://www.cnblogs.com/crazy-fox/archive/2012/02/09/2343722.html)
 
-注意区分指定场景下仓库的元数据不同！！插件前缀-插件 仓库元数据（即： [groupId]/maven-metadate.xml 文件）依赖/插件版本 仓库元数据（即： [groupId]/[artifactId]/maven-metadate.xml 文件）
+注意区分指定场景下仓库的元数据不同！！插件前缀-插件 仓库元数据（即： [groupId]/maven-metadate.xml 文件）依赖/插件版本 仓库元数据（即： [groupId]/[artifactId]
+/maven-metadate.xml 文件）
 
 ## 聚合&继承
 
@@ -655,17 +687,18 @@ mvm help:describe -Dplugin = compiler
 3. 为了方便快速定位内容，模块所处的目录名称应当与 artifactId 一致，但是不是必须的。
 
 ```xml
+
 <project>
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.juvenxu.mvnbook.account</groupId>
     <artifactId>account-aggregator</artifactId>
     <version>1.0.0-SNAPSHOT</version>
-    <packaging> pom </packaging>
+    <packaging>pom</packaging>
     <name>Account Aggregator</name>
-     <modules>
+    <modules>
         <module>account-email</module>
         <module>account-persist</module>
-     </modules>
+    </modules>
 </project>
 
 ```
@@ -677,30 +710,31 @@ mvm help:describe -Dplugin = compiler
 <project>
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.juvenxu.mvnbook.account</groupId>
-    <artifactId> account-parent </artifactId>
+    <artifactId>account-parent</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Account Parent</name>
 </project>
 
-# 子POM如下：
+        # 子POM如下：
 <project>
-    <modelVersion>4.0.0</modelVersion>
+<modelVersion>4.0.0</modelVersion>
 
-    < parent >
-        <groupId>com.juvenxu.mvnbook.account</groupId>
-        <artifactId> account-parent </artifactId>
-        <version>1.0.0-SNAPSHOT</version>
-        < relativePath >../account-parent/pom.xml</ relativePath>
-    </ parent >
+< parent>
+    <groupId>com.juvenxu.mvnbook.account</groupId>
+    <artifactId>account-parent</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    < relativePath>../account-parent/pom.xml</ relativePath>
+</ parent>
 
-    <artifactId> account-email </artifactId>
-    <name>Account Email</name>
-  ...
+<artifactId>account-email</artifactId>
+<name>Account Email</name>
+...
 </project>
 ```
 
-注意： 1、子模块没有声明 groupId 和 version, 这两个属性继承至父模块。但如果子模块有不同与父模块的 groupId、version ，也可指定； 2、不应该继承 artifactId,如果 groupId ，version，artifactId 完全继承的话会造成坐标冲突；另外即使使用不同的 groupId 或 version，同样的 artifactId 也容易产生混淆。 3、使用继承后 parent 也必须像自模块一样加入到聚合模块中。
+注意： 1、子模块没有声明 groupId 和 version, 这两个属性继承至父模块。但如果子模块有不同与父模块的 groupId、version ，也可指定； 2、不应该继承 artifactId,如果 groupId
+，version，artifactId 完全继承的话会造成坐标冲突；另外即使使用不同的 groupId 或 version，同样的 artifactId 也容易产生混淆。 3、使用继承后 parent 也必须像自模块一样加入到聚合模块中。
 
 Maven 可继承的 POM 元素:
 
@@ -746,40 +780,48 @@ reporting ：包括项目的报告输出目录配置、报告插件配置等。
 
 输入 mvn -h 可以看到剪裁反应堆的
 
-``` bash
+```bash
 -am  // alse-make 同时构建所列模块的依赖模块
 -amd //alse-make-dependents 同时构建依赖于所列模块的模块，同am相反
 -pl  <args>// projects 构建指定模块，模块用逗号分隔
 -rf  <args>  //reusme-from 从指定的模板回复反应堆
 ```
 
-
-
 ## 搭建私服 Nexus
+
 ### 安装Nexus
 
 下载地址：[https://www.sonatype.com/download-oss-sonatype](https://www.sonatype.com/download-oss-sonatype)
 
 有两种安装包
--  包含Jetrt容器的Bundle包
--  不包含Webr容器的war包
+
+- 包含Jetrt容器的Bundle包
+- 不包含Webr容器的war包
+
 #### 备份Nexus
-Bundle包下有2个目录，注意当用户需要备份特定配置时，只需要备份sonatype-work/目录即可（包含了Nexus生成的配置文件、日志文件、仓库文件等）。nexus-webappp-x.x.x 下内容客户可以从安装包直接获得。而sonatype-work/目录是运行时自动生成的，不同的用户在不同机器上使用Nexus会有不同，因此备份它即可。
+
+Bundle包下有2个目录，注意当用户需要备份特定配置时，只需要备份sonatype-work/目录即可（包含了Nexus生成的配置文件、日志文件、仓库文件等）。nexus-webappp-x.x.x
+下内容客户可以从安装包直接获得。而sonatype-work/目录是运行时自动生成的，不同的用户在不同机器上使用Nexus会有不同，因此备份它即可。
+
 #### 常用命令与配置
+
 ##### 常用命令
-``` bash
+
+```bash
 ./nexus start
 ./nexus stop
 ./nexus restart
 ./nexus status
 ```
-##### 配置
-默认管理用户名与密码： admin/admin123
-修改Nexus的端口：位置 conf/pluxus.properties 中的application-port属性值。
 
+##### 配置
+
+默认管理用户名与密码： admin/admin123 修改Nexus的端口：位置 conf/pluxus.properties 中的application-port属性值。
 
 ### 仓库与仓库组
+
 #### 仓库类型
+
 - group （仓库组）
 - hosted（宿主仓库）
 - proxy（代理仓库）
@@ -787,7 +829,7 @@ Bundle包下有2个目录，注意当用户需要备份特定配置时，只需�
 
 仓库有个名为Policy（策略）的属性，决定该仓库是Release（发布）版本仓库还是Snapshot（快照）版本仓库。
 
-<img src="maven%20%E5%AE%9E%E6%88%98%E6%8C%87%E5%8D%97/8FC08FD7-2892-4A66-A489-0E2B8181F925-3299110-3299205.png" alt="img" style="zoom:75%;" /> 
+<img src="maven%20%E5%AE%9E%E6%88%98%E6%8C%87%E5%8D%97/8FC08FD7-2892-4A66-A489-0E2B8181F925-3299110-3299205.png" alt="img" style="zoom:75%;" />
 
 #### 内置的仓库列表
 
@@ -795,14 +837,13 @@ Bundle包下有2个目录，注意当用户需要备份特定配置时，只需�
 
  <img src="maven%20%E5%AE%9E%E6%88%98%E6%8C%87%E5%8D%97/670A2152-3F8E-4ECE-8DE3-59C003D79DFB-3299238.png" alt="img" style="zoom:75%;" />
 
-####  新建宿主仓库页面：
+#### 新建宿主仓库页面：
+
 <img src="maven%20%E5%AE%9E%E6%88%98%E6%8C%87%E5%8D%97/05C52087-BF5C-40F2-9FC3-3BF603226334-3299252.png" alt="img" style="zoom:75%;" />
 
 <img src="maven%20%E5%AE%9E%E6%88%98%E6%8C%87%E5%8D%97/AD70F31E-C05F-4BE4-914A-549DBFE66D0B-3299263.png" alt="img" style="zoom:67%;" />
 
- ####  新建代理仓库页面：
-
-
+#### 新建代理仓库页面：
 
 <img src="maven%20%E5%AE%9E%E6%88%98%E6%8C%87%E5%8D%97/CAD796ED-BB07-4074-9499-F85B629CA061-3299302.png" alt="img" style="zoom:75%;" />
 
@@ -810,32 +851,22 @@ Bundle包下有2个目录，注意当用户需要备份特定配置时，只需�
 
 <img src="maven%20%E5%AE%9E%E6%88%98%E6%8C%87%E5%8D%97/DE114ABF-F74B-4386-8EB0-4712ABA9A2DD-3299325.png" alt="img" style="zoom:67%;" />
 
-  ####  新建仓库组页面：
+#### 新建仓库组页面：
+
 <img src="maven%20%E5%AE%9E%E6%88%98%E6%8C%87%E5%8D%97/5B22885A-207D-41B7-8FB5-B293E924032E.png" alt="img" style="zoom:75%;" />
 
 <img src="maven%20%E5%AE%9E%E6%88%98%E6%8C%87%E5%8D%97/24EB218D-CA11-49EA-B67F-1AACBADE5BE7.png" alt="img" style="zoom:75%;" />
 
-
 ### 索引与搜索构件
+
 ### 从Nexus下载构件
 
-1.  单独项目配置（仅对当前项目生效，在pom如下定义）
+1. 单独项目配置（仅对当前项目生效，在pom如下定义）
+
 ```xml
+
 <repositories>
     <repository>
-        <id>nexus</id>
-        <name>Nexus</name>
-        <url>http://localhost/nexus-2.11/content/groups/public/</url>
-        <releases>
-            <enabled>true</enabled>
-        </releases>  
-        <snapshots>
-            <enabled>true</enabled>
-        </snapshots>    
-    </repository>
-  </repositories>
-  <pluginRepositories>
-    <pluginRepository>
         <id>nexus</id>
         <name>Nexus</name>
         <url>http://localhost/nexus-2.11/content/groups/public/</url>
@@ -845,113 +876,141 @@ Bundle包下有2个目录，注意当用户需要备份特定配置时，只需�
         <snapshots>
             <enabled>true</enabled>
         </snapshots>
-    </pluginRepository>
+    </repository>
+</repositories>
+<pluginRepositories>
+<pluginRepository>
+    <id>nexus</id>
+    <name>Nexus</name>
+    <url>http://localhost/nexus-2.11/content/groups/public/</url>
+    <releases>
+        <enabled>true</enabled>
+    </releases>
+    <snapshots>
+        <enabled>true</enabled>
+    </snapshots>
+</pluginRepository>
+</pluginRepositories>
+```
+
+2、此电脑所有项目都默认从私服下载，需要改settings.xml<profiles>
+
+```xml
+
+<profile>
+  <id>nexus</id>
+  <repositories>
+      <repository>
+          <id>nexus</id>
+          <name>Nexus</name>
+          <url>http://localhost/nexus-2.11/content/groups/public/</url>
+          <releases>
+              <enabled>true</enabled>
+          </releases>
+          <snapshots>
+              <enabled>true</enabled>
+          </snapshots>
+      </repository>
+  </repositories>
+  <pluginRepositories>
+      <pluginRepository>
+          <id>nexus</id>
+          <name>Nexus</name>
+          <url>http://localhost/nexus-2.11/content/groups/public/</url>
+          <releases>
+              <enabled>true</enabled>
+          </releases>
+          <snapshots>
+              <enabled>true</enabled>
+          </snapshots>
+      </pluginRepository>
   </pluginRepositories>
-  ````
-  2、此电脑所有项目都默认从私服下载，需要改settings.xml<profiles>
-  ```xml
-   <profile>
-        <id>nexus</id>
-        <repositories>
-            <repository>
-                <id>nexus</id>
-                <name>Nexus</name>
-                <url>http://localhost/nexus-2.11/content/groups/public/</url>
-                <releases>
-                    <enabled>true</enabled>
-                </releases>
-                <snapshots>
-                    <enabled>true</enabled>
-                </snapshots>
-            </repository>
-        </repositories>
-        <pluginRepositories>
-            <pluginRepository>
-                <id>nexus</id>
-                <name>Nexus</name>
-                <url>http://localhost/nexus-2.11/content/groups/public/</url>
-                <releases>
-                    <enabled>true</enabled>
-                </releases>
-                <snapshots>
-                    <enabled>true</enabled>
-                </snapshots>
-            </pluginRepository>
-        </pluginRepositories>
-    </profile>
-    <!-- 每次建立maven都默认是jdk1.5的，此配置可以让建立maven项目默认jdk为1.7 -->
-    <profile>
-        <id>jdk-1.7</id>
-        <activation>
-            <activeByDefault>true</activeByDefault>
-            <jdk>1.7</jdk>
-        </activation>
-        <properties>
-            <maven.compiler.source>1.7</maven.compiler.source>
-            <maven.compiler.target>1.7</maven.compiler.target>
+</profile>
+      <!-- 每次建立maven都默认是jdk1.5的，此配置可以让建立maven项目默认jdk为1.7 -->
+<profile>
+<id>jdk-1.7</id>
+<activation>
+  <activeByDefault>true</activeByDefault>
+  <jdk>1.7</jdk>
+</activation>
+<properties>
+  <maven.compiler.source>1.7</maven.compiler.source>
+  <maven.compiler.target>1.7</maven.compiler.target>
   <maven.compiler.compilerVersion>1.7</maven.compiler.compilerVersion>
-        </properties>
-    </profile>
-  </profiles>
-  <!-- 激活nexus的profile -->
-  <activeProfiles>
-    <activeProfile>nexus</activeProfile>
-  </activeProfiles>
-  ````
+</properties>
+</profile>
+      </profiles>
+      <!-- 激活nexus的profile -->
+<activeProfiles>
+<activeProfile>nexus</activeProfile>
+</activeProfiles>
+```
+
 说明：这个配置已经能让本机所有的maven项目从Nexus下载构件，但Maven还会不时地访问中央仓库centeral，可以配置一个镜像，地址为私服，这样maven对任何仓库的构件下载请求都会转到私服中，如下配置
-  ```xml
-  <mirrors>
-    <mirror>
-        <id>nexus</id>
-        <mirrorOf>*</mirrorOf>
-        <name>Nexus</name>
-        <url>http://localhost/nexus-2.11/content/groups/public/</url>
-    </mirror>
-  </mirrors>
-  ````
+
+```xml
+
+<mirrors>
+  <mirror>
+      <id>nexus</id>
+      <mirrorOf>*</mirrorOf>
+      <name>Nexus</name>
+      <url>http://localhost/nexus-2.11/content/groups/public/</url>
+  </mirror>
+</mirrors>
+```
 
 ### 部署构件至Nexus
+
 两种方式：
+
 1. 通过nexus网页手动上传（自行百度）适用于第三方jar上传到n exus，比如oracle驱动。
 2. 配置方式（自己内部项目打成包上传到nexus，供其他项目使用）,下面介绍的就是这种方式
 
-一.   先在settings.xml中配置私服用户名密码
+一. 先在settings.xml中配置私服用户名密码
+
 ```xml
+
 <servers>
     <!--发布版 -->
     <server>
-      <id>nexus-realease</id>
-      <username>admin</username>
-      <password>admin123</password>
+        <id>nexus-realease</id>
+        <username>admin</username>
+        <password>admin123</password>
     </server>
     <!--快照版 -->
     <server>
-      <id>nexus-snapshots</id>
-      <username>admin</username>
-      <password>admin123</password>
-    </server>
-  </servers>
-```
-二.  在项目中pom定义如下<distributionManagement>
-  ```xml
-<distributionManagement>
-    <!-- 发布版 -->
-    <repository>
-            <!—id与settings.xml发布版一致 -->
-        <id>nexus-release</id>
-        <name>Nexus Release Repository</name>
-        <url>http://localhost/nexus-2.11/content/repositories/releases/</url>
-    </repository>
-    <!-- 快照版 -->
-    <snapshotRepository>
-            <!—id与settings.xml快照版一致 -->
         <id>nexus-snapshots</id>
-        <name>Nexus Snapshots Repository</name>
-        <url>http://localhost/nexus-2.11/content/repositories/snapshots/</url>
-    </snapshotRepository>
-    </distributionManagement>
-  ```
-  三.  发布方式：配置好后，运行maven的deploy命令即可打包上传到nexus。
+        <username>admin</username>
+        <password>admin123</password>
+    </server>
+</servers>
+```
+
+二. 在项目中pom定义如下<distributionManagement>
+
+```xml
+
+<distributionManagement>
+  <!-- 发布版 -->
+  <repository>
+      <!—id与settings.xml发布版一致 -->
+      <id>nexus-release</id>
+      <name>Nexus Release Repository</name>
+      <url>http://localhost/nexus-2.11/content/repositories/releases/</url>
+  </repository>
+  <!-- 快照版 -->
+  <snapshotRepository>
+      <!—id与settings.xml快照版一致 -->
+      <id>nexus-snapshots</id>
+      <name>Nexus Snapshots Repository</name>
+      <url>http://localhost/nexus-2.11/content/repositories/snapshots/</url>
+  </snapshotRepository>
+</distributionManagement>
+```
+
+三. 发布方式：配置好后，运行maven的deploy命令即可打包上传到nexus。
 
 ### 权限管理
+
 ### 调度任务

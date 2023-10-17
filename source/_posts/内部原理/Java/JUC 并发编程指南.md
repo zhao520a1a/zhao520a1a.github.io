@@ -1,11 +1,10 @@
 ---
 title: JUC 并发编程指南
-tags: [java]   
+tags: [java]
 categories: [内部原理]
 date: 2019-11-01
 cover: https://picx.zhimg.com/v2-db80222fa84fdda08c09ff7b6e5c0e46_720w.jpg?source=172ae18b
 ---
-
 
 > JUC: 泛指java.util.concurrent包中并发编程下使用的工具类。
 > 多线程编程的固定套路： 线程操作资源类
@@ -38,7 +37,7 @@ sleep - `谁调用谁睡觉😴`
 | 是否抛出异常 | 有       | 无       |
 | 方法不同     | call（） | run()    |
 
-``` java
+```java
   FutureTask task = new FutureTask<String>(new MyCallable()); //适配模式
         //两个线程执行同一任务，为了提高效率，会将结果缓存，导致任务只会执行一次；
         new Thread(task,"Thread-A").start();
@@ -66,7 +65,7 @@ CAS(compareAndSwap)： 比较并交换，`它是一个CPU的并发原语，是�
 - 它的功能：判断工作内存中的某个位置，是否是预期值，如果是就更新为指定的值。即：比较当前工作内存中的值和主内存的值，如果相同，就执行操作
 - Unsafe类是实现CAS的核心类，它可以操作特定内存中的数据（本质是调用native方法）
 
-``` java
+```java
 // valueOffset - 内存偏移量
 // expect - 期望值
 // update - 更新值
@@ -83,7 +82,7 @@ CAS(compareAndSwap)： 比较并交换，`它是一个CPU的并发原语，是�
 
 可以用它来解决ABA问题，原理类似数据库乐观锁；利用版本号，来识别是否被修改过。
 
-``` java
+````java
 //1. 获得版本号
 int stamp = atomicStampedReference.getStamp();
 //2. 版本号加一
@@ -103,9 +102,9 @@ System.out.println("stamp 03=>" + atomicStampedReference.getStamp());
 while(atomicReference.compareAndSet(null, thread)) {// cas
 
 }
-```
+````
 
-## 锁 
+## 锁
 
 ### 公平锁和非公平锁
 
@@ -117,7 +116,7 @@ while(atomicReference.compareAndSet(null, thread)) {// cas
   synchronized ：默认就是非公平锁，改不了
   ReentrantLock ：默认就是非公平锁，可以通过参数修改！
 
-``` java
+```java
 public ReentrantLock() {
     sync = new NonfairSync(); // 默认是非公平锁，随机
 }
@@ -143,7 +142,7 @@ synchronized关键字可以和对象的机锁交互，来实现线程的同步�
 
 Lock锁比synchronized使用范围更广泛。
 
-``` java
+```java
     Lock lock = new ReentrantLock();
     lock.lock();
     try {
@@ -155,24 +154,21 @@ Lock锁比synchronized使用范围更广泛。
     }
 ```
 
-
 ### ReentrantLock - 可重入锁(递归锁)
 
 白话：线程可以进入任何一个它已经拥有锁的，锁所同步的代码块！
 大门 卧室A 卧室B 厕所
 最大的好处：就是避免死锁！
 
-
-###  ReentrantReadWriteLock - 读写锁
+### ReentrantReadWriteLock - 读写锁
 
 > 读写分离，提高效率！
 > 读锁（共享锁）
 > 写锁（独占锁）
 
-``` java
+```java
     ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
 ```
-
 
 ### 死锁
 
@@ -183,13 +179,12 @@ Lock锁比synchronized使用范围更广泛。
 
 #### 发现死锁
 
-``` java
+```java
 //查看进程号
-jps -l 
+jps -l
 //查看死锁现象,看堆栈
 jstack <进程号>
 ```
-
 
 ## 常见并发问题
 
@@ -204,23 +199,21 @@ jstack <进程号>
 通过一个精确通知顺序访问的案例加深对Condition的使用。
 通过给每个线程不同的condition,然后用condition.signal()精确地通知对应的线程继续执行。
 
-
 ## 并发工具类
 
-### 信号量 - Semaphore 
+### 信号量 - Semaphore
+
 作用： 限流管理公共资源
 
-``` java
-    Semaphore semaphore = new Semaphore(3); 
+```java
+    Semaphore semaphore = new Semaphore(3);
     semaphore.acquire(); //得到资源
     semaphore.release(); //释放资源
 ```
 
-
-
 ### 可并发集合类
 
-``` java
+```java
 List - CopyOnWriteArrayList | Collections.synchronizedList(list1);
 Set - CopyOnWriteArraySet | Collections.newSetFromMap(new ConcurrentHashMap(16))
 Map - CurrentHashMap
@@ -232,9 +225,10 @@ Map - CurrentHashMap
 - Collections.synchronizedList写操作性能较好，而多线程的读操作性能较差（因为是采用了synchronized关键字的方式）。
 
 ### 计数器
+
 #### 减法计数器 - CountDownLatch
 
-``` java
+````java
 CountDownLatch downLatch = new CountDownLatch(6);
 downLatch.countDown();  //计数器减一
 downLatch.await(); //阻塞等待计数器归零
@@ -249,9 +243,10 @@ CyclicBarrier cyclicBarrier = new CyclicBarrier(7, () -> {
 });
 
 cyclicBarrier.await(); //阻塞等待
-```
+````
 
 ### 队列
+
 #### 阻塞队列 - ArrayBlockingQueue
 
 - 四组API:
@@ -273,17 +268,18 @@ cyclicBarrier.await(); //阻塞等待
 
 #### 7大参数
 
-``` java
+```java
 ThreadPoolExecutor(int corePoolSize,
                  int maximumPoolSize,
                  long keepAliveTime,
                  TimeUnit unit,
                  BlockingQueue<Runnable> workQueue,
-                 ThreadFactory threadFactory)   
+                 ThreadFactory threadFactory)
 ```
 
 #### 3大方法
-``` java
+
+```java
         Executors.newSingleThreadExecutor();
         Executors.newFixedThreadPool(3);
         Executors.newCachedThreadPool();
@@ -293,23 +289,20 @@ ThreadPoolExecutor(int corePoolSize,
 <img src="JUC%20%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E6%8C%87%E5%8D%97/334FC775-9843-4DA3-A109-984B1209AC56-3093434.png" alt="img" style="zoom:80%;" />
 
 #### 4种拒绝策略
-  AbortPolicy （默认的：队列满了，就丢弃任务抛出异常！） - 队列add()
-  CallerRunsPolicy（哪来的回哪去？ 谁叫你来的，你就去哪里处理）
-  DiscardOldestPolicy (尝试将最早进入队列与的任务删除,尝试加入队列)
-  DiscardPolicy (队列满了任务也会丢弃,不抛出异常) - 队列offer()
+
+AbortPolicy （默认的：队列满了，就丢弃任务抛出异常！） - 队列add()
+CallerRunsPolicy（哪来的回哪去？ 谁叫你来的，你就去哪里处理）
+DiscardOldestPolicy (尝试将最早进入队列与的任务删除,尝试加入队列)
+DiscardPolicy (队列满了任务也会丢弃,不抛出异常) - 队列offer()
 流程图：
-  <img src="JUC%20%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E6%8C%87%E5%8D%97/480DEF90-8894-4E5D-B782-D3E959063008-3093450-3093452-3093454-3093455.png" alt="img" style="zoom:80%;" />
+<img src="JUC%20%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E6%8C%87%E5%8D%97/480DEF90-8894-4E5D-B782-D3E959063008-3093450-3093452-3093454-3093455.png" alt="img" style="zoom:80%;" />
 
 - 最大参数该如何设置？
   CPU 密集型：CPU设置，每一次都要去写吗？
   IO 密集型：磁盘读写、一个线程在IO操作的时候、另外一个线程在CPU中跑，造成CPU空闲。
   最大线程数应该设置为 IO任务数！ 大文件读写耗时！单独的线程让他慢慢跑。
 
-
-
-
-
-###  对象类型(轻软弱虚)
+### 对象类型(轻软弱虚)
 
 - 强引用
 
@@ -334,6 +327,7 @@ Entry这个键值对，是一个弱引用对象：
 因此当ThreadLocal对象中数据不用时，要记得手动remove移除掉；
 
 ## 数据计算
+
 ### 函数式接口类型
 
 - 函数型接口 [Function]：有一个输入，有一个输出
@@ -372,7 +366,7 @@ ForkJoin是由JDK1.7后提供多线并发处理框架。ForkJoin的框架的基�
 
 ### CompletableFuture - 异步回调
 
-``` java
+```java
 Futrue设计初衷： 对将来发生的结果进行建模
   //有返回结果
 CompletableFuture<Integer> integerCompletableFuture = CompletableFuture.supplyAsync(() -> {
@@ -386,4 +380,3 @@ Integer result = integerCompletableFuture.whenComplete((t, u) -> {
     return 500;
 }).get();
 ```
-

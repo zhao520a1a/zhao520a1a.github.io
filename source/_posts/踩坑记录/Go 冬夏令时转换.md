@@ -8,14 +8,11 @@ cover: https://raw.githubusercontent.com/qax-os/excelize/7c221cf29531fcd38871d32
 
 ## 引言
 
-
 需求：给定一个时间戳 + 时区(Asia/shanghai) + 输出格式，返回该时区下特定格式的时间字符串
 
 注意：一定需要考虑到不同国家冬夏令时情况
 
 抽象一下：难点在于不同时区不同夏令时(夏时制)间转换
-
-
 
 ## 基本概念
 
@@ -59,15 +56,11 @@ func parseWithLocation(name string, timeStr string) (time.Time, error) {
 }
 ```
 
-
-
->  具体是如何完成呢？
+> 具体是如何完成呢？
 
 首先开源库 [IANA TZDB](https://www.iana.org/time-zones)提供`时区ID`到`具体夏令时偏移量`的转换数据，
 
 然后Go源码中包含了它所提供的数据包，因此可以判断冬夏令时的信息。
-
-
 
 > Go语言提供的time.LoadLocation可能又有什么坑呢？
 
@@ -79,9 +72,7 @@ LoadLocation所需的时区数据库可能并不存在于所有系统上,尤其�
 
 上源码，可以清楚的看到在unix系统中，zoneSources的查找路径：
 
-
 ![be6f4b58613bf7a5828c4af73c95046f.png](evernotecid://CD3082B6-03A3-4D41-80AB-E48CAD259C0B/appyinxiangcom/17782910/ENResource/p1647)
-
 
 因此不同国家政治策略的变动，时区对应关系会经常更新，IANA TZDB会发布新的[版本包](ftp://ftp.iana.org/tz/)，但是`Go并不会主动更新成最新的版本`，这导致可能会有问题。
 
@@ -91,11 +82,8 @@ LoadLocation所需的时区数据库可能并不存在于所有系统上,尤其�
 
 脚本更新时可以参考官方给的[更新脚本](https://github.com/golang/go/tree/dev.boringcrypto.go1.15/lib/time)。
 
-
-
 ## 参考
 
 [golang的时区和神奇的time.Parse](https://www.jianshu.com/p/f809b06144f7)
 
 [在Go中处理时区](https://www.shuzhiduo.com/A/Vx5M24n3dN/)
-

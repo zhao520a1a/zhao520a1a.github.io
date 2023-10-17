@@ -10,15 +10,18 @@ cover: https://contentstatic.techgig.com/photo/82278297/5-top-advantages-of-usin
 高阶脑图：https://www.processon.com/mindmap/60673b831e08534321f88c0c
 
 # 下载&安装
+
 ## 可以指定安装版本
+
 ```
-go get github.com/someone/some_module@{YOUR_GIT_COMMIT_HASH} 
+go get github.com/someone/some_module@{YOUR_GIT_COMMIT_HASH}
 ```
+
 eg: go get gitlab.pri.ibanyu.com/server/projectmanager/pub.git@master
 
 [Go 语言多版本管理利器 GVM](https://www.hi-linux.com/posts/20165.html#gvm)
 
-##  mac下设置gopath环境变量
+## mac下设置gopath环境变量
 
 - [官方指导](https://github.com/golang/go/wiki/SettingGOPATH)
 - Bash
@@ -101,33 +104,37 @@ b. 删除**.bash_profile**和 **.zshrc**文件的末尾加上的一段代码：
 ```
 
 # 使用
+
 ## 基础原理
+
 ### [参数传递到底是传值还是传引用](https://blog.csdn.net/qq_39397165/article/details/109561839)
+
 兄弟们实锤了奥，go就是值传递，可以确认的是Go语言中所有的传参都是值传递（传值），都是一个副本，一个拷贝。因为拷贝的内容有时候是非引用类型（int、string、struct等这些），这样就在函数中就无法修改原内容数据；有的是引用类型（指针、map、slice、chan等这些），这样就可以修改原内容数据。
 
 是否可以修改原内容数据，和传值、传引用没有必然的关系。在C++中，传引用肯定是可以修改原内容数据的，在Go语言里，虽然只有传值，但是我们也可以修改原内容数据，因为参数是引用类型。
 
 有的小伙伴会在这里还是懵逼，因为你把引用类型和传引用当成一个概念了，这是两个概念，切记！！！
 
-
 ### Json 解析
+
 [Go的json解析:Marshal与Unmarshal](https://cloud.tencent.com/developer/article/1515861)
 
-
 ### 接口压测
+
 [adjust/go-wrk](https://github.com/adjust/go-wrk)
 
-``` 
+```
 ./go-wrk  -c 10   -m "POST"  -b '{"version":1,"encoding":"command","command":"SET","namespace":"test/test","prefix":"indexer","payload_data":[["golden_k1","v1",120],["golden_k2","v2",120],["golden_k3","v3",120],["golden_k4","v4",120],["golden_k5","v5",120]]}'  -H 'Authorization: prn=prn:pf-cn:cache:hz::redis,action=cache:SET,token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6MTU5NjIwNzk4NH0.eyJpc3MiOiJJQU0iLCJzdWIiOiJncm91cCBjSEpMd1BId1VEckpPN2gvaWtZd2Z3PT0ifQ.2QCY70txMc2gSaHKRz59gAfdxRYoVuz8_Xg681YIq8Q; Content-Type: application/json; ' -n 10000 http://10.92.197.49:40465/base/indexer/cache/data/add
 
 ```
 
-
 ## goroutine & channel
+
 > Go 语言为构建并发程序的基本代码块是 协程 (goroutine) 与通道 (channel)。
-多线程下，如何实现对共享变量的正确访问需要精确的控制？
-主要是要解决内存中的数据共享问题。
-1.  对数据加锁，这样同时就只有一个线程可以变更数据。 -  Go 的标准库 `sync`有工具类
+> 多线程下，如何实现对共享变量的正确访问需要精确的控制？
+> 主要是要解决内存中的数据共享问题。
+
+1.  对数据加锁，这样同时就只有一个线程可以变更数据。 - Go 的标准库 `sync`有工具类
 2.  它将共享的值通过信道传递，这样可以无需提供同步原语。 即：`不要通过共享内存来通信，而应通过通信来共享内存。`注：**不要使用全局变量或者共享内存，它们会给你的代码在并发运算的时候带来危险。**第二种模式对比第一种模式而言，不但具有性能优势，而且代码显得更清晰、更优雅。
 
 扩展：Go 将共享的值通过信道传递。实际上，多个独立执行的线程从不会主动共享。 在任意给定的时间点，只有一个 Go 协程能够访问该值。 并不存在竞争关系，对一个通道读数据和写数据的整个过程是原子性的。
@@ -136,7 +143,7 @@ b. 删除**.bash_profile**和 **.zshrc**文件的末尾加上的一段代码：
 
 一个类似于 worker 使用通道进行通信和交互、Master 进行整体协调的方案都能完美解决。
 
-``` go
+```go
 func main() {
   pending, done := make(chan *Task), make(chan *Task)
   go sendWork(pending)       // put tasks with work on the channel
@@ -154,9 +161,9 @@ func Worker(in, out chan *Task) {
     out <- t
   }
 }
- 
 
- 
+
+
 ```
 
 **怎么选择是该使用锁还是通道**
@@ -173,10 +180,6 @@ func Worker(in, out chan *Task) {
 - 传递数据所有权
 
 - 与异步操作的结果进行交互
-
-
-
-
 
 ### goroutine 协程
 
@@ -215,18 +218,12 @@ GOMAXPROCS的数值代表允许运行时支持使用多少个的操作系统线�
 当 `GOMAXPROCS` 等于 `1` 时，所有的`协程`都会共享同一个`线程`。
 当 `GOMAXPROCS` 大于 `1` 时，会有一个线程池管理众多线程。
 
-
-
 只有 gc 编译器真正实现了协程，适当的把协程映射到操作系统线程。使用 `gccgo` 编译器，会为每一个协程创建操作系统线程。
-
-
 
 #### Go的协程 和 （其他语言的）协程的区别
 
     1. Go 协程意味着并行（或者可以以并行的方式部署），协程一般来说不是这样的
     2. Go 协程通过通道来通信，协程通过让出和恢复操作来通信
-
-
 
 ### channel 信道/通道
 
@@ -236,7 +233,7 @@ GOMAXPROCS的数值代表允许运行时支持使用多少个的操作系统线�
 
 #### 使用
 
-声明格式：`var identifier chan datatype`  // 通道只能传输一种类型的数据
+声明格式：`var identifier chan datatype` // 通道只能传输一种类型的数据
 
 通道是引用类型，通过 `make` 来分配内存。
 
@@ -259,9 +256,7 @@ doSomethingForAWhile()
 <-c   // 等待 sort 执行完成，然后从 channel 取值
 ```
 
-
-
-####  状态与操作
+#### 状态与操作
 
 channel存在`3种状态`：
 
@@ -276,9 +271,6 @@ channel可进行`3种操作`：
 3. 关闭
 
 ![5e38af5027db9c32400012aede8e922c.png](evernotecid://CD3082B6-03A3-4D41-80AB-E48CAD259C0B/appyinxiangcom/17782910/ENResource/p1441)
-
-
-
 
 #### 发送接收机制
 
@@ -303,7 +295,7 @@ select 做的就是：选择处理列出的多个通信情况中的一个。
 如果没有通道操作可以处理并且写了 default 语句，它就会执行：default 永远是可运行的（这就是准备好了，可以执行）。
 
 - 周期请求、超时检测 - 结合定时器Timer
-- 限制处理频率  - 结合计时器 Ticker
+- 限制处理频率 - 结合计时器 Ticker
 - 信号量
 
 扩展：

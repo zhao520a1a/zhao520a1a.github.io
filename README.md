@@ -69,5 +69,5 @@ hexo clean && hexo g && hexo d
 在线格式化：https://prettier.io/playground/
 本地格式化
 ```
- prettier --write ./*.md
+npx prettier . --write ./*.md
 ```

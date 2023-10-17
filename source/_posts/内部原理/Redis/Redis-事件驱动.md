@@ -1,11 +1,10 @@
 ---
 title: Redis-事件驱动
-tags: [redis]   
+tags: [redis]
 categories: [内部原理]
 date: 2020-09-01
 cover: https://i.morioh.com/2022/08/11/dcd7729a.webp
 ---
-
 
 > - Redis服务器是一个`事件驱动`的程序，事件分为两类：文件事件和时间事件。
 > - 文件事件和时间事件之间的关系？
@@ -75,17 +74,17 @@ cover: https://i.morioh.com/2022/08/11/dcd7729a.webp
 
 ```
 //事件处理器的主循环
-void aeMain(aeEventLoop *eventLoop) 
+void aeMain(aeEventLoop *eventLoop)
 {
     eventLoop->stop = 0;
- 
-    while (!eventLoop->stop) 
+
+    while (!eventLoop->stop)
     {
- 
+
         // 如果有需要在事件处理前执行的函数，那么运行它
         if (eventLoop->beforesleep != NULL)
             eventLoop->beforesleep(eventLoop);
- 
+
         // 开始处理事件
         aeProcessEvents(eventLoop, AE_ALL_EVENTS);
     }
@@ -157,7 +156,6 @@ def aeProcessEvents(aeEventLoop *eventLoop,int flags):
 
 - 当有事件发生时，内核会把所有发生的事件由内核层拷贝到应用层epoll就绪表中，之后aeApiPoll会把epoll就绪表state->events中的就绪事件拷贝到fired就绪表中。
   <img src="Redis-%E4%BA%8B%E4%BB%B6%E9%A9%B1%E5%8A%A8/image5-3030603.png" alt="aeApiPoll示意图"  />
-  
 - 当aeApiPoll()函数返回时，已就绪表中存储了所有就绪事件。
 
 ##### 新建事件

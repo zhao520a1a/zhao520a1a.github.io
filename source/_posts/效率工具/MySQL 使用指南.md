@@ -10,9 +10,11 @@ cover: https://www.simplilearn.com/ice9/free_resources_article_thumb/difference_
 <img src="img.png" alt="img.png" />
 
 ### [安装 MySQL](
- (https://blog.csdn.net/vkingnew/article/details/80105323))
+
+(https://blog.csdn.net/vkingnew/article/details/80105323))
 
 > 引言：[HomebrewCN：Homebrew的国内安装脚本，从此告别龟速更新](https://baijiahao.baidu.com/s?id=1668544039877443967&wfr=spider&for=pc)
+
 ```
 brew install mysql
 
@@ -29,40 +31,36 @@ brew install mysql
 ```
 
 采坑记录：
+
 > Failed to find valid data directory.
+
 1. 先清除原来data目录
-2. 执行命令mysqld --initialize-insecure，重新创建data文件夹以及对应的文件。
-3.重启mysql服务
+2. 执行命令mysqld --initialize-insecure，重新创建data文件夹以及对应的文件。3.重启mysql服务
 
+> ERROR 1819 (HY000): Your password does not satisfy the current policy requirements
+> 解决方案：[修改密码验证策略](https://blog.csdn.net/hello_world_qwp/article/details/79551789)
 
->ERROR 1819 (HY000): Your password does not satisfy the current policy requirements
-解决方案：[修改密码验证策略](https://blog.csdn.net/hello_world_qwp/article/details/79551789)  
-
->error 2059: Authentication plugin 'caching_sha2_password' cannot be loaded
-解决方案：
-[改密码认证方式]
-思路：将验证方式修改为上一版的，
-1.使用mysql，输入ALTER USER root@localhost IDENTIFIED WITH mysql_native_password BY '111111';
-2.刷新权限：FLUSH PRIVILEGES;
-运行截图：![5691eeff65aba4040b3260a7942fa35d.png](evernotecid://CD3082B6-03A3-4D41-80AB-E48CAD259C0B/appyinxiangcom/17782910/ENResource/p270)
-
+> error 2059: Authentication plugin 'caching_sha2_password' cannot be loaded
+> 解决方案：
+> [改密码认证方式]
+> 思路：将验证方式修改为上一版的，1.使用mysql，输入ALTER USER root@localhost IDENTIFIED WITH mysql_native_password BY '111111'; 2.刷新权限：FLUSH PRIVILEGES;
+> 运行截图：![5691eeff65aba4040b3260a7942fa35d.png](evernotecid://CD3082B6-03A3-4D41-80AB-E48CAD259C0B/appyinxiangcom/17782910/ENResource/p270)
 
 ### 重置密码
 
-
 **跳过MySQL的密码认证过程**
+
 1. vim etc/my.cnf
 2. 注：windows下修改的是my.ini
-3. 定位到[mysqld]文本段; 
+3. 定位到[mysqld]文本段;
 4. 在[mysqld]后面任意一行添加“skip-grant-tables”;
-
 
 **重启MySQL**
 /etc/init.d/mysql restart(有些用户可能需要使用/etc/init.d/mysqld restart)
 
-
-**进入并修改root密码** 
+**进入并修改root密码**
 输入 mysql即可进入,无须指定用户密码
+
 ```
 mysql> use mysql;
 
@@ -78,26 +76,27 @@ mysql> quit
 **恢复配置**
 将etc/my.cnf中的“skip-grant-tables”配置去除
 
-
-
 ### SQL 使用技巧
 
-####  HQL 
+#### HQL
+
 select 后面非聚合列必须出现在gruopby中
 
 #### 字符串拆分
- SUBSTRING_INDEX（str, delim, count）
+
+SUBSTRING_INDEX（str, delim, count）
 
 <img src="MySQL%20%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/D09AEE98-4E69-4120-923A-54CCD5D647D3.png" alt="D09AEE98-4E69-4120-923A-54CCD5D647D3" style="zoom:50%;" />
 
 #### 日期格式
-  date_format(add_date, '%Y-%m-%d') add_date,
 
- - 近30天数据
- DATE_SUB(CURDATE(), INTERVAL 30 DAY) <= date(时间字段名)
+date_format(add_date, '%Y-%m-%d') add_date,
 
+- 近30天数据
+  DATE_SUB(CURDATE(), INTERVAL 30 DAY) <= date(时间字段名)
 
 #### 字段值判断
+
 ```
   case
       f.flow_type
@@ -108,15 +107,17 @@ select 后面非聚合列必须出现在gruopby中
 ```
 
 #### 获取分组取组内特定数据
+
 可分为两种情况：
+
 - 获取组内前几条条数据
 - 获取组内第几条条数据
 
- 
-
 ##### 获取组内前几条条数据
+
 eg: 获取组内前2条数据
-``` sql
+
+```sql
 SELECT
 	*
 FROM
@@ -143,15 +144,15 @@ WHERE
 	rank <= 2
 ORDER BY
 	kemu ,
-	rank 
+	rank
 ```
-
 
 ##### 获取组内第几条条数据
 
-- 子查询 -  mysql
- eg: 获取组内第二条数据
-``` sql
+- 子查询 - mysql
+  eg: 获取组内第二条数据
+
+```sql
 SELECT
 	fr.id ,
 	fr.bug_id ,
@@ -170,14 +171,14 @@ WHERE
 	)
 ```
 
+​
 
-​      
+- ROW_NUMBER() - hive
+  `语法：ROW_NUMBER() OVER(PARTITION BY COLUMN ORDER BY COLUMN)`
+  > 简单的说row_number()从1开始，为每一条分组记录返回一个数字，这里的ROW_NUMBER() OVER (ORDER BY xlh DESC) 是先把xlh列降序，再为降序以后的没条xlh记录返回一个序号
+  > eg: 获取组内第二条数据
 
-- ROW_NUMBER()  - hive
-`语法：ROW_NUMBER() OVER(PARTITION BY COLUMN ORDER BY COLUMN)`
-> 简单的说row_number()从1开始，为每一条分组记录返回一个数字，这里的ROW_NUMBER() OVER (ORDER BY xlh DESC) 是先把xlh列降序，再为降序以后的没条xlh记录返回一个序号
- eg: 获取组内第二条数据
- ``` sql
+```sql
 SELECT
 	id ,
 	bug_id ,
@@ -195,20 +196,18 @@ FROM
 	) fr
 WHERE
 	row_num == 2
- ```
+```
 
- 
+#### 将多个列中内容合成一个字段
 
+##### GROUP_CONCAT - mysql
 
- #### 将多个列中内容合成一个字段
+eg： 将id降序后的列表中name数据已‘/’拼接起来
 
- #####  GROUP_CONCAT  - mysql
- eg： 将id降序后的列表中name数据已‘/’拼接起来
-
- ``` sql
- SELECT
+```sql
+SELECT
 	bf.id ,
-     GROUP_CONCAT(name order by id desc separator '/') NAME
+    GROUP_CONCAT(name order by id desc separator '/') NAME
 FROM
 	iwork_bugs_feedback bf
 LEFT JOIN iwork_feedback_ranks fr ON(
@@ -220,24 +219,27 @@ WHERE
 	kefu_org_id = 2104
 GROUP BY
 	bf.id
- ```
+```
 
- ##### concat_ws -hive
- concat_ws('/', collect_set( fr.name))  name 
+##### concat_ws -hive
 
+concat_ws('/', collect_set( fr.name)) name
 
 #### 将分组中的某列转为一个数组
+
 Hive中collect相关的函数有collect_list和collect_set。
 它们都是将分组中的某列转为一个数组返回，不同的是collect_list不去重而collect_set去重。
 
-
 #### 按时间区间统计数据
+
 使用使用`时间格式函数` + ·Group by· 的方式来获取数据
 
 ##### 按月维度统计
+
 eg: 需求平均完成周期
- 注：排除了需求完成周期超过90天异常数据
-``` sql
+注：排除了需求完成周期超过90天异常数据
+
+```sql
 SELECT
 	DATE_FORMAT(add_date , '%Y-%m') AS time ,
 	avg(
@@ -255,10 +257,11 @@ GROUP BY
 	time
 ```
 
-
 ##### 按周维度统计
- eg: 迭代完成周期分布,按每7天维度统计 【时间分隔 [0,7)  [7-14)  [14,21) 】
-``` sql
+
+eg: 迭代完成周期分布,按每7天维度统计 【时间分隔 [0,7) [7-14) [14,21) 】
+
+```sql
 SELECT
 	floor(
 		timestampdiff(DAY , start_time , online_time) / 7 + 1
@@ -276,10 +279,11 @@ HAVING
 	t > 0
 ```
 
-
 ##### 按天维度统计
+
 eg: bug解决周期分布
-``` sql
+
+```sql
 SELECT
 	timestampdiff(DAY , add_date , solve_date) AS t ,
 	count(*)
@@ -296,8 +300,10 @@ HAVING
 ```
 
 ##### 按小时维度统计
+
 eg: 需求录入时间分布图（0-24h）
-``` sql
+
+```sql
 SELECT
 	DATE_FORMAT(add_date , '%H') hours ,
 	COUNT(add_date)
@@ -311,8 +317,10 @@ GROUP BY
 ```
 
 ##### 按分钟维度统计
+
 eg：3天内bugfix最快(Top1-3)的业务线
-``` sql
+
+```sql
 SELECT
 	avg(timestampdiff(MINUTE , add_date , solve_date)) AS t ,
 	bg.id ,
@@ -334,11 +342,12 @@ LIMIT 0 ,
  3
 ```
 
-
 ### 索引调优
+
 1. 查询是在单个表上。
 2. GROUP BY仅命名构成索引最左前缀的列，而没有命名其他列。（如果查询具有DISTINCT子句，而不是GROUP BY，则所有不同的属性都引用构成索引最左前缀的列。）
-eg: 
+   eg:
+
 - 如果表t1在（c1，c2，c3）上具有索引，如果查询具有GROUP BY c1，c2，则松散索引扫描适用。
 - 如果查询具有GROUP BY c2，c3（列不是最左边的前缀）或GROUP BY c1，c2，c4（c4不在索引中），则不适用。
 
